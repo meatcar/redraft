@@ -1,0 +1,12 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/(^|/)\\.agents/sandbox/task\\.sha256$/"],
+      "matchStrings": ["(?<currentDigest>[0-9a-f]{64})  (?<currentValue>v[^/\\s]+)/task_"],
+      "depNameTemplate": "go-task/task",
+      "datasourceTemplate": "github-release-attachments",
+    },
+  ],
+}

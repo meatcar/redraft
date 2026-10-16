@@ -1,0 +1,24 @@
+{
+  "name": "flake-modules",
+  "private": true,
+  "type": "module",
+  "module": "index.ts",
+  "scripts": {
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint && fallow",
+    "format": "treefmt -q",
+    "check": "bun run typecheck && bun run lint && treefmt --ci"
+  },
+  "devDependencies": {
+    "@tsconfig/bun": "^1.0.10",
+    "@types/bun": "latest",
+    "fallow": "^2.66.2",
+    "oxfmt": "^0.48.0",
+    "oxlint": "^1.63.0",
+    "oxlint-tsgolint": "^0.22.1"
+  },
+  "peerDependencies": {
+    "typescript": "^6.0.3"
+  }
+}

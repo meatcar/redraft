@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: cachix/install-nix-action@v31
+
+      - uses: nix-community/cache-nix-action@v7
+        with:
+          primary-key: nix-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-${{ runner.arch }}-
+
+      # Every step runs in the devshell: treefmt and the nix formatters live there.
+      - name: Install dependencies
+        run: nix develop --command bun install --frozen-lockfile
+
+      - name: Check
+        run: nix develop --command bun run check
+
+      - name: Test
+        run: nix develop --command bun test

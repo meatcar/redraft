@@ -1,0 +1,17 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>meatcar/renovate-config"],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchCurrentVersion": "!/^0/",
+      "automerge": true,
+    },
+    {
+      // NOTE: versions must match nixpkgs.
+      "matchDatasources": ["npm"],
+      "matchPackageNames": ["@playwright/**", "bun", "@types/bun"],
+      "enabled": false,
+    },
+  ],
+}
