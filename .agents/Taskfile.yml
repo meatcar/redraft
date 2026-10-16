@@ -7,17 +7,17 @@ tasks:
   before_nix:
     desc: Establish access needed for private Nix inputs
     # Only host tools and Task are guaranteed here.
-    # TODO: Authenticate Nix inputs.
+    # No private Nix inputs.
     cmds: []
 
   setup_auth:
     desc: Establish shared access needed for setup
-    # TODO: Authenticate setup.
+    # Setup needs no credentials.
     cmds: []
 
   resume_auth:
     desc: Refresh the current session's credentials
-    # TODO: Authenticate the session.
+    # LLM_* secrets arrive as orb environment variables.
     cmds: []
 
   work:
@@ -30,26 +30,25 @@ tasks:
 
   deps:
     desc: Supply dependencies not provided by Nix
-    # TODO: Sync dependencies. Keep warm runs fast.
-    cmds: []
+    cmds:
+      - bun install --frozen-lockfile
 
   prep:
     desc: Prepare project data and generated files
-    # TODO: Prepare project data.
     cmds: []
 
   check:
     desc: Prevent work in an unusable environment
-    # TODO: Check prerequisites.
-    cmds: []
+    cmds:
+      - bun run typecheck
 
   ready:
     desc: Hand the prepared project over to its consumers
-    # TODO: Report readiness.
-    cmds: []
+    cmds:
+      - echo "Ready. Start the app with 'amp orb services ensure' (see .amp/services.yaml)."
 
   setup_cleanup:
     desc: Remove credentials before setup artifacts can be shared
     # Runs on success and failure, without requiring a working devshell.
-    # TODO: Remove setup credentials and provider caches.
+    # No setup credentials to remove.
     cmds: []

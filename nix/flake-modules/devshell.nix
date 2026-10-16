@@ -11,8 +11,7 @@
     {
       legacyPackages = pkgs;
       devShells.default = pkgs.mkShell {
-        # TODO: change to project name
-        name = "devshell";
+        name = "redraft";
         inputsFrom = [
           config.flake-root.devShell
           config.treefmt.build.devShell

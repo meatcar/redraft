@@ -1,0 +1,8 @@
+services:
+  web:
+    command: direnv exec . bun run dev
+    health: /healthz
+    portal:
+      url: /
+      title: Redraft
+      description: Select text to get three rewrites. Needs LLM_BASE_URL, LLM_API_KEY, and LLM_MODEL set as project secrets.

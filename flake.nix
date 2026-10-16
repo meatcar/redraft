@@ -1,5 +1,5 @@
 {
-  description = "change me";
+  description = "Redraft: select text, get three AI rewrites grounded in your notes";
 
   inputs = {
     # see docs at https://flake.parts/

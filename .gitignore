@@ -43,3 +43,6 @@ results/
 .claude/
 
 .fallow/
+
+# local artifacts
+.amp/in/
