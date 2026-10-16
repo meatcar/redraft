@@ -31,8 +31,8 @@ const theme = EditorView.theme({
     lineHeight: "1.7",
     padding: "1.5rem 2rem",
   },
-  // NOTE: no horizontal padding here; CodeMirror paints selection across the content box.
-  ".cm-content": { maxWidth: "42rem", margin: "0 auto", padding: "0" },
+  // NOTE: CodeMirror paints full-line selection across this padding; keep it small.
+  ".cm-content": { maxWidth: "calc(42rem + 0.5em)", margin: "0 auto", padding: "0 0.25em" },
   ".cm-redraft-target": { backgroundColor: "rgb(250 204 21 / 0.35)", borderRadius: "2px" },
   "&.cm-focused": { outline: "none" },
 });
