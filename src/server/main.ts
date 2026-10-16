@@ -8,7 +8,7 @@ import { log } from "./log";
 const config = loadConfig();
 const app = createApp({
   llm: createLlm(config),
-  library: new ContextLibrary(config.CONTEXT_ROOT),
+  library: new ContextLibrary(config.CONTEXT_ROOT, { indexPath: config.INDEX_PATH }),
   defaultContextDir: config.CONTEXT_DIR,
   maxSteps: config.LLM_MAX_STEPS,
 });
@@ -28,6 +28,7 @@ log.info("listening", {
   url: server.url.href,
   llm: config.LLM_BASE_URL ? new URL(config.LLM_BASE_URL).host : null,
   contextRoot: config.CONTEXT_ROOT,
+  index: config.INDEX_PATH,
 });
 
 for (const signal of ["SIGINT", "SIGTERM"] as const) {

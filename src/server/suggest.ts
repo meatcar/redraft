@@ -64,10 +64,10 @@ function contextTools(context: ContextIndex, consulted: Set<string>) {
   return {
     search_context: tool({
       description:
-        "Full-text search (BM25, fuzzy) over the user's context folder. Returns matching sections with their file paths.",
+        "Full-text search (BM25, matches any word by prefix) over the user's context folder. Returns matching sections with their file paths. Use distinctive keywords; try synonyms if results are weak.",
       inputSchema: z.object({ query: z.string().describe("Keywords, names, or phrases.") }),
-      execute: ({ query }) => {
-        const hits = context.search(query);
+      execute: async ({ query }) => {
+        const hits = await context.search(query);
         for (const hit of hits) consulted.add(hit.path);
         return formatHits(hits);
       },
@@ -98,7 +98,7 @@ export async function suggest(request: SuggestInput, deps: SuggestDeps): Promise
   ];
 
   if (deps.context) {
-    const hits = deps.context.search(`${selected} ${steering}`, PREFETCH_HITS);
+    const hits = await deps.context.search(`${selected} ${steering}`, PREFETCH_HITS);
     for (const hit of hits) consulted.add(hit.path);
     sections.push(
       `<retrieved_context note="automatic search on the selection">\n${formatHits(hits)}\n</retrieved_context>`,

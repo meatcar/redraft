@@ -1,4 +1,5 @@
 import { homedir } from "node:os";
+import { join } from "node:path";
 import { z } from "zod";
 
 const flag = z
@@ -15,13 +16,16 @@ const envSchema = z.object({
   LLM_MAX_STEPS: z.coerce.number().int().min(1).max(20).default(6),
   CONTEXT_ROOT: z.string().default(homedir()),
   CONTEXT_DIR: z.string().optional(),
+  XDG_CACHE_HOME: z.string().default(join(homedir(), ".cache")),
+  INDEX_PATH: z.string().optional(),
 });
 
-export type Config = z.infer<typeof envSchema>;
+export type Config = ReturnType<typeof loadConfig>;
 
-export function loadConfig(env: Record<string, string | undefined> = process.env): Config {
+export function loadConfig(env: Record<string, string | undefined> = process.env) {
   const blankAsUnset = Object.fromEntries(Object.entries(env).filter(([, v]) => v !== ""));
   const parsed = envSchema.safeParse(blankAsUnset);
   if (!parsed.success) throw new Error(`Invalid environment:\n${z.prettifyError(parsed.error)}`);
-  return parsed.data;
+  const { XDG_CACHE_HOME, INDEX_PATH, ...config } = parsed.data;
+  return { ...config, INDEX_PATH: INDEX_PATH ?? join(XDG_CACHE_HOME, "redraft", "index.sqlite") };
 }

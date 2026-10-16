@@ -1,7 +1,8 @@
-import MiniSearch from "minisearch";
+import { Database } from "bun:sqlite";
+import { mkdirSync } from "node:fs";
 import { realpath, stat } from "node:fs/promises";
 import { homedir } from "node:os";
-import { isAbsolute, join, relative, resolve, sep } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 
 import type { ContextStatus } from "../shared/api";
 
@@ -9,56 +10,76 @@ const TEXT_FILES = new Bun.Glob("**/*.{md,mdx,markdown,txt,rst,org,adoc}");
 const IGNORED_SEGMENTS = new Set(["node_modules", ".git"]);
 const MAX_FILE_BYTES = 1_000_000;
 const READ_BATCH = 64;
+const MAX_QUERY_TERMS = 32;
+const MIN_PREFIX_CHARS = 4;
+const OPTIMIZE_AFTER_FILES = 50;
+const SCHEMA_VERSION = 1;
 
-export type Chunk = { heading: string; text: string };
-export type ContextHit = Chunk & { path: string; score: number };
+export type Chunk = { heading: string; start: number; end: number };
+export type ContextHit = { path: string; heading: string; text: string; score: number };
 
-type IndexedChunk = Chunk & { id: number; path: string };
 type FileEntry = { path: string; mtimeMs: number; size: number };
+type FileRow = { id: number; path: string; mtime: number; size: number };
+type HitRow = { path: string; mtime: number; size: number; heading: string } & Chunk & {
+    score: number;
+  };
 
 export function chunkMarkdown(source: string, maxChars = 1500): Chunk[] {
   const sections: Chunk[] = [];
   const trail: string[] = [];
-  let lines: string[] = [];
+  let heading = "";
+  let start = 0;
+  let pos = 0;
   let inFence = false;
 
-  const flush = () => {
-    const text = lines.join("\n").trim();
-    if (text) sections.push({ heading: trail.filter(Boolean).join(" > "), text });
-    lines = [];
+  const flush = (end: number) => {
+    const range = trimRange(source, start, end);
+    if (range) sections.push({ heading, ...range });
   };
 
   for (const line of source.split("\n")) {
     if (/^\s*(```|~~~)/.test(line)) inFence = !inFence;
-    const heading = inFence ? null : /^(#{1,6})\s+(.*)$/.exec(line);
-    if (heading?.[1] && heading[2] !== undefined) {
-      flush();
-      const depth = heading[1].length;
+    const match = inFence ? null : /^(#{1,6})\s+(.*)$/.exec(line);
+    if (match?.[1] && match[2] !== undefined) {
+      flush(pos);
+      start = pos;
+      const depth = match[1].length;
       trail.length = depth;
-      trail[depth - 1] = heading[2].trim();
+      trail[depth - 1] = match[2].trim();
+      heading = trail.filter(Boolean).join(" > ");
     }
-    lines.push(line);
+    pos += line.length + 1;
   }
-  flush();
+  flush(source.length);
 
-  return sections.flatMap((section) => splitSection(section, maxChars));
+  return sections.flatMap((section) => splitSection(source, section, maxChars));
 }
 
-function splitSection(section: Chunk, maxChars: number): Chunk[] {
-  if (section.text.length <= maxChars) return [section];
-  const chunks: Chunk[] = [];
-  let current = "";
-  for (const paragraph of section.text.split(/\n{2,}/)) {
-    for (let start = 0; start < paragraph.length; start += maxChars) {
-      const piece = paragraph.slice(start, start + maxChars);
-      if (current && current.length + piece.length + 2 > maxChars) {
-        chunks.push({ heading: section.heading, text: current });
-        current = "";
-      }
-      current = current ? `${current}\n\n${piece}` : piece;
+function trimRange(source: string, start: number, end: number) {
+  while (start < end && /\s/.test(source[start] ?? "")) start++;
+  while (end > start && /\s/.test(source[end - 1] ?? "")) end--;
+  return start < end ? { start, end } : null;
+}
+
+function splitSection(source: string, section: Chunk, maxChars: number): Chunk[] {
+  if (section.end - section.start <= maxChars) return [section];
+  const pieces: { start: number; end: number }[] = [];
+  const body = source.slice(section.start, section.end);
+  let paragraphStart = 0;
+  for (const separator of [...body.matchAll(/\n{2,}/g), { index: body.length, 0: "" }]) {
+    for (let at = paragraphStart; at < separator.index; at += maxChars) {
+      const end = Math.min(at + maxChars, separator.index);
+      pieces.push({ start: section.start + at, end: section.start + end });
     }
+    paragraphStart = separator.index + separator[0].length;
   }
-  if (current) chunks.push({ heading: section.heading, text: current });
+
+  const chunks: Chunk[] = [];
+  for (const piece of pieces) {
+    const last = chunks.at(-1);
+    if (last && piece.end - last.start <= maxChars) last.end = piece.end;
+    else chunks.push({ heading: section.heading, ...piece });
+  }
   return chunks;
 }
 
@@ -69,88 +90,200 @@ async function listFiles(dir: string): Promise<FileEntry[]> {
     const info = await stat(join(dir, path));
     if (info.size <= MAX_FILE_BYTES) entries.push({ path, mtimeMs: info.mtimeMs, size: info.size });
   }
-  return entries.toSorted((a, b) => a.path.localeCompare(b.path));
+  return entries;
 }
 
-function signatureOf(files: FileEntry[]): string {
-  return Bun.hash(files.map((f) => `${f.path}:${f.mtimeMs}:${f.size}`).join("\n")).toString(36);
+/** Turns free text into an FTS5 query: any word, by prefix, ranked by BM25. */
+function toMatchQuery(text: string): string | null {
+  const words = new Set(text.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? []);
+  const terms = [...words]
+    .slice(0, MAX_QUERY_TERMS)
+    .map((w) => (w.length >= MIN_PREFIX_CHARS ? `"${w}"*` : `"${w}"`));
+  return terms.length > 0 ? terms.join(" OR ") : null;
 }
 
-export class ContextIndex {
-  private constructor(
-    readonly dir: string,
-    readonly signature: string,
-    private readonly files: ReadonlySet<string>,
-    private readonly chunks: readonly IndexedChunk[],
-    private readonly engine: MiniSearch<IndexedChunk>,
-  ) {}
-
-  static async build(dir: string, files: FileEntry[]): Promise<ContextIndex> {
-    const chunks: IndexedChunk[] = [];
-    for (let start = 0; start < files.length; start += READ_BATCH) {
-      const batch = files.slice(start, start + READ_BATCH);
-      // NOTE: bounded batches avoid exhausting file descriptors on large corpora.
-      // oxlint-disable-next-line no-await-in-loop
-      const contents = await Promise.all(batch.map((f) => Bun.file(join(dir, f.path)).text()));
-      batch.forEach((file, i) => {
-        for (const { heading, text } of chunkMarkdown(contents[i] ?? "")) {
-          chunks.push({ id: chunks.length, path: file.path, heading, text });
-        }
-      });
-    }
-    const engine = new MiniSearch<IndexedChunk>({
-      fields: ["heading", "text", "path"],
-      searchOptions: { boost: { heading: 2, path: 1.5 }, fuzzy: 0.2, prefix: true },
-    });
-    engine.addAll(chunks);
-    return new ContextIndex(
-      dir,
-      signatureOf(files),
-      new Set(files.map((f) => f.path)),
-      chunks,
-      engine,
-    );
+function openDatabase(path: string): Database {
+  if (path !== ":memory:") mkdirSync(dirname(path), { recursive: true });
+  const db = new Database(path, { create: true, strict: true });
+  db.run("PRAGMA journal_mode = WAL");
+  db.run("PRAGMA foreign_keys = ON");
+  const { user_version: version } = db
+    .query<{ user_version: number }, []>("PRAGMA user_version")
+    .get()!;
+  if (version !== SCHEMA_VERSION) {
+    // NOTE: the index is a disposable cache; rebuild instead of migrating.
+    db.run("DROP TABLE IF EXISTS chunks_fts");
+    db.run("DROP TABLE IF EXISTS chunks");
+    db.run("DROP TABLE IF EXISTS files");
+    db.run(`CREATE TABLE files (
+      id INTEGER PRIMARY KEY, dir TEXT NOT NULL, path TEXT NOT NULL,
+      mtime REAL NOT NULL, size INTEGER NOT NULL, UNIQUE (dir, path))`);
+    db.run(`CREATE TABLE chunks (
+      id INTEGER PRIMARY KEY, file_id INTEGER NOT NULL REFERENCES files ON DELETE CASCADE,
+      heading TEXT NOT NULL, start INTEGER NOT NULL, "end" INTEGER NOT NULL)`);
+    db.run("CREATE INDEX chunks_file ON chunks (file_id)");
+    // NOTE: contentless; stores terms and positions only. Snippets are read from disk.
+    db.run(`CREATE VIRTUAL TABLE chunks_fts USING fts5(heading, body, path,
+      content='', contentless_delete=1, tokenize='unicode61 remove_diacritics 2')`);
+    db.run(`PRAGMA user_version = ${SCHEMA_VERSION}`);
   }
+  return db;
+}
+
+/** One synced context folder: search by relevance, read whole files. */
+export class ContextIndex {
+  constructor(
+    readonly dir: string,
+    private readonly db: Database,
+  ) {}
 
   // NOTE: fallow misses the getter use in app.ts.
   // fallow-ignore-next-line unused-class-member
   get status(): ContextStatus {
-    return { root: this.dir, files: this.files.size, chunks: this.chunks.length };
+    const row = this.db
+      .query<{ files: number; chunks: number }, [string]>(
+        `SELECT count(DISTINCT f.id) AS files, count(c.id) AS chunks
+         FROM files f LEFT JOIN chunks c ON c.file_id = f.id WHERE f.dir = ?`,
+      )
+      .get(this.dir);
+    return { root: this.dir, files: row?.files ?? 0, chunks: row?.chunks ?? 0 };
   }
 
-  search(query: string, limit = 6): ContextHit[] {
-    return this.engine
-      .search(query)
-      .slice(0, limit)
-      .flatMap((hit) => {
-        const id: unknown = hit.id;
-        const chunk = typeof id === "number" ? this.chunks[id] : undefined;
-        return chunk
-          ? [{ path: chunk.path, heading: chunk.heading, text: chunk.text, score: hit.score }]
-          : [];
-      });
+  async search(query: string, limit = 6): Promise<ContextHit[]> {
+    const match = toMatchQuery(query);
+    if (!match) return [];
+    const rows = this.db
+      .query<HitRow, [string, string, number]>(
+        // NOTE: MATERIALIZED forces FTS first; otherwise the planner scans every chunk in the folder.
+        `WITH matches AS MATERIALIZED (
+           SELECT rowid, bm25(chunks_fts, 2.0, 1.0, 1.5) AS score
+           FROM chunks_fts WHERE chunks_fts MATCH ?)
+         SELECT f.path, f.mtime, f.size, c.heading, c.start, c."end", matches.score
+         FROM matches
+         JOIN chunks c ON c.id = matches.rowid
+         JOIN files f ON f.id = c.file_id
+         WHERE f.dir = ?
+         ORDER BY matches.score LIMIT ?`,
+      )
+      .all(match, this.dir, limit);
+
+    const sources = new Map<string, Promise<string | null>>();
+    const sourceOf = (row: HitRow) => {
+      let source = sources.get(row.path);
+      if (!source) {
+        source = this.readUnchanged(row);
+        sources.set(row.path, source);
+      }
+      return source;
+    };
+    const hits = await Promise.all(
+      rows.map(async (row) => {
+        const source = await sourceOf(row);
+        if (source === null) return [];
+        const text = source.slice(row.start, row.end);
+        return [{ path: row.path, heading: row.heading, text, score: -row.score }];
+      }),
+    );
+    return hits.flat();
   }
 
   async read(path: string): Promise<string> {
-    if (!this.files.has(path)) throw new Error(`${path} is not in the context folder`);
+    const known = this.db
+      .query<{ id: number }, [string, string]>("SELECT id FROM files WHERE dir = ? AND path = ?")
+      .get(this.dir, path);
+    if (!known) throw new Error(`${path} is not in the context folder`);
     return Bun.file(join(this.dir, path)).text();
+  }
+
+  /** Returns the file text only if it still matches the indexed version, so offsets stay valid. */
+  private async readUnchanged(row: { path: string; mtime: number; size: number }) {
+    const file = join(this.dir, row.path);
+    const info = await stat(file).catch(() => null);
+    if (!info || info.mtimeMs !== row.mtime || info.size !== row.size) return null;
+    return Bun.file(file).text();
   }
 }
 
-/** Opens context folders under one allowed root and caches their indexes until files change. */
+/** Opens context folders under one allowed root and keeps their FTS5 index in sync with disk. */
 export class ContextLibrary {
-  private readonly cache = new Map<string, ContextIndex>();
+  private readonly db: Database;
+  private readonly syncs = new Map<string, Promise<ContextIndex>>();
 
-  constructor(readonly root: string) {}
+  constructor(
+    readonly root: string,
+    { indexPath = ":memory:" }: { indexPath?: string } = {},
+  ) {
+    this.db = openDatabase(indexPath);
+  }
 
   async open(path: string): Promise<ContextIndex> {
     const dir = await this.resolveInsideRoot(path);
+    // NOTE: one sync per folder at a time; callers queue behind the running one.
+    const previous = this.syncs.get(dir) ?? Promise.resolve();
+    const next = previous.catch(() => {}).then(() => this.sync(dir));
+    this.syncs.set(dir, next);
+    return next;
+  }
+
+  private async sync(dir: string): Promise<ContextIndex> {
     const files = await listFiles(dir);
-    const cached = this.cache.get(dir);
-    if (cached?.signature === signatureOf(files)) return cached;
-    const index = await ContextIndex.build(dir, files);
-    this.cache.set(dir, index);
-    return index;
+    const known = new Map(
+      this.db
+        .query<FileRow, [string]>("SELECT id, path, mtime, size FROM files WHERE dir = ?")
+        .all(dir)
+        .map((row) => [row.path, row]),
+    );
+    const present = new Set(files.map((f) => f.path));
+    const removed = [...known.values()].filter((row) => !present.has(row.path));
+    const changed = files.filter((f) => {
+      const row = known.get(f.path);
+      return !row || row.mtime !== f.mtimeMs || row.size !== f.size;
+    });
+
+    this.db.transaction(() => {
+      for (const row of removed) this.forget(row.id);
+    })();
+
+    for (let start = 0; start < changed.length; start += READ_BATCH) {
+      const batch = changed.slice(start, start + READ_BATCH);
+      // NOTE: bounded batches avoid exhausting file descriptors on large corpora.
+      // oxlint-disable-next-line no-await-in-loop
+      const contents = await Promise.all(batch.map((f) => Bun.file(join(dir, f.path)).text()));
+      this.db.transaction(() => {
+        batch.forEach((file, i) => this.index(dir, file, contents[i] ?? "", known.get(file.path)));
+      })();
+    }
+    if (changed.length >= OPTIMIZE_AFTER_FILES) {
+      this.db.run("INSERT INTO chunks_fts (chunks_fts) VALUES ('optimize')");
+      this.db.run("VACUUM");
+    }
+    return new ContextIndex(dir, this.db);
+  }
+
+  private forget(fileId: number) {
+    this.db
+      .query("DELETE FROM chunks_fts WHERE rowid IN (SELECT id FROM chunks WHERE file_id = ?)")
+      .run(fileId);
+    this.db.query("DELETE FROM files WHERE id = ?").run(fileId);
+  }
+
+  private index(dir: string, file: FileEntry, source: string, previous: FileRow | undefined) {
+    if (previous) this.forget(previous.id);
+    const { id: fileId } = this.db
+      .query<{ id: number }, [string, string, number, number]>(
+        "INSERT INTO files (dir, path, mtime, size) VALUES (?, ?, ?, ?) RETURNING id",
+      )
+      .get(dir, file.path, file.mtimeMs, file.size)!;
+    const insertChunk = this.db.query<{ id: number }, [number, string, number, number]>(
+      `INSERT INTO chunks (file_id, heading, start, "end") VALUES (?, ?, ?, ?) RETURNING id`,
+    );
+    const insertTerms = this.db.query(
+      "INSERT INTO chunks_fts (rowid, heading, body, path) VALUES (?, ?, ?, ?)",
+    );
+    for (const chunk of chunkMarkdown(source)) {
+      const { id } = insertChunk.get(fileId, chunk.heading, chunk.start, chunk.end)!;
+      insertTerms.run(id, chunk.heading, source.slice(chunk.start, chunk.end), file.path);
+    }
   }
 
   private async resolveInsideRoot(path: string): Promise<string> {
