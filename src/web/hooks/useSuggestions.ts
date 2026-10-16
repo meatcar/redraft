@@ -15,14 +15,16 @@ export type SuggestionState =
 
 type Inputs = Omit<SuggestRequest, "selection"> & { apiKey: string };
 
-/** Fetches alternatives for each committed selection; newer selections cancel older requests. */
-export function useSuggestions(selection: { from: number; to: number }, inputs: Inputs) {
+type Range = { from: number; to: number };
+
+/** Fetches alternatives on demand; a newer request cancels the older one. */
+export function useSuggestions(inputs: Inputs) {
   const [state, setState] = useState<SuggestionState>({ status: "idle" });
   const inputsRef = useRef(inputs);
   inputsRef.current = inputs;
   const inflight = useRef<AbortController | null>(null);
 
-  const run = useCallback((range: { from: number; to: number }) => {
+  const run = useCallback((range: Range) => {
     inflight.current?.abort();
     const { document } = inputsRef.current;
     const target = { ...range, text: document.slice(range.from, range.to) };
@@ -40,21 +42,21 @@ export function useSuggestions(selection: { from: number; to: number }, inputs: 
       });
   }, []);
 
-  const { from, to } = selection;
-  useEffect(() => {
-    if (from !== to) run({ from, to });
-  }, [from, to, run]);
-
   useEffect(() => () => inflight.current?.abort(), []);
 
-  const regenerate = useCallback(() => {
-    if (state.status !== "idle") run(state.target);
-  }, [state, run]);
+  /** Suggests for the selection; with nothing selected, refreshes the last target. */
+  const suggest = useCallback(
+    (selection: Range) => {
+      if (selection.from !== selection.to) run(selection);
+      else if (state.status !== "idle") run({ from: state.target.from, to: state.target.to });
+    },
+    [state, run],
+  );
 
   const clear = useCallback(() => {
     inflight.current?.abort();
     setState({ status: "idle" });
   }, []);
 
-  return { state, regenerate, clear };
+  return { state, suggest, clear };
 }

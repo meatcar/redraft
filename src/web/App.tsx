@@ -1,5 +1,5 @@
 import { FileUp, Sparkles } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 import type { Alternative } from "../shared/api";
 import { ApiKeyInput } from "@/components/ApiKeyInput";
@@ -11,10 +11,11 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { usePersistentString } from "@/hooks/usePersistentString";
 import { useSuggestions } from "@/hooks/useSuggestions";
+import { SUGGEST_SHORTCUT, isSuggestShortcut } from "@/lib/shortcuts";
 
 const SAMPLE = `# Welcome to Redraft
 
-Paste or open a markdown document, then select any sentence or paragraph. Three alternatives appear on the right; click one (or press Alt+1, Alt+2, Alt+3) to swap it in.
+Paste or open a markdown document, select any sentence or paragraph, and press ${SUGGEST_SHORTCUT}. Three alternatives appear on the right; click one (or press Alt+1, Alt+2, Alt+3) to swap it in.
 
 Use the steering box at the bottom to tell the model what you are going for. Point the context folder at your notes so suggestions match your facts and voice.
 `;
@@ -25,11 +26,10 @@ export function App() {
   const [contextPath, setContextPath] = usePersistentString("contextPath", "");
   const [model, setModel] = usePersistentString("model", "");
   const [apiKey, setApiKey] = usePersistentString("apiKey", "");
-  const [selection, setSelection] = useState({ from: 0, to: 0 });
   const editor = useRef<EditorHandle>(null);
   const fileInput = useRef<HTMLInputElement>(null);
 
-  const { state, regenerate, clear } = useSuggestions(selection, {
+  const { state, suggest, clear } = useSuggestions({
     document,
     steering,
     contextPath: contextPath || undefined,
@@ -47,8 +47,17 @@ export function App() {
     if (editor.current?.replace(target, alternative.text)) clear();
   };
 
+  const suggestForSelection = () => {
+    if (editor.current) suggest(editor.current.selection());
+  };
+
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
+      if (isSuggestShortcut(event)) {
+        event.preventDefault();
+        suggestForSelection();
+        return;
+      }
       if (event.altKey && state.status === "done") {
         const alternative = state.result.alternatives[Number(event.key) - 1];
         if (alternative) {
@@ -57,8 +66,8 @@ export function App() {
         }
       }
     };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener("keydown", onKey, { capture: true });
+    return () => window.removeEventListener("keydown", onKey, { capture: true });
   });
 
   const openFile = async (file: File | undefined) => {
@@ -90,26 +99,20 @@ export function App() {
 
       <main className="grid min-h-0 flex-1 grid-cols-[1fr_24rem]">
         <section className="min-h-0 overflow-hidden">
-          <Editor ref={editor} value={document} onChange={setDocument} onSelect={setSelection} />
+          <Editor ref={editor} value={document} onChange={setDocument} />
         </section>
         <aside className="min-h-0 border-l bg-muted/30" aria-label="Suggestions">
-          <SuggestionPanel state={state} onApply={apply} onRegenerate={regenerate} />
+          <SuggestionPanel state={state} onApply={apply} onSuggest={suggestForSelection} />
         </aside>
       </main>
 
       <footer className="border-t bg-background p-3">
         <Textarea
           className="max-h-40 min-h-12 resize-none"
-          placeholder="Steer the suggestions: audience, tone, goal, constraints… (Ctrl+Enter to regenerate)"
+          placeholder={`Steer the suggestions: audience, tone, goal, constraints… (${SUGGEST_SHORTCUT} to refresh)`}
           aria-label="Steering prompt"
           value={steering}
           onChange={(e) => setSteering(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
-              e.preventDefault();
-              regenerate();
-            }
-          }}
         />
       </footer>
     </div>

@@ -2,7 +2,7 @@ import { markdown } from "@codemirror/lang-markdown";
 import { StateEffect, StateField } from "@codemirror/state";
 import { Decoration, EditorView, type DecorationSet } from "@codemirror/view";
 import CodeMirror from "@uiw/react-codemirror";
-import { useEffect, useImperativeHandle, useMemo, useRef, type Ref } from "react";
+import { useImperativeHandle, useRef, type Ref } from "react";
 
 import type { Target } from "@/hooks/useSuggestions";
 
@@ -36,63 +36,23 @@ const theme = EditorView.theme({
   "&.cm-focused": { outline: "none" },
 });
 
-const baseExtensions = [markdown(), EditorView.lineWrapping, targetField, theme];
+const extensions = [markdown(), EditorView.lineWrapping, targetField, theme];
 
 export type EditorHandle = {
   /** Replaces the target if the document still holds its original text. */
   replace: (target: Target, text: string) => boolean;
   highlight: (range: { from: number; to: number } | null) => void;
+  selection: () => { from: number; to: number };
 };
 
 type Props = {
   value: string;
   onChange: (value: string) => void;
-  /** Fires when the user lets go of a selection: pointer or key release. */
-  onSelect: (range: { from: number; to: number }) => void;
   ref?: Ref<EditorHandle>;
 };
 
-export function Editor({ value, onChange, onSelect, ref }: Props) {
+export function Editor({ value, onChange, ref }: Props) {
   const view = useRef<EditorView | null>(null);
-  const onSelectRef = useRef(onSelect);
-  onSelectRef.current = onSelect;
-  const committed = useRef({ from: 0, to: 0 });
-  const pointerDown = useRef(false);
-
-  const commit = useRef(() => {
-    const current = view.current;
-    if (!current) return;
-    const { from, to } = current.state.selection.main;
-    if (from === committed.current.from && to === committed.current.to) return;
-    committed.current = { from, to };
-    onSelectRef.current({ from, to });
-  }).current;
-
-  const extensions = useMemo(
-    () => [
-      ...baseExtensions,
-      EditorView.domEventHandlers({
-        pointerdown: () => {
-          pointerDown.current = true;
-        },
-        keyup: () => {
-          if (!pointerDown.current) commit();
-        },
-      }),
-    ],
-    [commit],
-  );
-
-  useEffect(() => {
-    // NOTE: listen on window; a drag can end outside the editor.
-    const release = () => {
-      if (!pointerDown.current) return;
-      pointerDown.current = false;
-      commit();
-    };
-    window.addEventListener("pointerup", release);
-    return () => window.removeEventListener("pointerup", release);
-  }, [commit]);
 
   useImperativeHandle(ref, () => ({
     replace(target, text) {
@@ -110,6 +70,10 @@ export function Editor({ value, onChange, onSelect, ref }: Props) {
     highlight(range) {
       view.current?.dispatch({ effects: setTarget.of(range) });
     },
+    selection() {
+      const { from, to } = view.current?.state.selection.main ?? { from: 0, to: 0 };
+      return { from, to };
+    },
   }));
 
   return (
@@ -117,7 +81,13 @@ export function Editor({ value, onChange, onSelect, ref }: Props) {
       className="h-full"
       value={value}
       height="100%"
-      basicSetup={{ lineNumbers: false, foldGutter: false, highlightActiveLine: false }}
+      basicSetup={{
+        lineNumbers: false,
+        foldGutter: false,
+        highlightActiveLine: false,
+        // NOTE: autocompletion binds Ctrl+Space, the suggest shortcut.
+        autocompletion: false,
+      }}
       extensions={extensions}
       onChange={onChange}
       onCreateEditor={(created) => {

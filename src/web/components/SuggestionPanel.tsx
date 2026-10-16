@@ -1,40 +1,50 @@
-import { FileText, Loader2, RefreshCw, TextSelect } from "lucide-react";
+import { FileText, Loader2, RefreshCw, Sparkles, TextSelect } from "lucide-react";
 
 import type { Alternative } from "../../shared/api";
 import { Button } from "@/components/ui/button";
 import type { SuggestionState } from "@/hooks/useSuggestions";
+import { SUGGEST_SHORTCUT } from "@/lib/shortcuts";
 
 type Props = {
   state: SuggestionState;
   onApply: (alternative: Alternative) => void;
-  onRegenerate: () => void;
+  onSuggest: () => void;
 };
 
-export function SuggestionPanel({ state, onApply, onRegenerate }: Props) {
+const shortcutHint = (
+  <kbd className="rounded border px-1.5 font-mono text-xs text-muted-foreground">
+    {SUGGEST_SHORTCUT}
+  </kbd>
+);
+
+export function SuggestionPanel({ state, onApply, onSuggest }: Props) {
   if (state.status === "idle") {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-3 p-8 text-center text-sm text-muted-foreground">
         <TextSelect className="size-8 opacity-50" />
-        <p>Select text in the document to get three alternatives.</p>
+        <p>Select text in the document, then ask for three alternatives.</p>
+        <Button variant="outline" onClick={onSuggest}>
+          <Sparkles /> Suggest {shortcutHint}
+        </Button>
       </div>
     );
   }
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-start justify-between gap-2 border-b p-4">
+      <div className="flex flex-col gap-2 border-b p-4">
         <blockquote className="line-clamp-3 border-l-2 border-yellow-400 pl-3 text-sm text-muted-foreground italic">
           {state.target.text}
         </blockquote>
         <Button
-          size="icon"
+          size="sm"
           variant="ghost"
-          onClick={onRegenerate}
+          className="self-end"
+          onClick={onSuggest}
           disabled={state.status === "loading"}
-          title="Regenerate (Ctrl+Enter)"
-          aria-label="Regenerate"
+          title="Suggest for the selection, or refresh these"
         >
-          <RefreshCw />
+          <RefreshCw /> Refresh {shortcutHint}
         </Button>
       </div>
 

@@ -2,10 +2,7 @@ import { afterEach, describe, expect, mock, test } from "bun:test";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import { json, stubFetch } from "../test/fetch";
-import { EditorView } from "@codemirror/view";
-
 import { ContextPicker } from "./ContextPicker";
-import { Editor } from "./Editor";
 import { ModelPicker } from "./ModelPicker";
 import { SuggestionPanel } from "./SuggestionPanel";
 
@@ -24,7 +21,7 @@ describe("SuggestionPanel", () => {
       <SuggestionPanel
         state={{ status: "done", target, result: { alternatives, sources: ["notes/a.md"] } }}
         onApply={onApply}
-        onRegenerate={() => {}}
+        onSuggest={() => {}}
       />,
     );
     fireEvent.click(screen.getByText("Hey"));
@@ -37,10 +34,17 @@ describe("SuggestionPanel", () => {
       <SuggestionPanel
         state={{ status: "error", target, error: "boom" }}
         onApply={() => {}}
-        onRegenerate={() => {}}
+        onSuggest={() => {}}
       />,
     );
     expect(screen.getByRole("alert").textContent).toBe("boom");
+  });
+
+  test("offers the suggest action with its shortcut before anything is requested", () => {
+    const onSuggest = mock();
+    render(<SuggestionPanel state={{ status: "idle" }} onApply={() => {}} onSuggest={onSuggest} />);
+    fireEvent.click(screen.getByRole("button", { name: /Suggest\s*Ctrl\+Space/ }));
+    expect(onSuggest).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -90,47 +94,5 @@ describe("ModelPicker", () => {
     render(<ModelPicker apiKey="bad" value="" onChange={() => {}} />);
     await waitFor(() => expect(screen.getByText("Models unavailable")).toBeTruthy());
     expect(screen.getByTitle(/rejected the API key/)).toBeTruthy();
-  });
-});
-
-function renderEditor() {
-  const onSelect = mock();
-  const { container } = render(
-    <Editor value="alpha beta gamma" onChange={() => {}} onSelect={onSelect} />,
-  );
-  const content = container.querySelector<HTMLElement>(".cm-content")!;
-  const view = EditorView.findFromDOM(content)!;
-  const select = (anchor: number, head: number) => view.dispatch({ selection: { anchor, head } });
-  return { onSelect, content, select };
-}
-
-describe("Editor", () => {
-  test("reports a drag selection only once the pointer is released", () => {
-    const { onSelect, content, select } = renderEditor();
-    fireEvent.pointerDown(content);
-    select(6, 8);
-    select(6, 10);
-    expect(onSelect).not.toHaveBeenCalled();
-
-    fireEvent.pointerUp(window);
-    expect(onSelect.mock.calls).toEqual([[{ from: 6, to: 10 }]]);
-  });
-
-  test("reports a keyboard selection when the key is released", () => {
-    const { onSelect, content, select } = renderEditor();
-    select(0, 5);
-    expect(onSelect).not.toHaveBeenCalled();
-    fireEvent.keyUp(content, { key: "Shift" });
-    expect(onSelect.mock.calls).toEqual([[{ from: 0, to: 5 }]]);
-  });
-
-  test("ignores releases that leave the selection unchanged", () => {
-    const { onSelect, content, select } = renderEditor();
-    fireEvent.pointerDown(content);
-    select(0, 5);
-    fireEvent.pointerUp(window);
-    fireEvent.keyUp(content, { key: "Shift" });
-    fireEvent.pointerUp(window);
-    expect(onSelect).toHaveBeenCalledTimes(1);
   });
 });
