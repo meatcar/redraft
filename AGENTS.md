@@ -24,6 +24,9 @@ scripts/build-html.ts # single-file build (dist/redraft.html); attested by .gith
 - 12-factor server: config only from env (`src/server/config.ts`, documented in `.env.example`), JSON logs to stdout, stateless. User settings live in the browser (`localStorage`, prefix `redraft:`).
 - Test `src/core` directly with `MockLanguageModelV4` and in-memory `FileSource`s; test web code with Testing Library (happy-dom preloaded via `bunfig.toml`) and `src/web/test/fetch.ts` for the network boundary.
 - Copied third-party code: keep a `NOTE:` with copyright, license, what changed, and a `see` link; add it to `NOTICE`. Bundled dependency licenses are collected by `scripts/licenses.ts` at build time.
+- After a significant user-visible change (feature, workflow, provider, or positioning), rethink the README and the GitHub topics as a whole, not as an appended line:
+  - README: does the pitch, feature list, quick start, and `docs/screenshot.png` still describe the product a first-time visitor sees? Rewrite sections that drifted; retake the screenshot if the UI changed.
+  - Topics: check them with `gh repo view --json repositoryTopics`. Add topics for new capabilities, drop stale ones, max 20. Weigh reach against fit with `gh api "search/repositories?q=topic:<name>&per_page=1" --jq .total_count`. Apply with `gh repo edit --add-topic/--remove-topic`.
 
 ## Commands (repo root)
 
