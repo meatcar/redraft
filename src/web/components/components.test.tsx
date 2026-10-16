@@ -9,6 +9,7 @@ import { createLlm } from "@core/llm";
 import { json, stubFetch } from "../test/fetch";
 import { ContextPicker } from "./ContextPicker";
 import { ModelPicker } from "./ModelPicker";
+import { ModelSettings, useModelSettings } from "./ModelSettings";
 import { SuggestionPanel } from "./SuggestionPanel";
 
 afterEach(cleanup);
@@ -139,5 +140,35 @@ describe("ModelPicker", () => {
     render(<ModelPicker llm={llm("bad")} value="" onChange={() => {}} />);
     await waitFor(() => expect(screen.getByText("Models unavailable")).toBeTruthy());
     expect(screen.getByTitle(/rejected the API key/)).toBeTruthy();
+  });
+});
+
+function SettingsHarness() {
+  return <ModelSettings settings={useModelSettings()} />;
+}
+
+describe("ModelSettings", () => {
+  afterEach(() => localStorage.clear());
+
+  test("defaults to OpenRouter and sends only that endpoint's key", async () => {
+    localStorage.setItem("redraft:apiKey:https://api.openai.com/v1", "sk-openai");
+    localStorage.setItem("redraft:apiKey:https://openrouter.ai/api/v1", "sk-or");
+    const requests = stubFetch(() => json({ data: [{ id: "m" }] }));
+    render(<SettingsHarness />);
+    await waitFor(() => expect(requests).toHaveLength(1));
+    expect(screen.getByLabelText("Provider").textContent).toBe("OpenRouter");
+    expect(requests[0]?.url).toBe("https://openrouter.ai/api/v1/models");
+    expect(requests[0]?.headers.get("authorization")).toBe("Bearer sk-or");
+    expect(screen.queryByLabelText("Model endpoint")).toBeNull();
+  });
+
+  test("shows a stored non-preset endpoint as Custom with its URL", async () => {
+    localStorage.setItem("redraft:endpoint", "https://llm.test/v1");
+    stubFetch(() => json({ data: [] }));
+    render(<SettingsHarness />);
+    expect(screen.getByLabelText("Provider").textContent).toBe("Custom");
+    expect(screen.getByLabelText<HTMLInputElement>("Model endpoint").value).toBe(
+      "https://llm.test/v1",
+    );
   });
 });

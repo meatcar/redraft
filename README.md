@@ -15,9 +15,10 @@ bun install
 bun run dev          # http://localhost:3000
 ```
 
-In an orb, run `amp orb services ensure`. In the app, set the model endpoint (default
-`https://cpa.pvlv.ca/v1`), enter your API key, and pick a model. The endpoint must allow
-CORS from the app's origin.
+In an orb, run `amp orb services ensure`. In the app, pick a provider (OpenRouter by
+default, OpenAI, or a Custom OpenAI-compatible URL), enter its API key, and pick a model.
+Keys and model choices are stored per endpoint. A custom endpoint must allow CORS from the
+app's origin.
 
 Production: `bun run start` serves the same app with `NODE_ENV=production`. Server
 configuration is `PORT` only; see `.env.example`.

@@ -42,7 +42,7 @@ const userPrompt = async (request: Request) =>
 
 beforeEach(() => {
   localStorage.setItem("redraft:document", sample);
-  localStorage.setItem("redraft:model", "m");
+  localStorage.setItem("redraft:model:https://openrouter.ai/api/v1", "m");
 });
 afterEach(() => {
   cleanup();

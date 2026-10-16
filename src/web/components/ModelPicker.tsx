@@ -59,7 +59,7 @@ export function ModelPicker({ llm, value, onChange }: Props) {
       >
         <SelectTrigger
           size="sm"
-          className="w-64 font-mono text-xs"
+          className="w-56 font-mono text-xs"
           aria-label="Model"
           aria-invalid={listing.kind === "error"}
         >
