@@ -1,6 +1,7 @@
 import { Cpu, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import type { Llm } from "@core/llm";
 import {
   Select,
   SelectContent,
@@ -8,34 +9,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { api } from "@/lib/api";
 
 type Listing =
   | { kind: "loading" }
   | { kind: "ok"; models: string[] }
   | { kind: "error"; message: string };
 
-type Props = { apiKey: string; value: string; onChange: (value: string) => void };
+type Props = { llm: Llm; value: string; onChange: (value: string) => void };
 
-/** Lists the endpoint's models for the current key and keeps a valid choice selected. */
-export function ModelPicker({ apiKey, value, onChange }: Props) {
+/** Lists the endpoint's models for the current endpoint and key. */
+export function ModelPicker({ llm, value, onChange }: Props) {
   const [listing, setListing] = useState<Listing>({ kind: "loading" });
 
   useEffect(() => {
     const controller = new AbortController();
     setListing({ kind: "loading" });
-    api.models(apiKey, controller.signal).then(
-      ({ models, defaultModel }) => {
-        setListing({ kind: "ok", models });
-        if (!value && defaultModel && models.includes(defaultModel)) onChange(defaultModel);
-      },
+    llm.listModels(controller.signal).then(
+      (models) => setListing({ kind: "ok", models }),
       (error: Error) => {
         if (!controller.signal.aborted) setListing({ kind: "error", message: error.message });
       },
     );
     return () => controller.abort();
-    // NOTE: refetch only when the key changes, not on every selection.
-  }, [apiKey]);
+  }, [llm]);
 
   const models = listing.kind === "ok" ? listing.models : [];
   const placeholder = {

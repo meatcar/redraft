@@ -2,9 +2,7 @@ services:
   web:
     command: direnv exec . bun run dev
     health: /healthz
-    env:
-      LLM_BASE_URL: https://cpa.pvlv.ca/v1
     portal:
       url: /
       title: Redraft
-      description: Select text to get three rewrites. Enter your API key in the header, then pick a model.
+      description: Select text, press Ctrl+Space for three rewrites. Enter your API key in the header, then pick a model. Runs in the browser.

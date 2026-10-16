@@ -17,7 +17,7 @@ tasks:
 
   resume_auth:
     desc: Refresh the current session's credentials
-    # LLM_* secrets arrive as orb environment variables.
+    # No secrets: the API key is entered in the browser.
     cmds: []
 
   work:

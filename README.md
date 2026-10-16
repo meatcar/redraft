@@ -1,38 +1,44 @@
 # Redraft
 
-Paste text or open a markdown file, select a span, and get three AI rewrites. A steering
-prompt at the bottom shapes every suggestion. Point it at a folder of notes and the model
-searches them to match your facts and voice.
+Paste text or open a markdown file, select a span, press Ctrl+Space, and get three AI
+rewrites. A steering prompt at the bottom shapes every suggestion. Pick a folder of notes and
+the model can search them to match your facts and voice.
+
+Everything runs in the browser. Your document, notes, and API key go only to the model
+endpoint you set; the server only serves static files.
 
 ## Run
 
 ```sh
 nix develop          # or: direnv allow
 bun install
-cp .env.example .env # set LLM_BASE_URL, LLM_API_KEY, LLM_MODEL
 bun run dev          # http://localhost:3000
 ```
 
-In an orb, set the `LLM_*` variables as project secrets and run `amp orb services ensure`.
+In an orb, run `amp orb services ensure`. In the app, set the model endpoint (default
+`https://cpa.pvlv.ca/v1`), enter your API key, and pick a model. The endpoint must allow
+CORS from the app's origin.
 
-Production: `bun run start` serves the same app with `NODE_ENV=production`. All configuration
-comes from the environment; see `.env.example`.
+Production: `bun run start` serves the same app with `NODE_ENV=production`. Server
+configuration is `PORT` only; see `.env.example`.
 
 ## How suggestions work
 
 ```
-select text ─▶ POST /api/suggest ─▶ BM25 prefetch over context folder
-                                    ─▶ model loop (search_context / read_context_file tools)
-                                    ─▶ structured output: exactly 3 { text, rationale }
+Ctrl+Space ─▶ browser: sync context index ─▶ model loop with tools ─▶ exactly 3 { text, rationale }
+                                             │
+                                             ├─ read_around_selection, search_document
+                                             └─ search_context, read_context_file
 ```
 
-- Context folders are indexed in memory with MiniSearch (BM25 + fuzzy + prefix) over
-  heading-aware markdown chunks, and reindexed when any file changes. Paths must resolve
-  inside `CONTEXT_ROOT`.
-- The model gets the top hits up front, then can search again or read whole files before it
-  answers.
-- Any OpenAI-compatible endpoint works. Set `LLM_STRUCTURED_OUTPUTS=false` if it rejects
-  `response_format: json_schema`.
+- The first prompt holds only the selection and the steering text. The model calls tools
+  when it needs more.
+- The context folder is indexed in memory with SQLite FTS5 (`@sqlite.org/sqlite-wasm`), one
+  contentless index of heading-aware markdown chunks. Snippets are read from the files, so
+  nothing is copied. Each suggestion resyncs changed, added, and deleted files first.
+- Chromium uses the File System Access API (`showDirectoryPicker`), so later edits show up.
+  Other browsers upload the folder as a snapshot.
+- Any OpenAI-compatible endpoint that supports `response_format: json_schema` works.
 
 ## Check
 
@@ -41,3 +47,5 @@ bun test
 bun run check   # tsc, oxlint, fallow, treefmt
 nix flake check
 ```
+
+Licensed under the [Apache License 2.0](LICENSE); attributions in [NOTICE](NOTICE).

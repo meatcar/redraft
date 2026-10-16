@@ -4,9 +4,10 @@ import { z } from "zod";
 import {
   alternativesSchema,
   SUGGESTION_COUNT,
+  suggestRequestSchema,
+  type SuggestRequest,
   type SuggestResponse,
-  type suggestRequestSchema,
-} from "../shared/api";
+} from "./api";
 import type { ContextHit, ContextIndex } from "./context";
 
 const MAX_READ_CHARS = 8000;
@@ -29,12 +30,14 @@ Rules:
 - The steering instructions override your default taste.
 - Never invent facts the selection, document, or context does not support.`;
 
-type SuggestInput = z.output<typeof suggestRequestSchema>;
+const MAX_STEPS = 6;
+
+type ContextReader = Pick<ContextIndex, "search" | "read">;
 
 export type SuggestDeps = {
   model: LanguageModel;
-  context?: ContextIndex;
-  maxSteps: number;
+  context?: ContextReader;
+  maxSteps?: number;
   abortSignal?: AbortSignal;
 };
 
@@ -100,7 +103,7 @@ function preserveEdges(original: string, replacement: string): string {
   return `${lead}${replacement.trim()}${trail}`;
 }
 
-function contextTools(context: ContextIndex, consulted: Set<string>) {
+function contextTools(context: ContextReader, consulted: Set<string>) {
   return {
     search_context: tool({
       description:
@@ -126,8 +129,11 @@ function contextTools(context: ContextIndex, consulted: Set<string>) {
   };
 }
 
-export async function suggest(request: SuggestInput, deps: SuggestDeps): Promise<SuggestResponse> {
-  const { document, selection, steering } = request;
+export async function suggest(
+  request: SuggestRequest,
+  deps: SuggestDeps,
+): Promise<SuggestResponse> {
+  const { document, selection, steering } = suggestRequestSchema.parse(request);
   const selected = document.slice(selection.from, selection.to);
   const consulted = new Set<string>();
 
@@ -144,7 +150,7 @@ export async function suggest(request: SuggestInput, deps: SuggestDeps): Promise
       ...documentTools(document, selection.from, selection.to),
       ...(deps.context && contextTools(deps.context, consulted)),
     },
-    stopWhen: isStepCount(deps.maxSteps),
+    stopWhen: isStepCount(deps.maxSteps ?? MAX_STEPS),
     output: Output.object({ schema: alternativesSchema }),
     abortSignal: deps.abortSignal,
   });

@@ -1,5 +1,10 @@
 import { afterEach, describe, expect, mock, test } from "bun:test";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { useState } from "react";
+
+import type { ContextIndex } from "@core/context";
+import type { DirectoryEntry } from "@core/files";
+import { createLlm } from "@core/llm";
 
 import { json, stubFetch } from "../test/fetch";
 import { ContextPicker } from "./ContextPicker";
@@ -48,50 +53,90 @@ describe("SuggestionPanel", () => {
   });
 });
 
+const notesFile = (path: string, text: string) =>
+  Object.defineProperty(new File([text], path.split("/").at(-1)!), "webkitRelativePath", {
+    value: path,
+  });
+
+function ControlledContextPicker() {
+  const [value, setValue] = useState<ContextIndex | null>(null);
+  return <ContextPicker value={value} onChange={setValue} />;
+}
+
 describe("ContextPicker", () => {
-  test("reports the indexed folder size", async () => {
-    stubFetch(() => json({ root: "/n", files: 12, chunks: 40 }));
-    render(<ContextPicker value="notes" onChange={() => {}} />);
-    await waitFor(() => expect(screen.getByText("12 files · 40 sections")).toBeTruthy());
+  afterEach(() => {
+    delete window.showDirectoryPicker;
   });
 
-  test("reports why a folder was rejected", async () => {
-    stubFetch(() => json({ error: "/etc is outside the allowed context root" }, 400));
-    render(<ContextPicker value="/etc" onChange={() => {}} />);
-    await waitFor(() => expect(screen.getByText(/outside the allowed/)).toBeTruthy());
+  test("indexes the folder the browser picker returns", async () => {
+    const file = {
+      kind: "file" as const,
+      name: "a.md",
+      getFile: async () => new File(["# A\n\nalpha"], "a.md"),
+    };
+    const handle: DirectoryEntry = {
+      kind: "directory",
+      name: "notes",
+      values: async function* () {
+        yield file;
+      },
+    };
+    window.showDirectoryPicker = async () => handle;
+    render(<ControlledContextPicker />);
+    fireEvent.click(screen.getByRole("button", { name: "Context folder" }));
+    await waitFor(() => expect(screen.getByText("1 files · 1 sections")).toBeTruthy());
+    expect(screen.getByRole("button", { name: "notes" })).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: "Forget context folder" }));
+    expect(screen.getByRole("button", { name: "Context folder" })).toBeTruthy();
   });
 
-  test("commits the typed path on Enter", () => {
-    stubFetch(() => json({ root: "/n", files: 0, chunks: 0 }));
-    const onChange = mock();
-    render(<ContextPicker value="" onChange={onChange} />);
-    const input = screen.getByLabelText("Context folder");
-    fireEvent.change(input, { target: { value: "~/notes" } });
-    fireEvent.keyDown(input, { key: "Enter" });
-    expect(onChange).toHaveBeenCalledWith("~/notes");
+  test("stays quiet when the user cancels the picker", async () => {
+    window.showDirectoryPicker = async () => {
+      throw new DOMException("The user aborted a request.", "AbortError");
+    };
+    render(<ControlledContextPicker />);
+    fireEvent.click(screen.getByRole("button", { name: "Context folder" }));
+    await new Promise((r) => setTimeout(r, 20));
+    expect(screen.getByRole("button", { name: "Context folder" })).toBeTruthy();
+    expect(screen.queryByText(/files ·/)).toBeNull();
+  });
+
+  test("falls back to a folder upload where the picker is missing", async () => {
+    render(<ControlledContextPicker />);
+    const input = screen.getByLabelText<HTMLInputElement>("Context folder files");
+    expect(input.webkitdirectory).toBe(true);
+    Object.defineProperty(input, "files", {
+      value: [notesFile("vault/a.md", "# A\n\nalpha"), notesFile("vault/b.png", "x")],
+    });
+    fireEvent.change(input);
+    await waitFor(() => expect(screen.getByText("1 files · 1 sections")).toBeTruthy());
+    expect(screen.getByRole("button", { name: "vault" })).toBeTruthy();
   });
 });
 
+const llm = (apiKey: string) => createLlm({ baseURL: "https://llm.test/v1", apiKey });
+
 describe("ModelPicker", () => {
-  test("discovers models with the entered key and selects the default", async () => {
-    const requests = stubFetch(() => json({ defaultModel: "big", models: ["big", "small"] }));
-    const onChange = mock();
-    render(<ModelPicker apiKey="sk-1" value="" onChange={onChange} />);
-    await waitFor(() => expect(onChange).toHaveBeenCalledWith("big"));
+  test("lists the endpoint's models with the entered key", async () => {
+    const requests = stubFetch(() => json({ data: [{ id: "small" }, { id: "big" }] }));
+    render(<ModelPicker llm={llm("sk-1")} value="" onChange={() => {}} />);
+    await waitFor(() => expect(screen.getByText("Choose a model")).toBeTruthy());
+    expect(requests[0]?.url).toBe("https://llm.test/v1/models");
     expect(requests[0]?.headers.get("authorization")).toBe("Bearer sk-1");
   });
 
   test("keeps the user's choice when it is still offered", async () => {
-    stubFetch(() => json({ defaultModel: "big", models: ["big", "small"] }));
+    stubFetch(() => json({ data: [{ id: "big" }, { id: "small" }] }));
     const onChange = mock();
-    render(<ModelPicker apiKey="sk-1" value="small" onChange={onChange} />);
+    render(<ModelPicker llm={llm("sk-1")} value="small" onChange={onChange} />);
     await waitFor(() => expect(screen.getByLabelText("Model").textContent).toContain("small"));
     expect(onChange).not.toHaveBeenCalled();
   });
 
   test("explains a rejected key", async () => {
-    stubFetch(() => json({ error: "The model endpoint rejected the API key." }, 401));
-    render(<ModelPicker apiKey="bad" value="" onChange={() => {}} />);
+    stubFetch(() => json({ error: "nope" }, 401));
+    render(<ModelPicker llm={llm("bad")} value="" onChange={() => {}} />);
     await waitFor(() => expect(screen.getByText("Models unavailable")).toBeTruthy());
     expect(screen.getByTitle(/rejected the API key/)).toBeTruthy();
   });

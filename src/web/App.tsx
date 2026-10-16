@@ -1,43 +1,38 @@
 import { FileUp, Keyboard, Sparkles } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import type { Alternative } from "../shared/api";
-import { ApiKeyInput } from "@/components/ApiKeyInput";
+import type { Alternative } from "@core/api";
+import type { ContextIndex } from "@core/context";
 import { ContextPicker } from "@/components/ContextPicker";
 import { Editor, type EditorHandle } from "@/components/Editor";
-import { ModelPicker } from "@/components/ModelPicker";
+import { ModelSettings, useModelSettings } from "@/components/ModelSettings";
 import { SuggestionPanel } from "@/components/SuggestionPanel";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { usePersistentString } from "@/hooks/usePersistentString";
-import { useSuggestions } from "@/hooks/useSuggestions";
-import { SUGGEST_SHORTCUT, isSuggestShortcut } from "@/lib/shortcuts";
+import { useSuggester, useSuggestions } from "@/hooks/useSuggestions";
+import { useShortcuts } from "@/hooks/useShortcuts";
+import { SUGGEST_SHORTCUT } from "@/lib/shortcuts";
 
 const SAMPLE = `# Welcome to Redraft
 
 Paste or open a markdown document, select any sentence or paragraph, and press ${SUGGEST_SHORTCUT}. Three alternatives appear on the right; click one (or press Alt+1, Alt+2, Alt+3) to swap it in.
 
-Use the steering box at the bottom to tell the model what you are going for. Point the context folder at your notes so suggestions match your facts and voice.
+Use the steering box at the bottom to tell the model what you are going for. Pick a context folder of notes so suggestions match your facts and voice. Everything runs in your browser: text goes only to the model endpoint you set.
 `;
 
 export function App() {
   const [document, setDocument] = usePersistentString("document", SAMPLE);
   const [steering, setSteering] = usePersistentString("steering", "");
-  const [contextPath, setContextPath] = usePersistentString("contextPath", "");
-  const [model, setModel] = usePersistentString("model", "");
-  const [apiKey, setApiKey] = usePersistentString("apiKey", "");
+  const settings = useModelSettings();
+  const [context, setContext] = useState<ContextIndex | null>(null);
   const [vim, setVim] = usePersistentString("vim", "off");
   const vimMode = vim === "on";
   const editor = useRef<EditorHandle>(null);
   const fileInput = useRef<HTMLInputElement>(null);
 
-  const { state, suggest, clear } = useSuggestions({
-    document,
-    steering,
-    contextPath: contextPath || undefined,
-    model: model || undefined,
-    apiKey,
-  });
+  const suggester = useSuggester(settings.llm, settings.model, context);
+  const { state, suggest, clear } = useSuggestions({ document, steering, suggester });
 
   const target = state.status === "idle" ? null : state.target;
   useEffect(() => {
@@ -53,23 +48,10 @@ export function App() {
     if (editor.current) suggest(editor.current.selection());
   };
 
-  useEffect(() => {
-    const onKey = (event: KeyboardEvent) => {
-      if (isSuggestShortcut(event)) {
-        event.preventDefault();
-        suggestForSelection();
-        return;
-      }
-      if (event.altKey && state.status === "done") {
-        const alternative = state.result.alternatives[Number(event.key) - 1];
-        if (alternative) {
-          event.preventDefault();
-          apply(alternative);
-        }
-      }
-    };
-    window.addEventListener("keydown", onKey, { capture: true });
-    return () => window.removeEventListener("keydown", onKey, { capture: true });
+  useShortcuts({
+    onSuggest: suggestForSelection,
+    alternatives: state.status === "done" ? state.result.alternatives : null,
+    onApply: apply,
   });
 
   const openFile = async (file: File | undefined) => {
@@ -94,9 +76,8 @@ export function App() {
           className="hidden"
           onChange={(e) => void openFile(e.target.files?.[0])}
         />
-        <ContextPicker value={contextPath} onChange={setContextPath} />
-        <ApiKeyInput value={apiKey} onChange={setApiKey} />
-        <ModelPicker apiKey={apiKey} value={model} onChange={setModel} />
+        <ContextPicker value={context} onChange={setContext} />
+        <ModelSettings settings={settings} />
         <Button
           size="sm"
           variant={vimMode ? "secondary" : "ghost"}

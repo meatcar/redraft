@@ -1,6 +1,7 @@
 ## Codebase: Redraft (Direnv + Nix + Bun)
 
-Selection-based AI rewriting. Bun serves the React app and a Hono API from one process.
+Selection-based AI rewriting, client-side only. Bun serves the static React app; the browser
+calls the model endpoint and indexes the context folder itself.
 
 ```
 flake.nix            # inputs only
@@ -8,9 +9,9 @@ flake.nix            # inputs only
 nix/flake-modules/   # flake parts: devshell.nix, treefmt.nix
 .agents/             # orb lifecycle (vendored from meatcar/nix-templates#sandbox)
 .amp/services.yaml   # orb dev server + portal
-src/shared/api.ts    # zod contract shared by server and web; derive types from it
-src/server/          # main.ts (Bun.serve), app.ts (Hono routes), config.ts (env),
-                     # context.ts (folder index + search), suggest.ts (LLM loop), llm.ts
+src/core/            # browser domain, no React: api.ts (zod contract), suggest.ts (LLM loop),
+                     # llm.ts (endpoint), context.ts (SQLite-wasm FTS5 index), files.ts (folder sources)
+src/server/          # main.ts (Bun.serve static + /healthz), config.ts (env)
 src/web/             # React 19 + shadcn/ui + Tailwind 4 + CodeMirror 6
 ```
 
@@ -18,15 +19,17 @@ src/web/             # React 19 + shadcn/ui + Tailwind 4 + CodeMirror 6
 
 - Red/Green TDD. Conventional Commits: consistent scopes, short titles. Atomic, testable, logically distinct commits.
 - Ask before network or out-of-workspace actions.
-- 12-factor: config only from env (`src/server/config.ts`, documented in `.env.example`), JSON logs to stdout, stateless server.
-- Test the server through `createApp(...).request()` with `MockLanguageModelV4`; test web code with Testing Library (happy-dom preloaded via `bunfig.toml`) and `src/web/test/fetch.ts` for the network boundary.
+- Client-side only: document text, notes, and the API key never reach our server. Do not add server routes that handle them.
+- 12-factor server: config only from env (`src/server/config.ts`, documented in `.env.example`), JSON logs to stdout, stateless. User settings live in the browser (`localStorage`, prefix `redraft:`).
+- Test `src/core` directly with `MockLanguageModelV4` and in-memory `FileSource`s; test web code with Testing Library (happy-dom preloaded via `bunfig.toml`) and `src/web/test/fetch.ts` for the network boundary.
+- Copied third-party code: keep a `NOTE:` with copyright, license, what changed, and a `see` link; add it to `NOTICE`.
 
 ## Commands (repo root)
 
 - `direnv exec .`: run commands
 - `nix fmt`: format (run after every source edit)
 - `nix flake check`: validate flake outputs
-- `bun run dev`: dev server with HMR on `$PORT` (default 3000)
+- `bun run dev`: dev server with HMR on `$PORT` (default 3000). If HMR keeps a stale failed import, run `amp orb service restart web`.
 
 ## Nix
 

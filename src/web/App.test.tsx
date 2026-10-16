@@ -7,26 +7,43 @@ import { z } from "zod";
 import { App } from "./App";
 import { json, stubFetch } from "./test/fetch";
 
-const bodySchema = z.object({ selection: z.unknown() });
+const chatSchema = z.object({ messages: z.array(z.object({ content: z.unknown() })) });
 
 const sample = "Alpha beta gamma.";
 
-function setup() {
+const completion = (content: string) =>
+  json({
+    id: "1",
+    created: 0,
+    model: "m",
+    choices: [{ index: 0, finish_reason: "stop", message: { role: "assistant", content } }],
+  });
+
+/** Stands in for the OpenAI-compatible endpoint the browser calls directly. */
+async function setup() {
   const requests = stubFetch((request) =>
-    new URL(request.url).pathname === "/api/suggest"
-      ? json({
-          alternatives: [1, 2, 3].map((n) => ({ text: `Option text ${n}`, rationale: "" })),
-          sources: [],
-        })
-      : json({ defaultModel: null, models: [] }),
+    new URL(request.url).pathname.endsWith("/chat/completions")
+      ? completion(
+          JSON.stringify({
+            alternatives: [1, 2, 3].map((n) => ({ text: `Option text ${n}`, rationale: "" })),
+          }),
+        )
+      : json({ data: [{ id: "m" }] }),
   );
   const { container } = render(<App />);
   const view = EditorView.findFromDOM(container.querySelector<HTMLElement>(".cm-content")!)!;
-  const suggestions = () => requests.filter((r) => r.url.endsWith("/api/suggest"));
+  const suggestions = () => requests.filter((r) => r.url.endsWith("/chat/completions"));
+  await waitFor(() => expect(screen.getByLabelText("Model").textContent).toBe("m"));
   return { view, suggestions };
 }
 
-beforeEach(() => localStorage.setItem("redraft:document", sample));
+const userPrompt = async (request: Request) =>
+  JSON.stringify(chatSchema.parse(await request.json()).messages.at(-1)?.content);
+
+beforeEach(() => {
+  localStorage.setItem("redraft:document", sample);
+  localStorage.setItem("redraft:model", "m");
+});
 afterEach(() => {
   cleanup();
   localStorage.clear();
@@ -34,7 +51,7 @@ afterEach(() => {
 
 describe("App", () => {
   test("selecting text alone requests nothing; Ctrl+Space does", async () => {
-    const { view, suggestions } = setup();
+    const { view, suggestions } = await setup();
     view.dispatch({ selection: { anchor: 6, head: 10 } });
     await new Promise((r) => setTimeout(r, 30));
     expect(suggestions()).toHaveLength(0);
@@ -45,7 +62,7 @@ describe("App", () => {
   });
 
   test("Ctrl+Space refreshes the last suggestions after the selection is gone", async () => {
-    const { view, suggestions } = setup();
+    const { view, suggestions } = await setup();
     view.dispatch({ selection: { anchor: 0, head: 5 } });
     fireEvent.keyDown(window, { code: "Space", key: " ", metaKey: true });
     await new Promise((r) => setTimeout(r, 30));
@@ -57,14 +74,11 @@ describe("App", () => {
     view.dispatch({ selection: { anchor: 12 } });
     fireEvent.keyDown(window, { code: "Space", key: " ", ctrlKey: true });
     await waitFor(() => expect(suggestions()).toHaveLength(2));
-    expect(bodySchema.parse(await suggestions()[1]!.json()).selection).toEqual({
-      from: 0,
-      to: 5,
-    });
+    expect(await userPrompt(suggestions()[1]!)).toContain("<selection>\\nAlpha\\n</selection>");
   });
 
   test("the Vim toggle switches the editor to vim keys and remembers it", async () => {
-    const { view } = setup();
+    const { view } = await setup();
     const pressX = () => fireEvent.keyDown(view.contentDOM, { key: "x", code: "KeyX" });
     view.dispatch({ selection: { anchor: 0 } });
     pressX();

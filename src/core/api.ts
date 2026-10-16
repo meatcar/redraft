@@ -10,8 +10,6 @@ export const suggestRequestSchema = z
       to: z.number().int().nonnegative(),
     }),
     steering: z.string().max(4000).default(""),
-    contextPath: z.string().optional(),
-    model: z.string().optional(),
   })
   .refine(
     ({ document, selection }) => selection.from < selection.to && selection.to <= document.length,
@@ -29,24 +27,4 @@ export const alternativesSchema = z.object({
   alternatives: z.array(alternativeSchema).length(SUGGESTION_COUNT),
 });
 
-export const suggestResponseSchema = z.object({
-  alternatives: z.array(alternativeSchema),
-  sources: z.array(z.string()),
-});
-export type SuggestResponse = z.infer<typeof suggestResponseSchema>;
-
-export const contextStatusSchema = z.object({
-  root: z.string(),
-  files: z.number(),
-  chunks: z.number(),
-});
-export type ContextStatus = z.infer<typeof contextStatusSchema>;
-
-export const modelsResponseSchema = z.object({
-  defaultModel: z.string().nullable(),
-  models: z.array(z.string()),
-});
-export type ModelsResponse = z.infer<typeof modelsResponseSchema>;
-
-export const apiErrorSchema = z.object({ error: z.string() });
-export type ApiError = z.infer<typeof apiErrorSchema>;
+export type SuggestResponse = { alternatives: Alternative[]; sources: string[] };

@@ -1,6 +1,6 @@
 import { FileText, Loader2, RefreshCw, Sparkles, TextSelect } from "lucide-react";
 
-import type { Alternative } from "../../shared/api";
+import type { Alternative } from "@core/api";
 import { Button } from "@/components/ui/button";
 import type { SuggestionState } from "@/hooks/useSuggestions";
 import { SUGGEST_SHORTCUT } from "@/lib/shortcuts";

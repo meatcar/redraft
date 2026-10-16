@@ -1,2 +1,6 @@
 Redraft
 Copyright 2026 Denys Pavlov
+
+This product includes software from browser-fs-access
+(https://github.com/GoogleChromeLabs/browser-fs-access),
+Copyright 2020 Google LLC, licensed under the Apache License, Version 2.0.

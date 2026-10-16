@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import type { SuggestRequest, SuggestResponse } from "../../shared/api";
-import { api } from "@/lib/api";
+import type { SuggestRequest, SuggestResponse } from "@core/api";
+import type { ContextIndex } from "@core/context";
+import { describeLlmError, type Llm } from "@core/llm";
+import { suggest as runSuggestLoop } from "@core/suggest";
 
 const MIN_SELECTION_CHARS = 2;
 
@@ -13,7 +15,9 @@ export type SuggestionState =
   | { status: "done"; target: Target; result: SuggestResponse }
   | { status: "error"; target: Target; error: string };
 
-type Inputs = Omit<SuggestRequest, "selection"> & { apiKey: string };
+export type Suggester = (request: SuggestRequest, signal: AbortSignal) => Promise<SuggestResponse>;
+
+type Inputs = { document: string; steering: string; suggester: Suggester };
 
 type Range = { from: number; to: number };
 
@@ -33,10 +37,11 @@ export function useSuggestions(inputs: Inputs) {
     const controller = new AbortController();
     inflight.current = controller;
     setState({ status: "loading", target });
-    const { apiKey, ...request } = inputsRef.current;
-    api
-      .suggest({ ...request, selection: range }, apiKey, controller.signal)
-      .then((result) => setState({ status: "done", target, result }))
+    const { suggester, steering } = inputsRef.current;
+    suggester({ document, steering, selection: range }, controller.signal)
+      .then((result) => {
+        if (!controller.signal.aborted) setState({ status: "done", target, result });
+      })
       .catch((error: Error) => {
         if (!controller.signal.aborted) setState({ status: "error", target, error: error.message });
       });
@@ -59,4 +64,24 @@ export function useSuggestions(inputs: Inputs) {
   }, []);
 
   return { state, suggest, clear };
+}
+
+/** Runs the suggest loop in the browser against the chosen model and context folder. */
+export function useSuggester(llm: Llm, model: string, context: ContextIndex | null): Suggester {
+  return useCallback<Suggester>(
+    async (request, abortSignal) => {
+      if (!model) throw new Error("Choose a model first.");
+      try {
+        await context?.sync();
+        return await runSuggestLoop(request, {
+          model: llm.model(model),
+          context: context ?? undefined,
+          abortSignal,
+        });
+      } catch (error) {
+        throw new Error(describeLlmError(error), { cause: error });
+      }
+    },
+    [llm, model, context],
+  );
 }

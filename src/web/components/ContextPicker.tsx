@@ -1,59 +1,91 @@
-import { FolderSearch } from "lucide-react";
-import { useEffect, useState } from "react";
+import { FolderSearch, Loader2, X } from "lucide-react";
+import { useRef, useState } from "react";
 
-import type { ContextStatus } from "../../shared/api";
-import { Input } from "@/components/ui/input";
-import { api } from "@/lib/api";
+import { ContextIndex } from "@core/context";
+import { directorySource, snapshotSource, type FileSource } from "@core/files";
+import { Button } from "@/components/ui/button";
 
-type Status =
-  | { kind: "none" }
-  | { kind: "loading" }
-  | { kind: "ok"; value: ContextStatus }
-  | { kind: "error"; message: string };
+type Props = { value: ContextIndex | null; onChange: (value: ContextIndex | null) => void };
 
-type Props = { value: string; onChange: (value: string) => void };
+type Status = { kind: "idle" } | { kind: "indexing" } | { kind: "error"; message: string };
 
+const isAbort = (error: unknown) => error instanceof DOMException && error.name === "AbortError";
+
+/** Picks a folder in the browser and indexes it in memory; nothing is uploaded. */
 export function ContextPicker({ value, onChange }: Props) {
-  const [draft, setDraft] = useState(value);
-  const [status, setStatus] = useState<Status>({ kind: "none" });
+  const [status, setStatus] = useState<Status>({ kind: "idle" });
+  const fallbackInput = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    let live = true;
-    if (value.trim()) {
-      setStatus({ kind: "loading" });
-      api
-        .context(value)
-        .then((result) => live && setStatus({ kind: "ok", value: result }))
-        .catch((error: Error) => live && setStatus({ kind: "error", message: error.message }));
-    } else {
-      setStatus({ kind: "none" });
+  const open = async (source: FileSource) => {
+    setStatus({ kind: "indexing" });
+    try {
+      onChange(await ContextIndex.open(source));
+      setStatus({ kind: "idle" });
+    } catch (error) {
+      setStatus({ kind: "error", message: error instanceof Error ? error.message : String(error) });
     }
-    return () => {
-      live = false;
-    };
-  }, [value]);
+  };
+
+  const pick = async () => {
+    if (!window.showDirectoryPicker) {
+      fallbackInput.current?.click();
+      return;
+    }
+    try {
+      await open(directorySource(await window.showDirectoryPicker({ id: "redraft-context" })));
+    } catch (error) {
+      if (!isAbort(error)) throw error;
+    }
+  };
+
+  const summary = value?.status;
 
   return (
-    <div className="flex min-w-fit flex-1 items-center gap-2">
-      <FolderSearch className="size-4 shrink-0 text-muted-foreground" />
-      <Input
-        className="h-8 max-w-sm min-w-24 font-mono text-xs"
-        placeholder="Context folder, e.g. ~/notes"
-        aria-label="Context folder"
-        value={draft}
-        onChange={(e) => setDraft(e.target.value)}
-        onBlur={() => onChange(draft)}
-        onKeyDown={(e) => e.key === "Enter" && onChange(draft)}
-        aria-invalid={status.kind === "error"}
+    <div className="flex min-w-fit items-center gap-2">
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() => void pick()}
+        disabled={status.kind === "indexing"}
+        title="Notes the model can search. Files stay in your browser."
+      >
+        {status.kind === "indexing" ? <Loader2 className="animate-spin" /> : <FolderSearch />}
+        {summary ? summary.name : "Context folder"}
+      </Button>
+      <input
+        ref={(input) => {
+          if (input) input.webkitdirectory = true;
+          fallbackInput.current = input;
+        }}
+        type="file"
+        multiple
+        hidden
+        aria-label="Context folder files"
+        onChange={(e) => {
+          const files = [...(e.target.files ?? [])];
+          e.target.value = "";
+          if (files.length > 0) void open(snapshotSource(files));
+        }}
       />
       <span
         className={`text-xs ${status.kind === "error" ? "truncate text-destructive" : "shrink-0 whitespace-nowrap text-muted-foreground"}`}
         title={status.kind === "error" ? status.message : undefined}
       >
-        {status.kind === "loading" && "Indexing…"}
-        {status.kind === "ok" && `${status.value.files} files · ${status.value.chunks} sections`}
+        {status.kind === "indexing" && "Indexing…"}
+        {status.kind === "idle" && summary && `${summary.files} files · ${summary.chunks} sections`}
         {status.kind === "error" && status.message}
       </span>
+      {summary && (
+        <Button
+          size="icon"
+          variant="ghost"
+          className="size-7"
+          aria-label="Forget context folder"
+          onClick={() => onChange(null)}
+        >
+          <X />
+        </Button>
+      )}
     </div>
   );
 }
