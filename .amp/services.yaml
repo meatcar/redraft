@@ -2,7 +2,9 @@ services:
   web:
     command: direnv exec . bun run dev
     health: /healthz
+    env:
+      LLM_BASE_URL: https://cpa.pvlv.ca/v1
     portal:
       url: /
       title: Redraft
-      description: Select text to get three rewrites. Needs LLM_BASE_URL, LLM_API_KEY, and LLM_MODEL set as project secrets.
+      description: Select text to get three rewrites. Enter your API key in the header, then pick a model.

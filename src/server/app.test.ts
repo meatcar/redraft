@@ -4,10 +4,11 @@ import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { suggestResponseSchema, type SuggestRequest } from "../shared/api";
+import { modelsResponseSchema, suggestResponseSchema, type SuggestRequest } from "../shared/api";
 import { createApp } from "./app";
 import { ContextLibrary } from "./context";
-import type { Llm } from "./llm";
+import { loadConfig } from "./config";
+import { createLlm, type Llm } from "./llm";
 
 type Content = Awaited<ReturnType<MockLanguageModelV4["doGenerate"]>>["content"];
 
@@ -56,10 +57,14 @@ afterAll(async () => {
 const document = "Hello there. We love our mascot. Goodbye.";
 const selection = { from: 13, to: 33 };
 
-async function post(app: ReturnType<typeof createApp>, body: unknown) {
+async function post(
+  app: ReturnType<typeof createApp>,
+  body: unknown,
+  headers: Record<string, string> = {},
+) {
   return app.request("/api/suggest", {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: { "content-type": "application/json", ...headers },
     body: JSON.stringify(body),
   });
 }
@@ -132,5 +137,59 @@ describe("POST /api/suggest", () => {
     const app = createApp({ llm, library: new ContextLibrary(root), maxSteps: 2 });
     const response = await post(app, { document, selection });
     expect(response.status).toBe(502);
+  });
+});
+
+const auth = (key: string) => ({ authorization: `Bearer ${key}` });
+
+describe("API key from the browser", () => {
+  const GOOD = "good-key";
+  let upstream: ReturnType<typeof Bun.serve>;
+  let app: ReturnType<typeof createApp>;
+
+  beforeAll(() => {
+    upstream = Bun.serve({
+      port: 0,
+      fetch(request) {
+        if (request.headers.get("authorization") !== `Bearer ${GOOD}`) {
+          return Response.json({ error: "Invalid API key" }, { status: 401 });
+        }
+        if (new URL(request.url).pathname === "/v1/models") {
+          return Response.json({ data: [{ id: "zeta" }, { id: "alpha" }] });
+        }
+        const content = JSON.stringify({
+          alternatives: ["a", "b", "c"].map((text) => ({ text, rationale: "" })),
+        });
+        return Response.json({
+          id: "1",
+          created: 0,
+          model: "alpha",
+          choices: [{ index: 0, finish_reason: "stop", message: { role: "assistant", content } }],
+        });
+      },
+    });
+    const config = loadConfig({ LLM_BASE_URL: `${upstream.url.href}v1`, LLM_API_KEY: "" });
+    app = createApp({ llm: createLlm(config), library: new ContextLibrary(root), maxSteps: 2 });
+  });
+
+  afterAll(() => upstream.stop(true));
+
+  test("lists the endpoint's models with the caller's key", async () => {
+    const response = await app.request("/api/models", { headers: auth(GOOD) });
+    expect(response.status).toBe(200);
+    expect(modelsResponseSchema.parse(await response.json()).models).toEqual(["alpha", "zeta"]);
+  });
+
+  test("reports a rejected key as 401", async () => {
+    const response = await app.request("/api/models", { headers: auth("bad") });
+    expect(response.status).toBe(401);
+    expect(await response.json()).toEqual({ error: expect.stringContaining("API key") });
+  });
+
+  test("suggests with the caller's key", async () => {
+    const ok = await post(app, { document, selection, model: "alpha" }, auth(GOOD));
+    expect(ok.status).toBe(200);
+    const rejected = await post(app, { document, selection, model: "alpha" }, auth("bad"));
+    expect(rejected.status).toBe(401);
   });
 });

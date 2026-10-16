@@ -1,4 +1,5 @@
-import { Hono } from "hono";
+import { APICallError, RetryError } from "ai";
+import { Hono, type Context } from "hono";
 import { z } from "zod";
 
 import {
@@ -9,7 +10,7 @@ import {
   type SuggestResponse,
 } from "../shared/api";
 import type { ContextIndex, ContextLibrary } from "./context";
-import type { Llm } from "./llm";
+import { UpstreamError, type Llm } from "./llm";
 import { log } from "./log";
 import { suggest } from "./suggest";
 
@@ -22,11 +23,26 @@ export type AppDeps = {
 
 class HttpError extends Error {
   constructor(
-    readonly status: 400 | 502 | 503,
+    readonly status: 400 | 401 | 502 | 503,
     message: string,
   ) {
     super(message);
   }
+}
+
+const apiKeyOf = (c: Context) =>
+  c.req.header("authorization")?.replace(/^Bearer\s+/i, "") || undefined;
+
+/** Maps upstream auth failures to 401 so the UI can ask for a key; everything else is a 502. */
+function upstreamStatus(error: unknown): 401 | 502 {
+  const cause = RetryError.isInstance(error) ? error.lastError : error;
+  const status =
+    cause instanceof UpstreamError
+      ? cause.status
+      : APICallError.isInstance(cause)
+        ? cause.statusCode
+        : undefined;
+  return status === 401 || status === 403 ? 401 : 502;
 }
 
 export function createApp(deps: AppDeps) {
@@ -49,16 +65,18 @@ export function createApp(deps: AppDeps) {
     .onError((error, c) => {
       if (error instanceof HttpError)
         return c.json<ApiError>({ error: error.message }, error.status);
-      log.error("request failed", { path: c.req.path, error: error.message });
-      return c.json<ApiError>({ error: error.message }, 502);
+      const status = upstreamStatus(error);
+      log.error("request failed", { path: c.req.path, status, error: error.message });
+      const message =
+        status === 401
+          ? `The model endpoint rejected the API key. ${error.message}`
+          : error.message;
+      return c.json<ApiError>({ error: message }, status);
     })
     .get("/healthz", (c) => c.text("ok"))
     .get("/api/models", async (c) => {
       const llm = requireLlm();
-      const models = await llm.listModels().catch((error: Error) => {
-        log.warn("model listing failed", { error: error.message });
-        return [];
-      });
+      const models = await llm.listModels(apiKeyOf(c));
       return c.json<ModelsResponse>({ defaultModel: llm.defaultModel, models });
     })
     .get("/api/context", async (c) => {
@@ -76,7 +94,7 @@ export function createApp(deps: AppDeps) {
 
       const started = performance.now();
       const result = await suggest(parsed.data, {
-        model: llm.model(modelId),
+        model: llm.model(modelId, apiKeyOf(c)),
         context,
         maxSteps: deps.maxSteps,
         abortSignal: c.req.raw.signal,

@@ -66,16 +66,26 @@ describe("ContextPicker", () => {
 });
 
 describe("ModelPicker", () => {
-  test("offers the endpoint's models and its default", async () => {
-    stubFetch(() => json({ defaultModel: "big", models: ["big", "small"] }));
-    const { container } = render(<ModelPicker value="" onChange={() => {}} />);
-    await waitFor(() => expect(container.querySelectorAll("datalist option")).toHaveLength(2));
-    expect(screen.getByPlaceholderText("big")).toBeTruthy();
+  test("discovers models with the entered key and selects the default", async () => {
+    const requests = stubFetch(() => json({ defaultModel: "big", models: ["big", "small"] }));
+    const onChange = mock();
+    render(<ModelPicker apiKey="sk-1" value="" onChange={onChange} />);
+    await waitFor(() => expect(onChange).toHaveBeenCalledWith("big"));
+    expect(requests[0]?.headers.get("authorization")).toBe("Bearer sk-1");
   });
 
-  test("flags a missing endpoint", async () => {
-    stubFetch(() => json({ error: "No model endpoint configured." }, 503));
-    render(<ModelPicker value="" onChange={() => {}} />);
-    await waitFor(() => expect(screen.getByPlaceholderText("No model endpoint")).toBeTruthy());
+  test("keeps the user's choice when it is still offered", async () => {
+    stubFetch(() => json({ defaultModel: "big", models: ["big", "small"] }));
+    const onChange = mock();
+    render(<ModelPicker apiKey="sk-1" value="small" onChange={onChange} />);
+    await waitFor(() => expect(screen.getByLabelText("Model").textContent).toContain("small"));
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  test("explains a rejected key", async () => {
+    stubFetch(() => json({ error: "The model endpoint rejected the API key." }, 401));
+    render(<ModelPicker apiKey="bad" value="" onChange={() => {}} />);
+    await waitFor(() => expect(screen.getByText("Models unavailable")).toBeTruthy());
+    expect(screen.getByTitle(/rejected the API key/)).toBeTruthy();
   });
 });

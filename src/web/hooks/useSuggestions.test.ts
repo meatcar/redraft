@@ -6,7 +6,7 @@ import { deferred, json, stubFetch } from "../test/fetch";
 import { useSuggestions } from "./useSuggestions";
 
 const document = "alpha beta gamma delta";
-const inputs = { document, steering: "" };
+const inputs = { document, steering: "", apiKey: "k" };
 const options = { debounceMs: 10 };
 
 const reply = (label: string) =>
@@ -29,6 +29,7 @@ describe("useSuggestions", () => {
     await waitFor(() => expect(result.current.state.status).toBe("done"));
     expect(requests).toHaveLength(1);
     expect(await selectionOf(requests[0]!.json())).toBe(6);
+    expect(requests[0]!.headers.get("authorization")).toBe("Bearer k");
     if (result.current.state.status === "done")
       expect(result.current.state.target.text).toBe("beta");
   });

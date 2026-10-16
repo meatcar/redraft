@@ -1,37 +1,82 @@
-import { Cpu } from "lucide-react";
+import { Cpu, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import type { ModelsResponse } from "../../shared/api";
-import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { api } from "@/lib/api";
 
-type Props = { value: string; onChange: (value: string) => void };
+type Listing =
+  | { kind: "loading" }
+  | { kind: "ok"; models: string[] }
+  | { kind: "error"; message: string };
 
-export function ModelPicker({ value, onChange }: Props) {
-  const [models, setModels] = useState<ModelsResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
+type Props = { apiKey: string; value: string; onChange: (value: string) => void };
+
+/** Lists the endpoint's models for the current key and keeps a valid choice selected. */
+export function ModelPicker({ apiKey, value, onChange }: Props) {
+  const [listing, setListing] = useState<Listing>({ kind: "loading" });
 
   useEffect(() => {
-    api.models().then(setModels, (e: Error) => setError(e.message));
-  }, []);
+    const controller = new AbortController();
+    setListing({ kind: "loading" });
+    api.models(apiKey, controller.signal).then(
+      ({ models, defaultModel }) => {
+        setListing({ kind: "ok", models });
+        if (!value && defaultModel && models.includes(defaultModel)) onChange(defaultModel);
+      },
+      (error: Error) => {
+        if (!controller.signal.aborted) setListing({ kind: "error", message: error.message });
+      },
+    );
+    return () => controller.abort();
+    // NOTE: refetch only when the key changes, not on every selection.
+  }, [apiKey]);
+
+  const models = listing.kind === "ok" ? listing.models : [];
+  const placeholder = {
+    loading: "Loading models…",
+    ok: models.length ? "Choose a model" : "No models available",
+    error: "Models unavailable",
+  }[listing.kind];
 
   return (
-    <div className="flex items-center gap-2" title={error ?? undefined}>
-      <Cpu className={`size-4 shrink-0 ${error ? "text-destructive" : "text-muted-foreground"}`} />
-      <Input
-        className="h-8 w-56 font-mono text-xs"
-        list="redraft-models"
-        aria-label="Model"
-        aria-invalid={Boolean(error)}
-        placeholder={error ? "No model endpoint" : (models?.defaultModel ?? "Model id")}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-      />
-      <datalist id="redraft-models">
-        {models?.models.map((id) => (
-          <option key={id} value={id} />
-        ))}
-      </datalist>
+    <div
+      className="flex items-center gap-2"
+      title={listing.kind === "error" ? listing.message : undefined}
+    >
+      {listing.kind === "loading" ? (
+        <Loader2 className="size-4 shrink-0 animate-spin text-muted-foreground" />
+      ) : (
+        <Cpu
+          className={`size-4 shrink-0 ${listing.kind === "error" ? "text-destructive" : "text-muted-foreground"}`}
+        />
+      )}
+      <Select
+        value={models.includes(value) ? value : ""}
+        onValueChange={onChange}
+        disabled={models.length === 0}
+      >
+        <SelectTrigger
+          size="sm"
+          className="w-64 font-mono text-xs"
+          aria-label="Model"
+          aria-invalid={listing.kind === "error"}
+        >
+          <SelectValue placeholder={placeholder} />
+        </SelectTrigger>
+        <SelectContent className="max-h-80">
+          {models.map((id) => (
+            <SelectItem key={id} value={id} className="font-mono text-xs">
+              {id}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 }

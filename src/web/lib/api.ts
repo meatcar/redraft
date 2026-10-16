@@ -18,14 +18,18 @@ async function call<T>(schema: z.ZodType<T>, path: string, init?: RequestInit): 
   return schema.parse(body);
 }
 
+const authHeader = (apiKey: string): Record<string, string> =>
+  apiKey ? { authorization: `Bearer ${apiKey}` } : {};
+
 export const api = {
-  models: () => call(modelsResponseSchema, "/api/models"),
+  models: (apiKey: string, signal?: AbortSignal) =>
+    call(modelsResponseSchema, "/api/models", { headers: authHeader(apiKey), signal }),
   context: (path: string) =>
     call(contextStatusSchema, `/api/context?path=${encodeURIComponent(path)}`),
-  suggest: (request: SuggestRequest, signal?: AbortSignal) =>
+  suggest: (request: SuggestRequest, apiKey: string, signal?: AbortSignal) =>
     call(suggestResponseSchema, "/api/suggest", {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: { "content-type": "application/json", ...authHeader(apiKey) },
       body: JSON.stringify(request),
       signal,
     }),

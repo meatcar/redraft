@@ -2,6 +2,7 @@ import { FileUp, Sparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import type { Alternative } from "../shared/api";
+import { ApiKeyInput } from "@/components/ApiKeyInput";
 import { ContextPicker } from "@/components/ContextPicker";
 import { Editor, type EditorHandle } from "@/components/Editor";
 import { ModelPicker } from "@/components/ModelPicker";
@@ -23,6 +24,7 @@ export function App() {
   const [steering, setSteering] = usePersistentString("steering", "");
   const [contextPath, setContextPath] = usePersistentString("contextPath", "");
   const [model, setModel] = usePersistentString("model", "");
+  const [apiKey, setApiKey] = usePersistentString("apiKey", "");
   const [selection, setSelection] = useState({ from: 0, to: 0 });
   const editor = useRef<EditorHandle>(null);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -32,6 +34,7 @@ export function App() {
     steering,
     contextPath: contextPath || undefined,
     model: model || undefined,
+    apiKey,
   });
 
   const target = state.status === "idle" ? null : state.target;
@@ -81,7 +84,8 @@ export function App() {
           onChange={(e) => void openFile(e.target.files?.[0])}
         />
         <ContextPicker value={contextPath} onChange={setContextPath} />
-        <ModelPicker value={model} onChange={setModel} />
+        <ApiKeyInput value={apiKey} onChange={setApiKey} />
+        <ModelPicker apiKey={apiKey} value={model} onChange={setModel} />
       </header>
 
       <main className="grid min-h-0 flex-1 grid-cols-[1fr_24rem]">

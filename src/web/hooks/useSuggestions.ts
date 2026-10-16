@@ -14,7 +14,7 @@ export type SuggestionState =
   | { status: "done"; target: Target; result: SuggestResponse }
   | { status: "error"; target: Target; error: string };
 
-type Inputs = Omit<SuggestRequest, "selection">;
+type Inputs = Omit<SuggestRequest, "selection"> & { apiKey: string };
 
 /** Fetches alternatives for the current selection after it settles; newer selections cancel older requests. */
 export function useSuggestions(
@@ -36,8 +36,9 @@ export function useSuggestions(
     const controller = new AbortController();
     inflight.current = controller;
     setState({ status: "loading", target });
+    const { apiKey, ...request } = inputsRef.current;
     api
-      .suggest({ ...inputsRef.current, selection: range }, controller.signal)
+      .suggest({ ...request, selection: range }, apiKey, controller.signal)
       .then((result) => setState({ status: "done", target, result }))
       .catch((error: Error) => {
         if (!controller.signal.aborted) setState({ status: "error", target, error: error.message });
