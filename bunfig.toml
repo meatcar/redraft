@@ -1,0 +1,10 @@
+[serve.static]
+plugins = ["bun-plugin-tailwind"]
+env = "BUN_PUBLIC_*"
+
+[test]
+preload = ["./src/web/test/dom.ts"]
+
+[install]
+# NOTE: bun comes from nixpkgs; do not install the npm bun peer of bun-plugin-tailwind.
+peer = false

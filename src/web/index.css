@@ -1,0 +1,13 @@
+@import "./globals.css";
+
+@layer base {
+  :root {
+    @apply font-sans;
+  }
+
+  html,
+  body,
+  #root {
+    @apply h-full m-0 bg-background text-foreground;
+  }
+}

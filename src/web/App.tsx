@@ -1,0 +1,113 @@
+import { FileUp, Sparkles } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+
+import type { Alternative } from "../shared/api";
+import { ContextPicker } from "@/components/ContextPicker";
+import { Editor, type EditorHandle } from "@/components/Editor";
+import { ModelPicker } from "@/components/ModelPicker";
+import { SuggestionPanel } from "@/components/SuggestionPanel";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { usePersistentString } from "@/hooks/usePersistentString";
+import { useSuggestions } from "@/hooks/useSuggestions";
+
+const SAMPLE = `# Welcome to Redraft
+
+Paste or open a markdown document, then select any sentence or paragraph. Three alternatives appear on the right; click one (or press Alt+1, Alt+2, Alt+3) to swap it in.
+
+Use the steering box at the bottom to tell the model what you are going for. Point the context folder at your notes so suggestions match your facts and voice.
+`;
+
+export function App() {
+  const [document, setDocument] = usePersistentString("document", SAMPLE);
+  const [steering, setSteering] = usePersistentString("steering", "");
+  const [contextPath, setContextPath] = usePersistentString("contextPath", "");
+  const [model, setModel] = usePersistentString("model", "");
+  const [selection, setSelection] = useState({ from: 0, to: 0 });
+  const editor = useRef<EditorHandle>(null);
+  const fileInput = useRef<HTMLInputElement>(null);
+
+  const { state, regenerate, clear } = useSuggestions(selection, {
+    document,
+    steering,
+    contextPath: contextPath || undefined,
+    model: model || undefined,
+  });
+
+  const target = state.status === "idle" ? null : state.target;
+  useEffect(() => {
+    editor.current?.highlight(target && { from: target.from, to: target.to });
+  }, [target]);
+
+  const apply = (alternative: Alternative) => {
+    if (!target) return;
+    if (editor.current?.replace(target, alternative.text)) clear();
+  };
+
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.altKey && state.status === "done") {
+        const alternative = state.result.alternatives[Number(event.key) - 1];
+        if (alternative) {
+          event.preventDefault();
+          apply(alternative);
+        }
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
+
+  const openFile = async (file: File | undefined) => {
+    if (!file) return;
+    setDocument(await file.text());
+    clear();
+  };
+
+  return (
+    <div className="flex h-full flex-col">
+      <header className="flex items-center gap-4 border-b px-4 py-2">
+        <h1 className="flex items-center gap-1.5 font-semibold">
+          <Sparkles className="size-4 text-yellow-500" /> Redraft
+        </h1>
+        <Button size="sm" variant="outline" onClick={() => fileInput.current?.click()}>
+          <FileUp /> Open
+        </Button>
+        <input
+          ref={fileInput}
+          type="file"
+          accept=".md,.markdown,.mdx,.txt"
+          className="hidden"
+          onChange={(e) => void openFile(e.target.files?.[0])}
+        />
+        <ContextPicker value={contextPath} onChange={setContextPath} />
+        <ModelPicker value={model} onChange={setModel} />
+      </header>
+
+      <main className="grid min-h-0 flex-1 grid-cols-[1fr_24rem]">
+        <section className="min-h-0 overflow-hidden">
+          <Editor ref={editor} value={document} onChange={setDocument} onSelect={setSelection} />
+        </section>
+        <aside className="min-h-0 border-l bg-muted/30" aria-label="Suggestions">
+          <SuggestionPanel state={state} onApply={apply} onRegenerate={regenerate} />
+        </aside>
+      </main>
+
+      <footer className="border-t bg-background p-3">
+        <Textarea
+          className="max-h-40 min-h-12 resize-none"
+          placeholder="Steer the suggestions: audience, tone, goal, constraints… (Ctrl+Enter to regenerate)"
+          aria-label="Steering prompt"
+          value={steering}
+          onChange={(e) => setSteering(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+              e.preventDefault();
+              regenerate();
+            }
+          }}
+        />
+      </footer>
+    </div>
+  );
+}
