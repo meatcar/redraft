@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "bun --hot src/server/main.ts",
     "start": "NODE_ENV=production bun src/server/main.ts",
+    "build:html": "bun scripts/build-html.ts",
     "test": "bun test",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint && fallow",

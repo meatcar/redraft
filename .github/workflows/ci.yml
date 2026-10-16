@@ -31,3 +31,6 @@ jobs:
 
       - name: Test
         run: nix develop --command bun test
+
+      - name: Build single-file HTML
+        run: nix develop --command bun run build:html

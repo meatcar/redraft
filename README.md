@@ -23,6 +23,22 @@ app's origin.
 Production: `bun run start` serves the same app with `NODE_ENV=production`. Server
 configuration is `PORT` only; see `.env.example`.
 
+## Single-file build
+
+`bun run build:html` writes `dist/redraft.html`: the whole app, CSS, and SQLite wasm in one
+file (about 3.5 MB). Open it from disk or host it anywhere static.
+
+Tagged releases (`v*`) attach `redraft.html` with a GitHub build-provenance attestation.
+Check a download before you open it:
+
+```sh
+gh attestation verify redraft.html --repo meatcar/redraft
+```
+
+This proves the file came from this repository's release workflow at a given commit; read
+that commit to judge what the code does. Documents, keys, and settings live in browser
+storage, never in the file, so the file stays verifiable.
+
 ## How suggestions work
 
 ```
@@ -49,4 +65,5 @@ bun run check   # tsc, oxlint, fallow, treefmt
 nix flake check
 ```
 
-Licensed under the [Apache License 2.0](LICENSE); attributions in [NOTICE](NOTICE).
+Licensed under the [Apache License 2.0](LICENSE); attributions in [NOTICE](NOTICE). The
+single-file build ends with an HTML comment holding the license texts of every bundled package.

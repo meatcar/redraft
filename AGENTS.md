@@ -13,6 +13,7 @@ src/core/            # browser domain, no React: api.ts (zod contract), suggest.
                      # llm.ts (endpoint), context.ts (SQLite-wasm FTS5 index), files.ts (folder sources)
 src/server/          # main.ts (Bun.serve static + /healthz), config.ts (env)
 src/web/             # React 19 + shadcn/ui + Tailwind 4 + CodeMirror 6
+scripts/build-html.ts # single-file build (dist/redraft.html); attested by .github/workflows/release.yml
 ```
 
 ## Principles
@@ -22,13 +23,14 @@ src/web/             # React 19 + shadcn/ui + Tailwind 4 + CodeMirror 6
 - Client-side only: document text, notes, and the API key never reach our server. Do not add server routes that handle them.
 - 12-factor server: config only from env (`src/server/config.ts`, documented in `.env.example`), JSON logs to stdout, stateless. User settings live in the browser (`localStorage`, prefix `redraft:`).
 - Test `src/core` directly with `MockLanguageModelV4` and in-memory `FileSource`s; test web code with Testing Library (happy-dom preloaded via `bunfig.toml`) and `src/web/test/fetch.ts` for the network boundary.
-- Copied third-party code: keep a `NOTE:` with copyright, license, what changed, and a `see` link; add it to `NOTICE`.
+- Copied third-party code: keep a `NOTE:` with copyright, license, what changed, and a `see` link; add it to `NOTICE`. Bundled dependency licenses are collected by `scripts/licenses.ts` at build time.
 
 ## Commands (repo root)
 
 - `direnv exec .`: run commands
 - `nix fmt`: format (run after every source edit)
 - `nix flake check`: validate flake outputs
+- `bun run build:html`: single self-contained HTML in `dist/`
 - `bun run dev`: dev server with HMR on `$PORT` (default 3000). If HMR keeps a stale failed import, run `amp orb service restart web`.
 
 ## Nix
