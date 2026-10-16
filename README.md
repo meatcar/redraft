@@ -28,8 +28,9 @@ configuration is `PORT` only; see `.env.example`.
 `bun run build:html` writes `dist/redraft.html`: the whole app, CSS, and SQLite wasm in one
 file (about 3.5 MB). Open it from disk or host it anywhere static.
 
-Tagged releases (`v*`) attach `redraft.html` with a GitHub build-provenance attestation.
-Check a download before you open it:
+Tagged releases (`v*`) attach `redraft.html` with a GitHub build-provenance attestation,
+then GitHub Pages serves the same bytes: the latest at https://meatcar.github.io/redraft/
+and each release at `/redraft/<tag>/`. Check a download before you open it:
 
 ```sh
 gh attestation verify redraft.html --repo meatcar/redraft

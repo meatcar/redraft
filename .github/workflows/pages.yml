@@ -1,0 +1,37 @@
+name: Pages
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  # NOTE: serves the attested release assets byte for byte; nothing is rebuilt here.
+  pages:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency: pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: Collect released builds
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          for tag in $(gh release list --limit 1000 --exclude-drafts --json tagName --jq '.[].tagName'); do
+            gh release download "$tag" --pattern redraft.html --dir "site/$tag"
+            mv "site/$tag/redraft.html" "site/$tag/index.html"
+          done
+          cp "site/$(gh release view --json tagName --jq .tagName)/index.html" site/index.html
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+
+      - id: deploy
+        uses: actions/deploy-pages@v5
