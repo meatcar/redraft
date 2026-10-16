@@ -44,14 +44,18 @@ describe("App", () => {
     expect(suggestions()).toHaveLength(1);
   });
 
-  test("Cmd+Space refreshes the last suggestions after the selection is gone", async () => {
+  test("Ctrl+Space refreshes the last suggestions after the selection is gone", async () => {
     const { view, suggestions } = setup();
     view.dispatch({ selection: { anchor: 0, head: 5 } });
     fireEvent.keyDown(window, { code: "Space", key: " ", metaKey: true });
+    await new Promise((r) => setTimeout(r, 30));
+    expect(suggestions()).toHaveLength(0);
+
+    fireEvent.keyDown(window, { code: "Space", key: " ", ctrlKey: true });
     await waitFor(() => expect(screen.getByText("Option text 1")).toBeTruthy());
 
     view.dispatch({ selection: { anchor: 12 } });
-    fireEvent.keyDown(window, { code: "Space", key: " ", metaKey: true });
+    fireEvent.keyDown(window, { code: "Space", key: " ", ctrlKey: true });
     await waitFor(() => expect(suggestions()).toHaveLength(2));
     expect(bodySchema.parse(await suggestions()[1]!.json()).selection).toEqual({
       from: 0,
