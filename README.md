@@ -9,7 +9,7 @@ your notes, and keep your words off everyone's server but the model's.
 
 [![CI](https://github.com/meatcar/redraft/actions/workflows/ci.yml/badge.svg)](https://github.com/meatcar/redraft/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/meatcar/redraft)](https://github.com/meatcar/redraft/releases/latest)
-[![License](https://img.shields.io/github/license/meatcar/redraft)](LICENSE)
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 
 [**Try it now**](https://meatcar.github.io/redraft/) ·
 [Download](https://github.com/meatcar/redraft/releases/latest) ·
