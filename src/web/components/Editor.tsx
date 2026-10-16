@@ -34,7 +34,8 @@ const theme = EditorView.theme({
   },
   // NOTE: CodeMirror paints full-line selection across this padding; keep it small.
   ".cm-content": { maxWidth: "calc(42rem + 0.5em)", margin: "0 auto", padding: "0 0.25em" },
-  ".cm-redraft-target": { backgroundColor: "rgb(250 204 21 / 0.35)", borderRadius: "2px" },
+  // NOTE: underline, not a fill; a fill blends with the selection layer into a muddy tan.
+  ".cm-redraft-target": { boxShadow: "inset 0 -0.18em rgb(234 179 8)" },
   "&.cm-focused": { outline: "none" },
 });
 
