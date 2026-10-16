@@ -34,10 +34,10 @@ export function ContextPicker({ value, onChange }: Props) {
   }, [value]);
 
   return (
-    <div className="flex min-w-0 flex-1 items-center gap-2">
+    <div className="flex min-w-fit flex-1 items-center gap-2">
       <FolderSearch className="size-4 shrink-0 text-muted-foreground" />
       <Input
-        className="h-8 max-w-sm font-mono text-xs"
+        className="h-8 max-w-sm min-w-24 font-mono text-xs"
         placeholder="Context folder, e.g. ~/notes"
         aria-label="Context folder"
         value={draft}
@@ -47,7 +47,7 @@ export function ContextPicker({ value, onChange }: Props) {
         aria-invalid={status.kind === "error"}
       />
       <span
-        className={`truncate text-xs ${status.kind === "error" ? "text-destructive" : "text-muted-foreground"}`}
+        className={`text-xs ${status.kind === "error" ? "truncate text-destructive" : "shrink-0 whitespace-nowrap text-muted-foreground"}`}
         title={status.kind === "error" ? status.message : undefined}
       >
         {status.kind === "loading" && "Indexing…"}

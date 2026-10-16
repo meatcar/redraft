@@ -62,4 +62,20 @@ describe("App", () => {
       to: 5,
     });
   });
+
+  test("the Vim toggle switches the editor to vim keys and remembers it", async () => {
+    const { view } = setup();
+    const pressX = () => fireEvent.keyDown(view.contentDOM, { key: "x", code: "KeyX" });
+    view.dispatch({ selection: { anchor: 0 } });
+    pressX();
+    expect(view.state.doc.toString()).toBe(sample);
+
+    fireEvent.click(screen.getByRole("button", { name: "Vim" }));
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Vim" }).getAttribute("aria-pressed")).toBe("true"),
+    );
+    pressX();
+    expect(view.state.doc.toString()).toBe(sample.slice(1));
+    expect(localStorage.getItem("redraft:vim")).toBe("on");
+  });
 });

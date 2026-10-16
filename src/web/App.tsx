@@ -1,4 +1,4 @@
-import { FileUp, Sparkles } from "lucide-react";
+import { FileUp, Keyboard, Sparkles } from "lucide-react";
 import { useEffect, useRef } from "react";
 
 import type { Alternative } from "../shared/api";
@@ -26,6 +26,8 @@ export function App() {
   const [contextPath, setContextPath] = usePersistentString("contextPath", "");
   const [model, setModel] = usePersistentString("model", "");
   const [apiKey, setApiKey] = usePersistentString("apiKey", "");
+  const [vim, setVim] = usePersistentString("vim", "off");
+  const vimMode = vim === "on";
   const editor = useRef<EditorHandle>(null);
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -78,7 +80,7 @@ export function App() {
 
   return (
     <div className="flex h-full flex-col">
-      <header className="flex items-center gap-4 border-b px-4 py-2">
+      <header className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b px-4 py-2">
         <h1 className="flex items-center gap-1.5 font-semibold">
           <Sparkles className="size-4 text-yellow-500" /> Redraft
         </h1>
@@ -95,11 +97,19 @@ export function App() {
         <ContextPicker value={contextPath} onChange={setContextPath} />
         <ApiKeyInput value={apiKey} onChange={setApiKey} />
         <ModelPicker apiKey={apiKey} value={model} onChange={setModel} />
+        <Button
+          size="sm"
+          variant={vimMode ? "secondary" : "ghost"}
+          aria-pressed={vimMode}
+          onClick={() => setVim(vimMode ? "off" : "on")}
+        >
+          <Keyboard /> Vim
+        </Button>
       </header>
 
       <main className="grid min-h-0 flex-1 grid-cols-[1fr_24rem]">
         <section className="min-h-0 overflow-hidden">
-          <Editor ref={editor} value={document} onChange={setDocument} />
+          <Editor ref={editor} value={document} onChange={setDocument} vimMode={vimMode} />
         </section>
         <aside className="min-h-0 border-l bg-muted/30" aria-label="Suggestions">
           <SuggestionPanel state={state} onApply={apply} onSuggest={suggestForSelection} />

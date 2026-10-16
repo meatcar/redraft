@@ -1,6 +1,7 @@
 import { markdown } from "@codemirror/lang-markdown";
-import { StateEffect, StateField } from "@codemirror/state";
+import { Prec, StateEffect, StateField } from "@codemirror/state";
 import { Decoration, EditorView, type DecorationSet } from "@codemirror/view";
+import { vim } from "@replit/codemirror-vim";
 import CodeMirror from "@uiw/react-codemirror";
 import { useImperativeHandle, useRef, type Ref } from "react";
 
@@ -37,7 +38,9 @@ const theme = EditorView.theme({
   "&.cm-focused": { outline: "none" },
 });
 
-const extensions = [markdown(), EditorView.lineWrapping, targetField, theme];
+const baseExtensions = [markdown(), EditorView.lineWrapping, targetField, theme];
+// NOTE: vim keymaps must outrank basicSetup's, which the wrapper installs first.
+const vimExtensions = [Prec.highest(vim({ status: true })), ...baseExtensions];
 
 export type EditorHandle = {
   /** Replaces the target if the document still holds its original text. */
@@ -49,10 +52,11 @@ export type EditorHandle = {
 type Props = {
   value: string;
   onChange: (value: string) => void;
+  vimMode?: boolean;
   ref?: Ref<EditorHandle>;
 };
 
-export function Editor({ value, onChange, ref }: Props) {
+export function Editor({ value, onChange, vimMode = false, ref }: Props) {
   const view = useRef<EditorView | null>(null);
 
   useImperativeHandle(ref, () => ({
@@ -89,7 +93,7 @@ export function Editor({ value, onChange, ref }: Props) {
         // NOTE: autocompletion binds Ctrl+Space, the suggest shortcut.
         autocompletion: false,
       }}
-      extensions={extensions}
+      extensions={vimMode ? vimExtensions : baseExtensions}
       onChange={onChange}
       onCreateEditor={(created) => {
         view.current = created;
