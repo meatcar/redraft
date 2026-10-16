@@ -29,9 +29,10 @@ const theme = EditorView.theme({
   ".cm-scroller": {
     fontFamily: "ui-serif, Georgia, serif",
     lineHeight: "1.7",
-    padding: "1.5rem 0",
+    padding: "1.5rem 2rem",
   },
-  ".cm-content": { maxWidth: "46rem", margin: "0 auto", padding: "0 2rem" },
+  // NOTE: no horizontal padding here; CodeMirror paints selection across the content box.
+  ".cm-content": { maxWidth: "42rem", margin: "0 auto", padding: "0" },
   ".cm-redraft-target": { backgroundColor: "rgb(250 204 21 / 0.35)", borderRadius: "2px" },
   "&.cm-focused": { outline: "none" },
 });
