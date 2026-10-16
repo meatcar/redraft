@@ -2,7 +2,7 @@ import { markdown } from "@codemirror/lang-markdown";
 import { StateEffect, StateField } from "@codemirror/state";
 import { Decoration, EditorView, type DecorationSet } from "@codemirror/view";
 import CodeMirror from "@uiw/react-codemirror";
-import { useImperativeHandle, useRef, type Ref } from "react";
+import { useEffect, useImperativeHandle, useMemo, useRef, type Ref } from "react";
 
 import type { Target } from "@/hooks/useSuggestions";
 
@@ -36,7 +36,7 @@ const theme = EditorView.theme({
   "&.cm-focused": { outline: "none" },
 });
 
-const extensions = [markdown(), EditorView.lineWrapping, targetField, theme];
+const baseExtensions = [markdown(), EditorView.lineWrapping, targetField, theme];
 
 export type EditorHandle = {
   /** Replaces the target if the document still holds its original text. */
@@ -47,12 +47,52 @@ export type EditorHandle = {
 type Props = {
   value: string;
   onChange: (value: string) => void;
+  /** Fires when the user lets go of a selection: pointer or key release. */
   onSelect: (range: { from: number; to: number }) => void;
   ref?: Ref<EditorHandle>;
 };
 
 export function Editor({ value, onChange, onSelect, ref }: Props) {
   const view = useRef<EditorView | null>(null);
+  const onSelectRef = useRef(onSelect);
+  onSelectRef.current = onSelect;
+  const committed = useRef({ from: 0, to: 0 });
+  const pointerDown = useRef(false);
+
+  const commit = useRef(() => {
+    const current = view.current;
+    if (!current) return;
+    const { from, to } = current.state.selection.main;
+    if (from === committed.current.from && to === committed.current.to) return;
+    committed.current = { from, to };
+    onSelectRef.current({ from, to });
+  }).current;
+
+  const extensions = useMemo(
+    () => [
+      ...baseExtensions,
+      EditorView.domEventHandlers({
+        pointerdown: () => {
+          pointerDown.current = true;
+        },
+        keyup: () => {
+          if (!pointerDown.current) commit();
+        },
+      }),
+    ],
+    [commit],
+  );
+
+  useEffect(() => {
+    // NOTE: listen on window; a drag can end outside the editor.
+    const release = () => {
+      if (!pointerDown.current) return;
+      pointerDown.current = false;
+      commit();
+    };
+    window.addEventListener("pointerup", release);
+    return () => window.removeEventListener("pointerup", release);
+  }, [commit]);
 
   useImperativeHandle(ref, () => ({
     replace(target, text) {
@@ -82,11 +122,6 @@ export function Editor({ value, onChange, onSelect, ref }: Props) {
       onChange={onChange}
       onCreateEditor={(created) => {
         view.current = created;
-      }}
-      onUpdate={(update) => {
-        if (!update.selectionSet) return;
-        const { from, to } = update.state.selection.main;
-        onSelect({ from, to });
       }}
       aria-label="Document"
     />

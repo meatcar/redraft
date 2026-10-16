@@ -7,7 +7,6 @@ import { useSuggestions } from "./useSuggestions";
 
 const document = "alpha beta gamma delta";
 const inputs = { document, steering: "", apiKey: "k" };
-const options = { debounceMs: 10 };
 
 const reply = (label: string) =>
   json({
@@ -19,12 +18,9 @@ const bodySchema = z.object({ selection: z.object({ from: z.number() }) });
 const selectionOf = async (body: Promise<unknown>) => bodySchema.parse(await body).selection.from;
 
 describe("useSuggestions", () => {
-  test("requests only the selection that settles", async () => {
+  test("requests alternatives for the selected text with the user's key", async () => {
     const requests = stubFetch(() => reply("x"));
-    const { result, rerender } = renderHook((sel) => useSuggestions(sel, inputs, options), {
-      initialProps: { from: 0, to: 5 },
-    });
-    rerender({ from: 6, to: 10 });
+    const { result } = renderHook(() => useSuggestions({ from: 6, to: 10 }, inputs));
 
     await waitFor(() => expect(result.current.state.status).toBe("done"));
     expect(requests).toHaveLength(1);
@@ -39,7 +35,7 @@ describe("useSuggestions", () => {
     stubFetch(async (request) =>
       (await selectionOf(request.json())) === 0 ? first.promise : reply("new"),
     );
-    const { result, rerender } = renderHook((sel) => useSuggestions(sel, inputs, options), {
+    const { result, rerender } = renderHook((sel) => useSuggestions(sel, inputs), {
       initialProps: { from: 0, to: 5 },
     });
     await waitFor(() => expect(result.current.state.status).toBe("loading"));
@@ -55,7 +51,7 @@ describe("useSuggestions", () => {
 
   test("surfaces the server's error message", async () => {
     stubFetch(() => json({ error: "No model endpoint configured." }, 503));
-    const { result } = renderHook(() => useSuggestions({ from: 0, to: 5 }, inputs, options));
+    const { result } = renderHook(() => useSuggestions({ from: 0, to: 5 }, inputs));
     await waitFor(() => expect(result.current.state.status).toBe("error"));
     const state = result.current.state;
     expect(state.status === "error" && state.error).toBe("No model endpoint configured.");
@@ -63,7 +59,7 @@ describe("useSuggestions", () => {
 
   test("skips whitespace-only selections", async () => {
     const requests = stubFetch(() => reply("x"));
-    renderHook(() => useSuggestions({ from: 0, to: 1 }, { ...inputs, document: "  x" }, options));
+    renderHook(() => useSuggestions({ from: 0, to: 1 }, { ...inputs, document: "  x" }));
     await new Promise((r) => setTimeout(r, 40));
     expect(requests).toHaveLength(0);
   });

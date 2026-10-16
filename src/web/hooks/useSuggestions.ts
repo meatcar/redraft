@@ -3,7 +3,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { SuggestRequest, SuggestResponse } from "../../shared/api";
 import { api } from "@/lib/api";
 
-const DEBOUNCE_MS = 600;
 const MIN_SELECTION_CHARS = 2;
 
 export type Target = { from: number; to: number; text: string };
@@ -16,12 +15,8 @@ export type SuggestionState =
 
 type Inputs = Omit<SuggestRequest, "selection"> & { apiKey: string };
 
-/** Fetches alternatives for the current selection after it settles; newer selections cancel older requests. */
-export function useSuggestions(
-  selection: { from: number; to: number },
-  inputs: Inputs,
-  { debounceMs = DEBOUNCE_MS } = {},
-) {
+/** Fetches alternatives for each committed selection; newer selections cancel older requests. */
+export function useSuggestions(selection: { from: number; to: number }, inputs: Inputs) {
   const [state, setState] = useState<SuggestionState>({ status: "idle" });
   const inputsRef = useRef(inputs);
   inputsRef.current = inputs;
@@ -47,9 +42,8 @@ export function useSuggestions(
 
   const { from, to } = selection;
   useEffect(() => {
-    const timer = from === to ? undefined : setTimeout(() => run({ from, to }), debounceMs);
-    return () => clearTimeout(timer);
-  }, [from, to, run, debounceMs]);
+    if (from !== to) run({ from, to });
+  }, [from, to, run]);
 
   useEffect(() => () => inflight.current?.abort(), []);
 
