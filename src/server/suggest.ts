@@ -9,19 +9,25 @@ import {
 } from "../shared/api";
 import type { ContextHit, ContextIndex } from "./context";
 
-const EXCERPT_CHARS = 3000;
-const PREFETCH_HITS = 4;
 const MAX_READ_CHARS = 8000;
+const MAX_AROUND_CHARS = 6000;
+const DOCUMENT_HITS = 5;
+const MAX_PARAGRAPH_CHARS = 1500;
 
 const SYSTEM = `You are a sharp, careful editor.
 The user selected a span of their document. Propose exactly ${SUGGESTION_COUNT} replacements for that span.
 
+You see only the selection and the user's steering. Tools can show more:
+- read_around_selection and search_document read the rest of the document.
+- search_context and read_context_file read the user's context folder, when one is set.
+Reach for them only when the steering or the selection needs it, such as matching nearby flow, checking a name, or following a house style. Otherwise answer directly.
+
 Rules:
-- Each replacement must drop into the document in place of the selection and read naturally with the text around it: match its markdown, tense, person, and voice.
+- Each replacement must drop into the document in place of the selection: keep its markdown, tense, person, and voice unless the steering says otherwise.
 - Return only the replacement for the selection, never the surrounding text.
 - Make the options meaningfully different from each other, not three paraphrases.
-- The steering instructions, when present, override your default taste.
-- When a context folder is available, use it to check facts, names, terminology, and house style before writing. Search more than once if the first results are weak. Never invent facts the document or context does not support.`;
+- The steering instructions override your default taste.
+- Never invent facts the selection, document, or context does not support.`;
 
 type SuggestInput = z.output<typeof suggestRequestSchema>;
 
@@ -32,18 +38,52 @@ export type SuggestDeps = {
   abortSignal?: AbortSignal;
 };
 
-function excerpt(document: string, from: number, to: number) {
-  const start = Math.max(0, from - EXCERPT_CHARS);
-  const end = Math.min(document.length, to + EXCERPT_CHARS);
-  return [
-    start > 0 ? "…" : "",
-    document.slice(start, from),
-    "⟦SELECTION⟧",
-    document.slice(from, to),
-    "⟦/SELECTION⟧",
-    document.slice(to, end),
-    end < document.length ? "…" : "",
-  ].join("");
+function paragraphs(document: string) {
+  const found: { start: number; text: string }[] = [];
+  let start = 0;
+  for (const separator of [...document.matchAll(/\n{2,}/g), { index: document.length, 0: "" }]) {
+    const text = document.slice(start, separator.index).trim();
+    if (text) found.push({ start, text });
+    start = separator.index + separator[0].length;
+  }
+  return found;
+}
+
+function searchDocument(document: string, query: string) {
+  const words = new Set(query.toLowerCase().match(/[\p{L}\p{N}]{2,}/gu) ?? []);
+  const hits = paragraphs(document)
+    .map(({ start, text }) => {
+      const lower = text.toLowerCase();
+      return { start, text, score: [...words].filter((w) => lower.includes(w)).length };
+    })
+    .filter((p) => p.score > 0)
+    .toSorted((a, b) => b.score - a.score || a.start - b.start)
+    .slice(0, DOCUMENT_HITS);
+  if (hits.length === 0) return "No matches.";
+  return hits
+    .map((h) => `<match offset="${h.start}">\n${h.text.slice(0, MAX_PARAGRAPH_CHARS)}\n</match>`)
+    .join("\n");
+}
+
+function documentTools(document: string, from: number, to: number) {
+  return {
+    read_around_selection: tool({
+      description: "Read the document text just before and after the selection.",
+      inputSchema: z.object({
+        chars: z.number().int().min(1).max(MAX_AROUND_CHARS).describe("Characters on each side."),
+      }),
+      execute: ({ chars }) =>
+        [
+          `<before>\n${document.slice(Math.max(0, from - chars), from)}\n</before>`,
+          `<after>\n${document.slice(to, to + chars)}\n</after>`,
+        ].join("\n"),
+    }),
+    search_document: tool({
+      description: "Find paragraphs anywhere in the document that mention any of the words.",
+      inputSchema: z.object({ query: z.string().describe("Keywords or names.") }),
+      execute: ({ query }) => searchDocument(document, query),
+    }),
+  };
 }
 
 function formatHits(hits: ContextHit[]) {
@@ -91,25 +131,19 @@ export async function suggest(request: SuggestInput, deps: SuggestDeps): Promise
   const selected = document.slice(selection.from, selection.to);
   const consulted = new Set<string>();
 
-  const sections = [
-    `<document_excerpt>\n${excerpt(document, selection.from, selection.to)}\n</document_excerpt>`,
+  const prompt = [
     `<selection>\n${selected}\n</selection>`,
     `<steering>\n${steering.trim() || "None. Improve clarity and flow."}\n</steering>`,
-  ];
-
-  if (deps.context) {
-    const hits = await deps.context.search(`${selected} ${steering}`, PREFETCH_HITS);
-    for (const hit of hits) consulted.add(hit.path);
-    sections.push(
-      `<retrieved_context note="automatic search on the selection">\n${formatHits(hits)}\n</retrieved_context>`,
-    );
-  }
+  ].join("\n\n");
 
   const { output } = await generateText({
     model: deps.model,
     system: SYSTEM,
-    prompt: sections.join("\n\n"),
-    tools: deps.context ? contextTools(deps.context, consulted) : undefined,
+    prompt,
+    tools: {
+      ...documentTools(document, selection.from, selection.to),
+      ...(deps.context && contextTools(deps.context, consulted)),
+    },
     stopWhen: isStepCount(deps.maxSteps),
     output: Output.object({ schema: alternativesSchema }),
     abortSignal: deps.abortSignal,

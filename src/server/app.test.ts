@@ -103,6 +103,52 @@ describe("POST /api/suggest", () => {
     expect(prompts[1]).toContain("capybara named Clementine");
   });
 
+  test("starts from the selection and steering alone", async () => {
+    const { llm, prompts } = scriptedLlm([answer(["a", "b", "c"])]);
+    const app = createApp({ llm, library: new ContextLibrary(root), maxSteps: 2 });
+    await post(app, { document, selection, steering: "punchier", contextPath: "notes" });
+
+    expect(prompts[0]).toContain("We love our mascot.");
+    expect(prompts[0]).toContain("punchier");
+    expect(prompts[0]).not.toContain("Hello there");
+    expect(prompts[0]).not.toContain("Goodbye");
+    expect(prompts[0]).not.toContain("Clementine");
+  });
+
+  test("lets the model read around the selection and search the document", async () => {
+    const long = `${"Intro filler. ".repeat(40)}\n\nOur wombat is named Gus.\n\nWe love our mascot.\n\nThe end.`;
+    const at = long.indexOf("We love");
+    const { llm, prompts } = scriptedLlm([
+      [
+        {
+          type: "tool-call",
+          toolCallId: "1",
+          toolName: "read_around_selection",
+          input: '{"chars":20}',
+        },
+        {
+          type: "tool-call",
+          toolCallId: "2",
+          toolName: "search_document",
+          input: '{"query":"wombat"}',
+        },
+      ],
+      answer(["a", "b", "c"]),
+    ]);
+    const app = createApp({ llm, maxSteps: 3, library: new ContextLibrary(root) });
+    const response = await post(app, {
+      document: long,
+      selection: { from: at, to: at + "We love our mascot.".length },
+    });
+
+    expect(response.status).toBe(200);
+    const toolResults = prompts[1] ?? "";
+    expect(toolResults).toContain("named Gus.");
+    expect(toolResults).toContain("The end.");
+    expect(toolResults).not.toContain("Intro filler. Intro filler. Intro");
+    expect(toolResults).toContain("Our wombat is named Gus.");
+  });
+
   test("works without a context folder", async () => {
     const { llm } = scriptedLlm([answer(["a", "b", "c"])]);
     const app = createApp({ llm, library: new ContextLibrary(root), maxSteps: 2 });
