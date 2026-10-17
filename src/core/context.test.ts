@@ -96,15 +96,28 @@ describe("ContextIndex", () => {
     const notes = folder({
       "cafe.md": "# Café\n\nA résumé about the zeppelin.\n",
       "other.md": "# Other\n\nA wombat lives here.\n",
+      "decomposed.md": "# Résumé\n\nThe nai\u0308ve author.\n",
     });
     const index = await ContextIndex.open(notes.source);
     expect((await index.search('CAFE + "resume"'))[0]?.path).toBe("cafe.md");
+    expect((await index.search("naive"))[0]?.path).toBe("decomposed.md");
     expect((await index.search("missing zeppel"))[0]?.path).toBe("cafe.md");
     expect(await index.search("zepplin")).toEqual([]);
     expect(await index.search("* + : ()")).toEqual([]);
     const hits = await index.search("zeppelin wombat", 1);
     expect(hits).toHaveLength(1);
     expect(hits[0]!.score).toBeGreaterThan(0);
+  });
+
+  test("keeps non-Latin diacritics distinct", async () => {
+    const index = await ContextIndex.open(
+      folder({
+        "accented.md": "άλφα й ё",
+        "plain.md": "αλφα и е",
+      }).source,
+    );
+    expect((await index.search("άλφα")).map(({ path }) => path)).toEqual(["accented.md"]);
+    expect((await index.search("и")).map(({ path }) => path)).toEqual(["plain.md"]);
   });
 
   test("reads indexed files only", async () => {

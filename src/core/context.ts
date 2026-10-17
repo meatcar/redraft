@@ -75,7 +75,11 @@ function splitSection(source: string, section: Chunk, maxChars: number): Chunk[]
   return chunks;
 }
 
-const words = (text: string) => text.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [];
+const words = (text: string) =>
+  text
+    .normalize("NFC")
+    .toLowerCase()
+    .match(/[\p{L}\p{N}][\p{L}\p{N}\p{M}]*/gu) ?? [];
 
 const isIndexable = (file: SourceFile) =>
   TEXT_FILE.test(file.path) && !isIgnoredPath(file.path) && file.size <= MAX_FILE_BYTES;
@@ -92,7 +96,11 @@ export class ContextIndex {
   private searchIndex = new MiniSearch<SearchDocument>({
     fields: ["heading", "body", "path"],
     tokenize: words,
-    processTerm: (term) => term.normalize("NFD").replace(/\p{M}/gu, ""),
+    processTerm: (term) =>
+      term
+        .normalize("NFD")
+        .replace(/(\p{Script=Latin})\p{M}+/gu, "$1")
+        .normalize("NFC"),
     searchOptions: {
       boost: { heading: 2, body: 1, path: 1.5 },
       combineWith: "OR",
