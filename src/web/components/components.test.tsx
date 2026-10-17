@@ -10,6 +10,7 @@ import { json, stubFetch } from "../test/fetch";
 import { ContextPicker } from "./ContextPicker";
 import { ModelPicker } from "./ModelPicker";
 import { ModelSettings, useModelSettings } from "./ModelSettings";
+import { SettingsMenu } from "./SettingsMenu";
 import { SuggestionPanel } from "./SuggestionPanel";
 
 afterEach(cleanup);
@@ -28,6 +29,7 @@ describe("SuggestionPanel", () => {
         state={{ status: "done", target, result: { alternatives, sources: ["notes/a.md"] } }}
         onApply={onApply}
         onSuggest={() => {}}
+        onDismiss={() => {}}
       />,
     );
     fireEvent.click(screen.getByText("Hey"));
@@ -41,6 +43,7 @@ describe("SuggestionPanel", () => {
         state={{ status: "error", target, error: "boom" }}
         onApply={() => {}}
         onSuggest={() => {}}
+        onDismiss={() => {}}
       />,
     );
     expect(screen.getByRole("alert").textContent).toBe("boom");
@@ -48,7 +51,14 @@ describe("SuggestionPanel", () => {
 
   test("offers the suggest action with its shortcut before anything is requested", () => {
     const onSuggest = mock();
-    render(<SuggestionPanel state={{ status: "idle" }} onApply={() => {}} onSuggest={onSuggest} />);
+    render(
+      <SuggestionPanel
+        state={{ status: "idle" }}
+        onApply={() => {}}
+        onSuggest={onSuggest}
+        onDismiss={() => {}}
+      />,
+    );
     fireEvent.click(screen.getByRole("button", { name: /Suggest\s*Ctrl\+Space/ }));
     expect(onSuggest).toHaveBeenCalledTimes(1);
   });
@@ -86,7 +96,7 @@ describe("ContextPicker", () => {
     render(<ControlledContextPicker />);
     fireEvent.click(screen.getByRole("button", { name: "Context folder" }));
     await waitFor(() => expect(screen.getByText("1 files · 1 sections")).toBeTruthy());
-    expect(screen.getByRole("button", { name: "notes" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Context folder: notes" })).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: "Forget context folder" }));
     expect(screen.getByRole("button", { name: "Context folder" })).toBeTruthy();
@@ -112,7 +122,7 @@ describe("ContextPicker", () => {
     });
     fireEvent.change(input);
     await waitFor(() => expect(screen.getByText("1 files · 1 sections")).toBeTruthy());
-    expect(screen.getByRole("button", { name: "vault" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Context folder: vault" })).toBeTruthy();
   });
 });
 
@@ -169,6 +179,31 @@ describe("ModelSettings", () => {
     expect(screen.getByLabelText("Provider").textContent).toBe("Custom");
     expect(screen.getByLabelText<HTMLInputElement>("Model endpoint").value).toBe(
       "https://llm.test/v1",
+    );
+  });
+});
+
+function MenuHarness() {
+  return <SettingsMenu settings={useModelSettings()} vim={false} onVimChange={() => {}} />;
+}
+
+describe("SettingsMenu", () => {
+  afterEach(() => localStorage.clear());
+
+  test("asks to connect a model until the endpoint has a key", () => {
+    render(<MenuHarness />);
+    expect(screen.getByRole("button", { name: /Model settings/ }).textContent).toBe(
+      "Connect a model",
+    );
+  });
+
+  test("names the provider and model once connected", () => {
+    localStorage.setItem("redraft:endpoint", "https://llm.test/v1");
+    localStorage.setItem("redraft:apiKey:https://llm.test/v1", "sk-1");
+    localStorage.setItem("redraft:model:https://llm.test/v1", "big");
+    render(<MenuHarness />);
+    expect(screen.getByRole("button", { name: /Model settings/ }).textContent).toBe(
+      "llm.test · big",
     );
   });
 });

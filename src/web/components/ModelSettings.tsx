@@ -26,8 +26,11 @@ export function useModelSettings() {
   const [apiKey, setApiKey] = usePersistentString(`apiKey:${endpoint}`, "");
   const [model, setModel] = usePersistentString(`model:${endpoint}`, "");
   const llm = useMemo(() => createLlm({ baseURL: endpoint, apiKey }), [endpoint, apiKey]);
-  return { endpoint, setEndpoint, apiKey, setApiKey, model, setModel, llm };
+  const provider = PRESETS.find((p) => p.url === endpoint)?.name ?? hostOf(endpoint);
+  return { endpoint, setEndpoint, apiKey, setApiKey, model, setModel, llm, provider };
 }
+
+const hostOf = (url: string) => URL.parse(url)?.host ?? url;
 
 type Props = { settings: ReturnType<typeof useModelSettings> };
 
@@ -47,7 +50,7 @@ export function ModelSettings({ settings }: Props) {
       <div className="flex items-center gap-2">
         <Server className="size-4 shrink-0 text-muted-foreground" />
         <Select value={provider} onValueChange={choose}>
-          <SelectTrigger size="sm" className="w-32 text-xs" aria-label="Provider">
+          <SelectTrigger size="sm" className="flex-1 text-xs" aria-label="Provider">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -65,7 +68,6 @@ export function ModelSettings({ settings }: Props) {
           label="Model endpoint"
           value={settings.endpoint}
           onChange={(value) => settings.setEndpoint(value || DEFAULT_ENDPOINT)}
-          className="w-44"
         />
       )}
       <SettingInput
@@ -75,7 +77,6 @@ export function ModelSettings({ settings }: Props) {
         secret
         value={settings.apiKey}
         onChange={settings.setApiKey}
-        className="w-36"
       />
       <ModelPicker llm={settings.llm} value={settings.model} onChange={settings.setModel} />
     </>

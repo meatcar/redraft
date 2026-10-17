@@ -25,7 +25,7 @@ export function SettingInput({ icon: Icon, label, value, onChange, secret, class
         type={secret ? "password" : "text"}
         autoComplete="off"
         spellCheck={false}
-        className={cn("h-8 font-mono text-xs", className)}
+        className={cn("h-8 flex-1 font-mono md:text-xs", className)}
         placeholder={label}
         aria-label={label}
         value={draft}

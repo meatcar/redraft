@@ -1,4 +1,4 @@
-import { FileText, Loader2, RefreshCw, Sparkles, TextSelect } from "lucide-react";
+import { FileText, Loader2, RefreshCw, Sparkles, TextSelect, X } from "lucide-react";
 
 import type { Alternative } from "@core/api";
 import { Button } from "@/components/ui/button";
@@ -9,19 +9,21 @@ type Props = {
   state: SuggestionState;
   onApply: (alternative: Alternative) => void;
   onSuggest: () => void;
+  onDismiss: () => void;
 };
 
+// NOTE: no keyboard on touch screens; hide shortcut hints there.
 const shortcutHint = (
-  <kbd className="rounded border px-1.5 font-mono text-xs text-muted-foreground">
+  <kbd className="rounded border px-1.5 font-mono text-xs text-muted-foreground pointer-coarse:hidden">
     {SUGGEST_SHORTCUT}
   </kbd>
 );
 
-export function SuggestionPanel({ state, onApply, onSuggest }: Props) {
+export function SuggestionPanel({ state, onApply, onSuggest, onDismiss }: Props) {
   if (state.status === "idle") {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-3 p-8 text-center text-sm text-muted-foreground">
-        <TextSelect className="size-8 opacity-50" />
+      <div className="flex items-center justify-between gap-3 p-3 text-sm text-muted-foreground md:h-full md:flex-col md:justify-center md:p-8 md:text-center">
+        <TextSelect className="size-8 opacity-50 max-md:hidden" />
         <p>Select text in the document, then ask for three alternatives.</p>
         <Button variant="outline" onClick={onSuggest}>
           <Sparkles /> Suggest {shortcutHint}
@@ -31,24 +33,28 @@ export function SuggestionPanel({ state, onApply, onSuggest }: Props) {
   }
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex flex-col gap-2 border-b p-4">
-        <blockquote className="line-clamp-3 border-l-2 border-yellow-400 pl-3 text-sm text-muted-foreground italic">
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div className="flex flex-col gap-2 border-b p-3 md:p-4">
+        <blockquote className="line-clamp-2 border-l-2 md:line-clamp-3 border-yellow-400 pl-3 text-sm text-muted-foreground italic">
           {state.target.text}
         </blockquote>
-        <Button
-          size="sm"
-          variant="ghost"
-          className="self-end"
-          onClick={onSuggest}
-          disabled={state.status === "loading"}
-          title="Suggest for the selection, or refresh these"
-        >
-          <RefreshCw /> Refresh {shortcutHint}
-        </Button>
+        <div className="flex justify-end gap-1">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={onSuggest}
+            disabled={state.status === "loading"}
+            title="Suggest for the selection, or refresh these"
+          >
+            <RefreshCw /> Refresh {shortcutHint}
+          </Button>
+          <Button size="sm" variant="ghost" onClick={onDismiss} aria-label="Dismiss suggestions">
+            <X />
+          </Button>
+        </div>
       </div>
 
-      <div className="flex-1 space-y-3 overflow-y-auto p-4" aria-live="polite">
+      <div className="min-h-0 flex-1 space-y-3 overflow-y-auto p-3 md:p-4" aria-live="polite">
         {state.status === "loading" && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Loader2 className="size-4 animate-spin" /> Drafting alternatives…
@@ -68,11 +74,11 @@ export function SuggestionPanel({ state, onApply, onSuggest }: Props) {
               key={i}
               type="button"
               onClick={() => onApply(alternative)}
-              className="group block w-full rounded-lg border bg-card p-4 text-left shadow-xs transition hover:border-primary/50 hover:shadow-md focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
+              className="group block w-full rounded-lg border bg-card p-3 text-left md:p-4 shadow-xs transition hover:border-primary/50 hover:shadow-md focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
             >
               <div className="mb-2 flex items-center justify-between text-xs text-muted-foreground">
                 <span className="font-medium">Option {i + 1}</span>
-                <kbd className="rounded border px-1.5 font-mono opacity-60 group-hover:opacity-100">
+                <kbd className="rounded border px-1.5 font-mono opacity-60 group-hover:opacity-100 pointer-coarse:hidden">
                   Alt+{i + 1}
                 </kbd>
               </div>
@@ -85,7 +91,7 @@ export function SuggestionPanel({ state, onApply, onSuggest }: Props) {
       </div>
 
       {state.status === "done" && state.result.sources.length > 0 && (
-        <details className="border-t p-4 text-xs text-muted-foreground">
+        <details className="border-t p-3 text-xs md:p-4 text-muted-foreground">
           <summary className="cursor-pointer">
             Context consulted ({state.result.sources.length})
           </summary>

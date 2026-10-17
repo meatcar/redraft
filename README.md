@@ -17,6 +17,8 @@ your notes, and keep your words off everyone's server but the model's.
 
 ![Redraft rewriting a sentence with three suggestions, steered by a prompt and a folder of notes](docs/screenshot.png)
 
+<img src="docs/screenshot-mobile.png" alt="Redraft on a phone, suggestions under the document" width="300">
+
 </div>
 
 ## Features
@@ -33,6 +35,8 @@ your notes, and keep your words off everyone's server but the model's.
   model. There is no Redraft backend.
 - **One verifiable file.** Each release is a single 3.5 MB HTML file with a GitHub build
   provenance attestation. Open it from disk, offline from everything but your model.
+- **Works on your phone.** Select with the usual handles and tap **Suggest**; rewrites slide
+  up under the document.
 - **Markdown editor with Vim mode**, built on CodeMirror 6.
 
 ## Quick start
@@ -40,8 +44,9 @@ your notes, and keep your words off everyone's server but the model's.
 1. Open **[meatcar.github.io/redraft](https://meatcar.github.io/redraft/)**, or download
    `redraft.html` from the [latest release](https://github.com/meatcar/redraft/releases/latest)
    and open it.
-2. Pick a provider, paste its API key, and choose a model.
-3. Paste or open a markdown document, select some text, and press <kbd>Ctrl</kbd>+<kbd>Space</kbd>.
+2. Click **Connect a model**, pick a provider, paste its API key, and choose a model.
+3. Paste or open a markdown document, select some text, and press <kbd>Ctrl</kbd>+<kbd>Space</kbd>
+   (or tap **Suggest**).
 
 Optional: click **Context folder** to let the model search your notes.
 

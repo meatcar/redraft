@@ -33,7 +33,9 @@ async function setup() {
   const { container } = render(<App />);
   const view = EditorView.findFromDOM(container.querySelector<HTMLElement>(".cm-content")!)!;
   const suggestions = () => requests.filter((r) => r.url.endsWith("/chat/completions"));
-  await waitFor(() => expect(screen.getByLabelText("Model").textContent).toBe("m"));
+  await waitFor(() =>
+    expect(screen.getByRole("button", { name: /Model settings/ }).textContent).toContain("m"),
+  );
   return { view, suggestions };
 }
 
@@ -42,6 +44,7 @@ const userPrompt = async (request: Request) =>
 
 beforeEach(() => {
   localStorage.setItem("redraft:document", sample);
+  localStorage.setItem("redraft:apiKey:https://openrouter.ai/api/v1", "sk-1");
   localStorage.setItem("redraft:model:https://openrouter.ai/api/v1", "m");
 });
 afterEach(() => {
@@ -84,7 +87,8 @@ describe("App", () => {
     pressX();
     expect(view.state.doc.toString()).toBe(sample);
 
-    fireEvent.click(screen.getByRole("button", { name: "Vim" }));
+    fireEvent.click(screen.getByRole("button", { name: /Model settings/ }));
+    fireEvent.click(await screen.findByRole("button", { name: "Vim" }));
     await waitFor(() =>
       expect(screen.getByRole("button", { name: "Vim" }).getAttribute("aria-pressed")).toBe("true"),
     );

@@ -26,11 +26,12 @@ const targetField = StateField.define<DecorationSet>({
 });
 
 const theme = EditorView.theme({
-  "&": { height: "100%", fontSize: "15px" },
+  // NOTE: 16px stops iOS Safari zooming in on focus.
+  "&": { height: "100%", fontSize: "16px" },
   ".cm-scroller": {
     fontFamily: "ui-serif, Georgia, serif",
     lineHeight: "1.7",
-    padding: "1.5rem 2rem",
+    padding: "1.5rem clamp(0.75rem, 4vw, 2rem)",
   },
   // NOTE: CodeMirror paints full-line selection across this padding; keep it small.
   ".cm-content": { maxWidth: "calc(42rem + 0.5em)", margin: "0 auto", padding: "0 0.25em" },

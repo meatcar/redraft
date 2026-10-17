@@ -48,9 +48,12 @@ export function ContextPicker({ value, onChange }: Props) {
         onClick={() => void pick()}
         disabled={status.kind === "indexing"}
         title="Notes the model can search. Files stay in your browser."
+        aria-label={summary ? `Context folder: ${summary.name}` : "Context folder"}
       >
         {status.kind === "indexing" ? <Loader2 className="animate-spin" /> : <FolderSearch />}
-        {summary ? summary.name : "Context folder"}
+        <span className="max-w-32 truncate max-sm:hidden">
+          {summary ? summary.name : "Context folder"}
+        </span>
       </Button>
       <input
         ref={(input) => {
@@ -68,7 +71,7 @@ export function ContextPicker({ value, onChange }: Props) {
         }}
       />
       <span
-        className={`text-xs ${status.kind === "error" ? "truncate text-destructive" : "shrink-0 whitespace-nowrap text-muted-foreground"}`}
+        className={`text-xs ${status.kind === "error" ? "truncate text-destructive" : "shrink-0 whitespace-nowrap text-muted-foreground max-md:hidden"}`}
         title={status.kind === "error" ? status.message : undefined}
       >
         {status.kind === "indexing" && "Indexing…"}
