@@ -129,6 +129,8 @@ describe("ContextPicker", () => {
 const llm = (apiKey: string) => createLlm({ baseURL: "https://llm.test/v1", apiKey });
 
 describe("ModelPicker", () => {
+  afterEach(() => localStorage.clear());
+
   test("lists the endpoint's models with the entered key", async () => {
     const requests = stubFetch(() => json({ data: [{ id: "small" }, { id: "big" }] }));
     render(<ModelPicker llm={llm("sk-1")} value="" onChange={() => {}} />);
@@ -143,6 +145,47 @@ describe("ModelPicker", () => {
     render(<ModelPicker llm={llm("sk-1")} value="small" onChange={onChange} />);
     await waitFor(() => expect(screen.getByLabelText("Model").textContent).toContain("small"));
     expect(onChange).not.toHaveBeenCalled();
+  });
+
+  test("groups models by vendor; only the chosen model's vendor starts open", async () => {
+    stubFetch(() =>
+      json({
+        data: ["openai/gpt-x", "solo", "anthropic/haiku", "anthropic/claude"].map((id) => ({ id })),
+      }),
+    );
+    const onChange = mock();
+    render(<ModelPicker llm={llm("sk-1")} value="anthropic/claude" onChange={onChange} />);
+    await waitFor(() =>
+      expect(screen.getByLabelText("Model").textContent).toContain("anthropic/claude"),
+    );
+    fireEvent.click(screen.getByLabelText("Model"));
+    await screen.findByRole("option", { name: "haiku" });
+    expect(screen.getByRole("option", { name: "solo" })).toBeTruthy();
+    expect(screen.queryByRole("option", { name: "gpt-x" })).toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: /openai/ }));
+    const option = await screen.findByRole("option", { name: "gpt-x" });
+    fireEvent.pointerDown(option);
+    fireEvent.click(option);
+    expect(onChange).toHaveBeenCalledWith("openai/gpt-x");
+  });
+
+  test("remembers which vendor groups the user opened or hid", async () => {
+    stubFetch(() => json({ data: ["openai/gpt-x", "anthropic/claude"].map((id) => ({ id })) }));
+    const first = render(
+      <ModelPicker llm={llm("sk-1")} value="anthropic/claude" onChange={() => {}} />,
+    );
+    await waitFor(() => expect(screen.getByLabelText("Model").textContent).toContain("claude"));
+    fireEvent.click(screen.getByLabelText("Model"));
+    fireEvent.click(await screen.findByRole("button", { name: /anthropic/ }));
+    fireEvent.click(screen.getByRole("button", { name: /openai/ }));
+    first.unmount();
+
+    render(<ModelPicker llm={llm("sk-1")} value="anthropic/claude" onChange={() => {}} />);
+    await waitFor(() => expect(screen.getByLabelText("Model").textContent).toContain("claude"));
+    fireEvent.click(screen.getByLabelText("Model"));
+    await screen.findByRole("option", { name: "gpt-x" });
+    expect(screen.queryByRole("option", { name: "claude" })).toBeNull();
   });
 
   test("explains a rejected key", async () => {
@@ -170,6 +213,17 @@ describe("ModelSettings", () => {
     expect(requests[0]?.url).toBe("https://openrouter.ai/api/v1/models");
     expect(requests[0]?.headers.get("authorization")).toBe("Bearer sk-or");
     expect(screen.queryByLabelText("Model endpoint")).toBeNull();
+  });
+
+  test("completes a bare custom host into an endpoint URL", async () => {
+    localStorage.setItem("redraft:endpoint", "https://llm.test/v1");
+    const requests = stubFetch(() => json({ data: [] }));
+    render(<SettingsHarness />);
+    const input = screen.getByLabelText<HTMLInputElement>("Model endpoint");
+    fireEvent.change(input, { target: { value: "localhost:11434" } });
+    fireEvent.blur(input);
+    await waitFor(() => expect(requests.at(-1)?.url).toBe("http://localhost:11434/v1/models"));
+    expect(input.value).toBe("http://localhost:11434/v1");
   });
 
   test("shows a stored non-preset endpoint as Custom with its URL", async () => {
