@@ -22,7 +22,10 @@
           ++ [
             nil # nix lsp
           ]
-          ++ [ bun ];
+          ++ [
+            bun
+            git-cliff
+          ];
       };
       checks.devshell = config.devShells.default.overrideAttrs (old: {
         name = "devshell-check";

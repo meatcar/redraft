@@ -25,6 +25,7 @@
           "*.lock"
           "*.lockb"
           "flake.lock"
+          "CHANGELOG.md"
         ];
       };
       formatter = config.treefmt.build.wrapper;

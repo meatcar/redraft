@@ -17,11 +17,18 @@ jobs:
       actions: write
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - uses: cachix/install-nix-action@v31
 
       - name: Install dependencies
         run: nix develop --command bun install --frozen-lockfile
+
+      - name: Check CHANGELOG.md matches the tag
+        run: |
+          nix develop --command git cliff --output CHANGELOG.md
+          git diff --exit-code CHANGELOG.md || { echo "::error::Tag with 'bun run release' so CHANGELOG.md is regenerated."; exit 1; }
 
       - name: Test
         run: nix develop --command bun test
@@ -36,7 +43,9 @@ jobs:
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" dist/redraft.html --generate-notes --verify-tag
+        run: |
+          nix develop --command git cliff --latest --strip all --output notes.md
+          gh release create "$GITHUB_REF_NAME" dist/redraft.html --notes-file notes.md --verify-tag
 
       # NOTE: GITHUB_TOKEN events skip other workflows, except dispatch; github-pages deploys only from main.
       - name: Deploy releases to GitHub Pages
