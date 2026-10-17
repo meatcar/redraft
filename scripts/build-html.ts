@@ -1,9 +1,9 @@
-import tailwind from "bun-plugin-tailwind";
+import tailwind from "./tailwind";
 
 import { packageRoots, thirdPartyNotices } from "./licenses";
 
 const outfile = Bun.argv[2] ?? "dist/redraft.html";
-// NOTE: the tailwind plugin inlines these stylesheets; they never appear in the metafile.
+// NOTE: PostCSS inlines these stylesheets; they never appear in the metafile.
 const CSS_PACKAGES = ["node_modules/tailwindcss", "node_modules/tw-animate-css"];
 
 const result = await Bun.build({
