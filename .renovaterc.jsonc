@@ -3,6 +3,20 @@
   "extends": ["github>meatcar/renovate-config"],
   "packageRules": [
     {
+      "description": "CVA is still maintained and used by shadcn base-vega; release age is not abandonment.",
+      "matchPackageNames": ["class-variance-authority"],
+      "abandonmentThreshold": null,
+    },
+    {
+      "description": "clsx is a finished 239-byte utility, also required by CVA; keep future updates enabled.",
+      "matchPackageNames": ["clsx"],
+      "abandonmentThreshold": null,
+    },
+    {
+      "matchPackageNames": ["tailwindcss", "@tailwindcss/**"],
+      "groupName": "Tailwind CSS",
+    },
+    {
       "matchUpdateTypes": ["minor", "patch"],
       "matchCurrentVersion": "!/^0/",
       "automerge": true,
