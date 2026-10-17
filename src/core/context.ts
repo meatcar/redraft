@@ -146,8 +146,6 @@ export class ContextIndex {
     return this.syncing;
   }
 
-  // NOTE: fallow misses calls through Pick<ContextIndex, ...> in suggest.ts.
-  // fallow-ignore-next-line unused-class-member
   async search(query: string, limit = 6): Promise<ContextHit[]> {
     const match = toMatchQuery(query);
     if (!match) return [];
@@ -186,7 +184,6 @@ export class ContextIndex {
     return hits.flat();
   }
 
-  // fallow-ignore-next-line unused-class-member
   async read(path: string): Promise<string> {
     const file = this.files.get(path);
     if (!file) throw new Error(`${path} is not in the context folder`);

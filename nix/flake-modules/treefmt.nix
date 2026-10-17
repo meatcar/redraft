@@ -7,6 +7,7 @@
   perSystem =
     {
       config,
+      lib,
       pkgs,
       ...
     }:
@@ -14,6 +15,7 @@
       treefmt.config = {
         inherit (config.flake-root) projectRootFile;
         package = pkgs.treefmt;
+        settings.formatter.oxfmt.command = lib.mkForce "./node_modules/.bin/oxfmt";
         # treefmt walks git when the tree is a repo, and the whole directory when it
         # is not -- which a freshly `nix flake init`ed project is. Without these it
         # reformats node_modules on the first `check`.
@@ -29,6 +31,12 @@
         ];
       };
       formatter = config.treefmt.build.wrapper;
+      # NOTE: npm dependencies are unavailable in Nix builds; bun run check validates oxfmt.
+      checks.treefmt = lib.mkForce (
+        (config.treefmt.build.check config.treefmt.projectRoot).overrideAttrs {
+          TREEFMT_FORMATTERS = "nixfmt,deadnix,statix";
+        }
+      );
       treefmt.config.programs = {
         ## Nix
         # format nix files

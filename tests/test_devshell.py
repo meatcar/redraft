@@ -8,6 +8,7 @@ def test_bun_is_available():
 def test_treefmt_formats_nix(tmp_path):
     source = tmp_path / "flake.nix"
     source.write_text("{answer=42;}")
-    subprocess.run(["treefmt"], cwd=tmp_path, check=True)
+    command = ["treefmt", "--formatters", "nixfmt,deadnix,statix"]
+    subprocess.run(command, cwd=tmp_path, check=True)
     assert source.read_text() == "{ answer = 42; }\n"
-    subprocess.run(["treefmt", "--ci"], cwd=tmp_path, check=True)
+    subprocess.run([*command, "--ci"], cwd=tmp_path, check=True)
