@@ -1,7 +1,6 @@
 import { FileUp, Sparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-import type { Alternative } from "@core/api";
 import type { ContextIndex } from "@core/context";
 import { ContextPicker } from "@/components/ContextPicker";
 import { Editor, type EditorHandle } from "@/components/Editor";
@@ -11,13 +10,14 @@ import { SuggestionPanel } from "@/components/SuggestionPanel";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { usePersistentString } from "@/hooks/usePersistentString";
+import { usePreview } from "@/hooks/usePreview";
 import { useSuggester, useSuggestions } from "@/hooks/useSuggestions";
 import { useShortcuts } from "@/hooks/useShortcuts";
-import { SUGGEST_SHORTCUT } from "@/lib/shortcuts";
+import { PREVIEW_MODIFIER, SUGGEST_SHORTCUT } from "@/lib/shortcuts";
 
 const SAMPLE = `# Welcome to Redraft
 
-Paste or open a markdown document, select any sentence or paragraph, and press ${SUGGEST_SHORTCUT}. On a phone, tap Suggest instead. Three alternatives appear in the suggestions panel; click one (or press Alt+1, Alt+2, Alt+3) to swap it in.
+Paste or open a markdown document, select any sentence or paragraph, and press ${SUGGEST_SHORTCUT}. On a phone, tap Suggest instead. Three alternatives appear in the suggestions panel. Press Tab (or ${PREVIEW_MODIFIER}+1, 2, 3) to preview one in place, Enter to keep it, Esc to go back; or click one.
 
 Use the steering box at the bottom to tell the model what you are going for. Pick a context folder of notes so suggestions match your facts and voice. Everything runs in your browser: text goes only to the model endpoint you set.
 `;
@@ -34,31 +34,29 @@ export function App() {
 
   const suggester = useSuggester(settings.llm, settings.model, context);
   const { state, suggest, clear } = useSuggestions({ document, steering, suggester });
+  const preview = usePreview(editor, state, clear);
 
   const target = state.status === "idle" ? null : state.target;
   useEffect(() => {
     editor.current?.highlight(target && { from: target.from, to: target.to });
   }, [target]);
 
-  const apply = (alternative: Alternative) => {
-    if (!target) return;
-    if (editor.current?.replace(target, alternative.text)) clear();
+  const dismiss = () => {
+    preview.cancel();
+    clear();
   };
 
   const suggestForSelection = () => {
+    preview.cancel();
     if (editor.current) suggest(editor.current.selection());
   };
 
-  useShortcuts({
-    onSuggest: suggestForSelection,
-    alternatives: state.status === "done" ? state.result.alternatives : null,
-    onApply: apply,
-  });
+  useShortcuts({ onSuggest: suggestForSelection, preview });
 
   const openFile = async (file: File | undefined) => {
     if (!file) return;
+    dismiss();
     setDocument(await file.text());
-    clear();
   };
 
   return (
@@ -103,9 +101,10 @@ export function App() {
         >
           <SuggestionPanel
             state={state}
-            onApply={apply}
+            previewing={preview.index}
+            onApply={preview.accept}
             onSuggest={suggestForSelection}
-            onDismiss={clear}
+            onDismiss={dismiss}
           />
         </aside>
       </main>

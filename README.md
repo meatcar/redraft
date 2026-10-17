@@ -24,7 +24,10 @@ your notes, and keep your words off everyone's server but the model's.
 ## Features
 
 - **Three rewrites on demand.** Select any span and press <kbd>Ctrl</kbd>+<kbd>Space</kbd>
-  (also on macOS). Apply one with a click or <kbd>Alt</kbd>+<kbd>1</kbd>–<kbd>3</kbd>.
+  (also on macOS).
+- **Preview in place.** <kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd> or <kbd>Alt</kbd>+<kbd>1</kbd>–<kbd>3</kbd>
+  (<kbd>Ctrl</kbd> on macOS) swaps each rewrite into the document; <kbd>Enter</kbd> keeps it as one undo step,
+  <kbd>Esc</kbd> restores the original. Or just click one.
 - **Steer every suggestion.** Type "punchier", "for a board audience", or "follow the style
   guide" in the box at the bottom.
 - **Ground it in your notes.** Pick a folder of markdown. The model searches it with tools

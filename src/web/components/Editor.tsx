@@ -1,5 +1,5 @@
 import { markdown } from "@codemirror/lang-markdown";
-import { Prec, StateEffect, StateField } from "@codemirror/state";
+import { Prec, StateEffect, StateField, Transaction } from "@codemirror/state";
 import { Decoration, EditorView, type DecorationSet } from "@codemirror/view";
 import { vim } from "@replit/codemirror-vim";
 import CodeMirror from "@uiw/react-codemirror";
@@ -47,6 +47,8 @@ const vimExtensions = [Prec.highest(vim({ status: true })), ...baseExtensions];
 export type EditorHandle = {
   /** Replaces the target if the document still holds its original text. */
   replace: (target: Target, text: string) => boolean;
+  /** Swaps `range.text` for `text` outside undo history and highlights the result. */
+  preview: (range: Target, text: string) => boolean;
   highlight: (range: { from: number; to: number } | null) => void;
   selection: () => { from: number; to: number };
 };
@@ -72,6 +74,16 @@ export function Editor({ value, onChange, vimMode = false, ref }: Props) {
         effects: setTarget.of(null),
       });
       current.focus();
+      return true;
+    },
+    preview(range, text) {
+      const current = view.current;
+      if (!current || current.state.sliceDoc(range.from, range.to) !== range.text) return false;
+      current.dispatch({
+        changes: { from: range.from, to: range.to, insert: text },
+        effects: setTarget.of({ from: range.from, to: range.from + text.length }),
+        annotations: Transaction.addToHistory.of(false),
+      });
       return true;
     },
     highlight(range) {

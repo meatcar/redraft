@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
+import { undo } from "@codemirror/commands";
 import { EditorView } from "@codemirror/view";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 
@@ -78,6 +79,54 @@ describe("App", () => {
     fireEvent.keyDown(window, { code: "Space", key: " ", ctrlKey: true });
     await waitFor(() => expect(suggestions()).toHaveLength(2));
     expect(await userPrompt(suggestions()[1]!)).toContain("<selection>\\nAlpha\\n</selection>");
+  });
+
+  test("Tab cycles previews in place, Esc restores, Enter keeps one undoable change", async () => {
+    const { view } = await setup();
+    view.dispatch({ selection: { anchor: 6, head: 10 } });
+    fireEvent.keyDown(window, { code: "Space", key: " ", ctrlKey: true });
+    await screen.findByText("Option text 3");
+    const doc = () => view.state.doc.toString();
+    const press = (key: string, init: object = {}) =>
+      fireEvent.keyDown(view.contentDOM, { key, code: key, ...init });
+
+    press("Tab");
+    expect(doc()).toBe("Alpha Option text 1 gamma.");
+    press("Tab");
+    expect(doc()).toBe("Alpha Option text 2 gamma.");
+    press("Tab", { shiftKey: true });
+    press("Tab", { shiftKey: true });
+    expect(doc()).toBe("Alpha Option text 3 gamma.");
+    press("Escape");
+    expect(doc()).toBe(sample);
+    expect(screen.getByText("Option text 1")).toBeTruthy();
+
+    press("Tab");
+    press("Enter");
+    expect(doc()).toBe("Alpha Option text 1 gamma.");
+    await waitFor(() => expect(screen.queryByText("Option text 2")).toBeNull());
+    undo(view);
+    expect(doc()).toBe(sample);
+  });
+
+  test("Ctrl or Alt with a digit previews that option", async () => {
+    const { view } = await setup();
+    view.dispatch({ selection: { anchor: 0, head: 5 } });
+    fireEvent.keyDown(window, { code: "Space", key: " ", ctrlKey: true });
+    await screen.findByText("Option text 3");
+    fireEvent.keyDown(view.contentDOM, { code: "Digit2", key: "2", ctrlKey: true });
+    expect(view.state.doc.toString()).toBe("Option text 2 beta gamma.");
+    fireEvent.keyDown(view.contentDOM, { code: "Digit3", key: "£", altKey: true });
+    expect(view.state.doc.toString()).toBe("Option text 3 beta gamma.");
+  });
+
+  test("Tab in the steering box still moves focus", async () => {
+    const { view } = await setup();
+    view.dispatch({ selection: { anchor: 0, head: 5 } });
+    fireEvent.keyDown(window, { code: "Space", key: " ", ctrlKey: true });
+    await screen.findByText("Option text 3");
+    fireEvent.keyDown(screen.getByLabelText("Steering prompt"), { key: "Tab", code: "Tab" });
+    expect(view.state.doc.toString()).toBe(sample);
   });
 
   test("the Vim toggle switches the editor to vim keys and remembers it", async () => {

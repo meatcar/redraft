@@ -1,25 +1,33 @@
 import { FileText, Loader2, RefreshCw, Sparkles, TextSelect, X } from "lucide-react";
 
-import type { Alternative } from "@core/api";
 import { Button } from "@/components/ui/button";
 import type { SuggestionState } from "@/hooks/useSuggestions";
-import { SUGGEST_SHORTCUT } from "@/lib/shortcuts";
+import { PREVIEW_MODIFIER, SUGGEST_SHORTCUT } from "@/lib/shortcuts";
+import { cn } from "@/lib/utils";
 
 type Props = {
   state: SuggestionState;
-  onApply: (alternative: Alternative) => void;
+  previewing?: number | null;
+  onApply: (index: number) => void;
   onSuggest: () => void;
   onDismiss: () => void;
 };
 
 // NOTE: no keyboard on touch screens; hide shortcut hints there.
-const shortcutHint = (
+const Kbd = ({ children }: { children: string }) => (
   <kbd className="rounded border px-1.5 font-mono text-xs text-muted-foreground pointer-coarse:hidden">
-    {SUGGEST_SHORTCUT}
+    {children}
   </kbd>
 );
+const shortcutHint = <Kbd>{SUGGEST_SHORTCUT}</Kbd>;
 
-export function SuggestionPanel({ state, onApply, onSuggest, onDismiss }: Props) {
+export function SuggestionPanel({
+  state,
+  previewing = null,
+  onApply,
+  onSuggest,
+  onDismiss,
+}: Props) {
   if (state.status === "idle") {
     return (
       <div className="flex items-center justify-between gap-3 p-3 text-sm text-muted-foreground md:h-full md:flex-col md:justify-center md:p-8 md:text-center">
@@ -73,13 +81,20 @@ export function SuggestionPanel({ state, onApply, onSuggest, onDismiss }: Props)
             <button
               key={i}
               type="button"
-              onClick={() => onApply(alternative)}
-              className="group block w-full rounded-lg border bg-card p-3 text-left md:p-4 shadow-xs transition hover:border-primary/50 hover:shadow-md focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
+              aria-current={previewing === i || undefined}
+              onClick={() => onApply(i)}
+              className={cn(
+                "group block w-full rounded-lg border bg-card p-3 text-left md:p-4 shadow-xs transition hover:border-primary/50 hover:shadow-md focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none",
+                previewing === i && "border-yellow-400 ring-2 ring-yellow-400/40",
+              )}
             >
               <div className="mb-2 flex items-center justify-between text-xs text-muted-foreground">
-                <span className="font-medium">Option {i + 1}</span>
+                <span className="font-medium">
+                  Option {i + 1}
+                  {previewing === i && " · previewing"}
+                </span>
                 <kbd className="rounded border px-1.5 font-mono opacity-60 group-hover:opacity-100 pointer-coarse:hidden">
-                  Alt+{i + 1}
+                  {PREVIEW_MODIFIER}+{i + 1}
                 </kbd>
               </div>
               <p className="font-serif text-[15px] leading-relaxed whitespace-pre-wrap">
@@ -89,6 +104,20 @@ export function SuggestionPanel({ state, onApply, onSuggest, onDismiss }: Props)
             </button>
           ))}
       </div>
+
+      {state.status === "done" && (
+        <p className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t px-3 py-2 text-xs text-muted-foreground md:px-4 pointer-coarse:hidden">
+          <span>
+            <Kbd>Tab</Kbd> preview
+          </span>
+          <span>
+            <Kbd>Enter</Kbd> keep
+          </span>
+          <span>
+            <Kbd>Esc</Kbd> restore
+          </span>
+        </p>
+      )}
 
       {state.status === "done" && state.result.sources.length > 0 && (
         <details className="border-t p-3 text-xs md:p-4 text-muted-foreground">

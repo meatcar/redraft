@@ -33,7 +33,7 @@ describe("SuggestionPanel", () => {
       />,
     );
     fireEvent.click(screen.getByText("Hey"));
-    expect(onApply).toHaveBeenCalledWith(alternatives[1]);
+    expect(onApply).toHaveBeenCalledWith(1);
     expect(screen.getByText("notes/a.md")).toBeTruthy();
   });
 
