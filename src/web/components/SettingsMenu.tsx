@@ -18,28 +18,30 @@ export function SettingsMenu({ settings, vim, onVimChange }: Props) {
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          size="sm"
-          variant={connected ? "outline" : "default"}
-          className="max-w-[55vw] md:max-w-md"
-          aria-label={`Model settings: ${summary}`}
-        >
-          <PlugZap />
-          <span className="truncate font-mono text-xs">
-            {connected ? (
-              <>
-                <span className="max-sm:hidden">{settings.provider} · </span>
-                {model}
-              </>
-            ) : (
-              summary
-            )}
-          </span>
-          <ChevronDown className="opacity-60" />
-        </Button>
+      <PopoverTrigger
+        render={
+          <Button
+            size="sm"
+            variant={connected ? "outline" : "default"}
+            className="max-w-[55vw] md:max-w-md"
+            aria-label={`Model settings: ${summary}`}
+          />
+        }
+      >
+        <PlugZap />
+        <span className="truncate font-mono text-xs">
+          {connected ? (
+            <>
+              <span className="max-sm:hidden">{settings.provider} · </span>
+              {model}
+            </>
+          ) : (
+            summary
+          )}
+        </span>
+        <ChevronDown className="opacity-60" />
       </PopoverTrigger>
-      <PopoverContent align="end" collisionPadding={8} className="flex w-80 flex-col gap-3">
+      <PopoverContent align="end" className="flex w-80 flex-col gap-3">
         <ModelSettings settings={settings} />
         <p className="text-xs text-muted-foreground">
           Requests go straight from this browser to the endpoint. Keys stay in this browser.

@@ -53,8 +53,8 @@ export function ModelPicker({ llm, value, onChange }: Props) {
         />
       )}
       <Select
-        value={models.includes(value) ? value : ""}
-        onValueChange={onChange}
+        value={models.includes(value) ? value : null}
+        onValueChange={(id) => id && onChange(id)}
         disabled={models.length === 0}
       >
         <SelectTrigger

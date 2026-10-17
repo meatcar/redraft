@@ -39,7 +39,8 @@ export function ModelSettings({ settings }: Props) {
   const [editingCustom, setEditingCustom] = useState(false);
   const provider = editingCustom || !preset ? CUSTOM : preset;
 
-  const choose = (name: string) => {
+  const choose = (name: string | null) => {
+    if (name === null) return;
     setEditingCustom(name === CUSTOM);
     const url = PRESETS.find((p) => p.name === name)?.url;
     if (url) settings.setEndpoint(url);
