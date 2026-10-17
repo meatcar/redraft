@@ -1,7 +1,7 @@
 import sqlite3InitModule from "@sqlite.org/sqlite-wasm";
 import wasmUrl from "@sqlite.org/sqlite-wasm/sqlite3.wasm" with { type: "file" };
 
-import { terms, type Engine } from "./terms";
+import { ftsMatch, type Engine } from "./terms";
 
 type Init = (options: { locateFile: () => string }) => ReturnType<typeof sqlite3InitModule>;
 
@@ -21,9 +21,7 @@ export async function makeEngine(): Promise<Engine> {
       remove.bind([id]).stepReset();
     },
     search: (query, limit) => {
-      const match = terms(query)
-        .map((term) => `"${term}"${term.length >= 4 ? "*" : ""}`)
-        .join(" OR ");
+      const match = ftsMatch(query);
       if (!match) return [];
       return db
         .selectObjects(

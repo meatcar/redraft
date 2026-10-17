@@ -2,1730 +2,1869 @@
   "date": "2026-10-17",
   "runtime": {
     "bun": "1.3.13",
-    "chrome": "155.0.0.0",
-    "platform": "Linux x64 orb",
-    "repetitions": 3,
-    "freshBrowserPerRun": true,
-    "flags": "--js-flags=--expose-gc,--enable-precise-memory-info,--disable-features=BackForwardCache"
+    "chrome": "Chrome/155.0.8059.79",
+    "platform": "Linux x86_64 orb",
+    "cpu": "1 vCPU, Intel Xeon 2.60GHz (KVM)",
+    "ramMiB": 1983,
+    "v8OldSpaceMiB": 512
   },
-  "corpus": {
-    "repository": "https://github.com/github/docs",
-    "commit": "dae83f7d28f3b8e10015bd6b6d8b72267cedceca",
-    "files": 3760,
-    "bytes": 20530560,
-    "chunks": 29947,
-    "sharedReadChunkPreparationMs": 231.782019
-  },
-  "quality": {
-    "labeledQueries": 17,
-    "negativeControls": 1,
-    "labels": [
-      {
-        "query": "github actions dependency caching",
-        "relevant": "caching-dependencies|dependency-caching"
-      },
-      {
-        "query": "personal access token expiration",
-        "relevant": "managing-your-personal-access-tokens|token-expiration-and-revocation"
-      },
-      {
-        "query": "resolving merge conflicts",
-        "relevant": "merge-conflict"
-      },
-      {
-        "query": "restore deleted repository",
-        "relevant": "restoring-a-deleted-repository"
-      },
-      {
-        "query": "protected branch rules",
-        "relevant": "protected-branches|branch-protection-rule"
-      },
-      {
-        "query": "deploy github pages site",
-        "relevant": "configuring-a-publishing-source|creating-a-github-pages-site|custom-workflow"
-      },
-      {
-        "query": "saml single sign on",
-        "relevant": "saml-single-sign-on|authentication-with-single-sign-on"
-      },
-      {
-        "query": "secret scanning push protection",
-        "relevant": "push-protection"
-      },
-      {
-        "query": "codeowners syntax",
-        "relevant": "code-owners"
-      },
-      {
-        "query": "git lfs large files",
-        "relevant": "git-large-file-storage"
-      },
-      {
-        "query": "configuring two factor authentication",
-        "relevant": "configuring-two-factor-authentication"
-      },
-      {
-        "query": "troubleshooting webhook deliveries",
-        "relevant": "troubleshooting-webhooks|redelivering-webhooks|viewing-webhook-deliveries"
-      },
-      {
-        "query": "transferring repository ownership",
-        "relevant": "transferring-a-repository"
-      },
-      {
-        "query": "codespaces forwarding ports",
-        "relevant": "forwarding-ports-in-your-codespace"
-      },
-      {
-        "query": "ssh key passphrase",
-        "relevant": "working-with-ssh-key-passphrases"
-      },
-      {
-        "query": "signing commits gpg",
-        "relevant": "signing-commits|telling-git-about-your-signing-key"
-      },
-      {
-        "query": "cach depend",
-        "relevant": "caching-dependencies|dependency-caching"
-      },
-      {
-        "query": "nonexistentquokkawombat",
-        "relevant": "^$"
-      }
-    ]
-  },
-  "completeHTML": {
+  "gzip": "Bun.gzipSync, explicit level 9; raw trial sizes used Bun default compression",
+  "fullApp": {
     "baseline": {
       "bytes": 3608033,
-      "gzip": 1205817
+      "gzip9Bytes": 1207178,
+      "gnuGzip9Bytes": 1202636,
+      "sha256": "ffc1a7c568f70be2d99f2bf810c0d315e70b60319d49bf40f4e5c9e8e68b9da2"
     },
-    "minisearch": {
-      "bytes": 2240422,
-      "gzip": 632166
+    "prototype": {
+      "bytes": 2240494,
+      "gzip9Bytes": 632302,
+      "gnuGzip9Bytes": 630929,
+      "sha256": "3ca3ff95136363f74b65755684514b1f9f76e4fd9cbd1d6b84f99a97e44470d9"
     },
-    "gzipReductionPercent": 47.57363679563317
+    "gzipSavingPercent": 47.62147752858319
   },
-  "engines": [
-    {
-      "name": "fts5",
-      "bundle": {
-        "engine": "fts5",
-        "js": 218494,
-        "gzip": 67034,
-        "html": 1377076,
-        "htmlGzip": 581557,
-        "assets": [
-          {
-            "path": "./sqlite3-dvy61q50.wasm",
-            "bytes": 868907
-          }
-        ]
-      },
-      "median": {
-        "buildMs": 1352.3000000000466,
-        "retainedJSBytes": 7500364,
-        "wasmBytes": 17498112,
-        "memoryMiB": 23.840404510498047,
-        "updateMs": 65.5,
-        "queryMs": 5.7999999998137355,
-        "queryP95Ms": 46.9000000001397
-      },
-      "hitAt6": 16,
-      "mrrAt6": 0.8235294117647058,
-      "chunkOverlapAt6": 1,
-      "runs": [
+  "corpora": {
+    "github": {
+      "repository": "https://github.com/github/docs",
+      "commit": "dae83f7d28f3b8e10015bd6b6d8b72267cedceca",
+      "files": 3760,
+      "bytes": 20530560,
+      "chunks": 29947,
+      "corpusSha256": "2c00672f19a62480570362db281a2716f2ff7dec84aade1e75865b6072cd3790",
+      "queriesSha256": "f6996e6806abb9b7a992283406a4ba7b3332de35acf78e988eacc3efc532368b",
+      "queries": [
         {
-          "after": 37133651,
-          "before": 29633287,
-          "buildMs": 1352.3000000000466,
-          "bytes": 20530560,
-          "changedChunks": 263,
-          "changedFiles": 38,
-          "chunkMs": 231.782019,
-          "chunks": 29947,
-          "engine": "fts5",
-          "files": 3760,
-          "mutationFound": 6,
-          "mutationRemoved": true,
-          "retainedBytes": 7500364,
-          "updateMs": 56.5,
-          "wasmBytes": 17498112,
-          "queryTimesMs": [
-            61.299999999813735, 11.799999999813735, 2.7999999998137355, 11, 5.5, 25,
-            11.300000000046566, 7.100000000093132, 1.2999999998137357, 4.600000000093132,
-            5.399999999906868, 2.4000000001396984, 6.300000000046566, 1.4000000001396984,
-            1.7999999998137357, 1.2000000001862643, 5.699999999953434, 0.19999999995343387
-          ]
-        },
-        {
-          "after": 37134431,
-          "before": 29633287,
-          "buildMs": 1463.6000000000931,
-          "bytes": 20530560,
-          "changedChunks": 263,
-          "changedFiles": 38,
-          "chunkMs": 231.782019,
-          "chunks": 29947,
-          "engine": "fts5",
-          "files": 3760,
-          "mutationFound": 6,
-          "mutationRemoved": true,
-          "retainedBytes": 7501144,
-          "updateMs": 77.60000000009313,
-          "wasmBytes": 17498112,
-          "queryTimesMs": [
-            65, 15, 3.6000000000931323, 11.299999999813735, 5.699999999953434, 28.9000000001397,
-            16.300000000046566, 10.5, 2, 6.600000000093132, 7.799999999813736, 3.3999999999068677,
-            9.200000000186265, 2.1000000000931323, 2.5999999998603016, 1.800000000046566,
-            7.600000000093132, 0.39999999990686774
-          ]
-        },
-        {
-          "after": 36607100,
-          "before": 29633287,
-          "buildMs": 1156.6999999999534,
-          "bytes": 20530560,
-          "changedChunks": 263,
-          "changedFiles": 38,
-          "chunkMs": 231.782019,
-          "chunks": 29947,
-          "engine": "fts5",
-          "files": 3760,
-          "mutationFound": 6,
-          "mutationRemoved": true,
-          "retainedBytes": 6973813,
-          "updateMs": 65.5,
-          "wasmBytes": 17498112,
-          "queryTimesMs": [
-            46.9000000001397, 10.5, 2.1000000000931323, 8, 3.799999999813735, 22.100000000093132,
-            13, 10.699999999953434, 5.7999999998137355, 7.100000000093132, 5.699999999953434, 2.5,
-            6.600000000093132, 1.4000000001396984, 1.800000000046566, 1.3999999999068675,
-            5.899999999906868, 0.19999999995343387
-          ]
-        }
-      ],
-      "rankings": [
-        {
-          "ids": [511, 1796, 508, 8266, 1808, 2329],
-          "paths": [
-            "actions/concepts/workflows-and-actions/dependency-caching.md",
-            "actions/reference/workflows-and-actions/dependency-caching.md",
-            "actions/concepts/workflows-and-actions/dependency-caching.md",
-            "code-security/concepts/code-scanning/codeql/codeql-for-compiled-languages.md",
-            "actions/reference/workflows-and-actions/dependency-caching.md",
-            "actions/tutorials/build-and-test-code/go.md"
-          ],
           "query": "github actions dependency caching",
-          "reciprocalRank": 1
+          "relevant": "caching-dependencies|dependency-caching",
+          "kind": "task"
         },
         {
-          "ids": [7298, 13635, 7233, 4900, 25185, 7211],
-          "paths": [
-            "authentication/keeping-your-account-and-data-secure/token-expiration-and-revocation.md",
-            "code-security/tutorials/secure-your-organization/protect-against-threats.md",
-            "authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens.md",
-            "admin/managing-iam/provisioning-user-accounts-with-scim/configuring-scim-provisioning-for-users.md",
-            "organizations/managing-programmatic-access-to-your-organization/setting-a-personal-access-token-policy-for-your-organization.md",
-            "authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens.md"
-          ],
           "query": "personal access token expiration",
-          "reciprocalRank": 1
+          "relevant": "managing-your-personal-access-tokens|token-expiration-and-revocation",
+          "kind": "task"
         },
         {
-          "ids": [14715, 26030, 16972, 26035, 26183, 14713],
-          "paths": [
-            "contributing/collaborating-on-github-docs/using-git-on-github-docs.md",
-            "pull-requests/how-tos/merge-and-close-pull-requests/resolving-a-merge-conflict-on-github.md",
-            "copilot/how-tos/copilot-cli/use-copilot-cli/manage-pull-requests.md",
-            "pull-requests/how-tos/merge-and-close-pull-requests/resolving-a-merge-conflict-using-the-command-line.md",
-            "pull-requests/reference/merge-conflicts.md",
-            "contributing/collaborating-on-github-docs/using-git-on-github-docs.md"
-          ],
           "query": "resolving merge conflicts",
-          "reciprocalRank": 0.5
+          "relevant": "merge-conflict",
+          "kind": "task"
         },
         {
-          "ids": [4376, 26595, 4378, 26598, 26597, 4377],
-          "paths": [
-            "admin/managing-accounts-and-repositories/managing-repositories-in-your-enterprise/restoring-a-deleted-repository.md",
-            "repositories/creating-and-managing-repositories/restoring-a-deleted-repository.md",
-            "admin/managing-accounts-and-repositories/managing-repositories-in-your-enterprise/restoring-a-deleted-repository.md",
-            "repositories/creating-and-managing-repositories/restoring-a-deleted-repository.md",
-            "repositories/creating-and-managing-repositories/restoring-a-deleted-repository.md",
-            "admin/managing-accounts-and-repositories/managing-repositories-in-your-enterprise/restoring-a-deleted-repository.md"
-          ],
           "query": "restore deleted repository",
-          "reciprocalRank": 1
+          "relevant": "restoring-a-deleted-repository",
+          "kind": "task"
         },
         {
-          "ids": [26476, 26411, 26389, 1831, 26424, 13600],
-          "paths": [
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/converting-branch-protections-to-rulesets.md",
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule.md",
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches.md",
-            "actions/reference/workflows-and-actions/deployments-and-environments.md",
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets.md",
-            "code-security/tutorials/secure-your-organization/prevent-data-leaks.md"
-          ],
           "query": "protected branch rules",
-          "reciprocalRank": 0.5
+          "relevant": "protected-branches|branch-protection-rule",
+          "kind": "task"
         },
         {
-          "ids": [25720, 25680, 25694, 25718, 25721, 25676],
-          "paths": [
-            "pages/getting-started-with-github-pages/unpublishing-a-github-pages-site.md",
-            "pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site.md",
-            "pages/getting-started-with-github-pages/deleting-a-github-pages-site.md",
-            "pages/getting-started-with-github-pages/unpublishing-a-github-pages-site.md",
-            "pages/getting-started-with-github-pages/unpublishing-a-github-pages-site.md",
-            "pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site.md"
-          ],
           "query": "deploy github pages site",
-          "reciprocalRank": 0.5
+          "relevant": "configuring-a-publishing-source|creating-a-github-pages-site|custom-workflow",
+          "kind": "task"
         },
         {
-          "ids": [25236, 25241, 7054, 25234, 25230, 25206],
-          "paths": [
-            "organizations/managing-saml-single-sign-on-for-your-organization/enforcing-saml-single-sign-on-for-your-organization.md",
-            "organizations/managing-saml-single-sign-on-for-your-organization/index.md",
-            "authentication/authenticating-with-single-sign-on/about-authentication-with-single-sign-on.md",
-            "organizations/managing-saml-single-sign-on-for-your-organization/enabling-and-testing-saml-single-sign-on-for-your-organization.md",
-            "organizations/managing-saml-single-sign-on-for-your-organization/enabling-and-testing-saml-single-sign-on-for-your-organization.md",
-            "organizations/managing-saml-single-sign-on-for-your-organization/about-identity-and-access-management-with-saml-single-sign-on.md"
-          ],
           "query": "saml single sign on",
-          "reciprocalRank": 1
+          "relevant": "saml-single-sign-on|authentication-with-single-sign-on",
+          "kind": "task"
         },
         {
-          "ids": [8413, 8392, 8377, 9757, 13103, 12647],
-          "paths": [
-            "code-security/concepts/secret-security/push-protection.md",
-            "code-security/concepts/secret-security/delegated-bypass.md",
-            "code-security/concepts/secret-security/about-alerts.md",
-            "code-security/how-tos/secure-your-secrets/work-with-leak-prevention/push-protection-on-the-command-line.md",
-            "code-security/tutorials/adopting-github-advanced-security-at-scale/phase-2-preparing-to-enable-at-scale.md",
-            "code-security/reference/secret-security/secret-scanning-scope.md"
-          ],
           "query": "secret scanning push protection",
-          "reciprocalRank": 1
+          "relevant": "push-protection",
+          "kind": "task"
         },
         {
-          "ids": [26650, 26649, 26652, 26651, 88, 26648],
-          "paths": [
-            "repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md",
-            "repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md",
-            "repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md",
-            "repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md",
-            "account-and-profile/concepts/username-changes.md",
-            "repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md"
-          ],
           "query": "codeowners syntax",
-          "reciprocalRank": 1
+          "relevant": "code-owners",
+          "kind": "task"
         },
         {
-          "ids": [26929, 4343, 7638, 26741, 26935, 4345],
-          "paths": [
-            "repositories/working-with-files/managing-large-files/installing-git-large-file-storage.md",
-            "admin/managing-accounts-and-repositories/managing-repositories-in-your-enterprise/configuring-git-large-file-storage-for-your-enterprise.md",
-            "billing/concepts/product-billing/git-lfs.md",
-            "repositories/managing-your-repositorys-settings-and-features/managing-repository-settings/managing-git-lfs-objects-in-archives-of-your-repository.md",
-            "repositories/working-with-files/managing-large-files/moving-a-file-in-your-repository-to-git-large-file-storage.md",
-            "admin/managing-accounts-and-repositories/managing-repositories-in-your-enterprise/configuring-git-large-file-storage-for-your-enterprise.md"
-          ],
           "query": "git lfs large files",
-          "reciprocalRank": 1
+          "relevant": "git-large-file-storage",
+          "kind": "task"
         },
         {
-          "ids": [7429, 7416, 7415, 7424, 7444, 7425],
-          "paths": [
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/configuring-two-factor-authentication.md",
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/configuring-two-factor-authentication-recovery-methods.md",
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/changing-your-two-factor-authentication-method.md",
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/configuring-two-factor-authentication-recovery-methods.md",
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/disabling-two-factor-authentication-for-your-personal-account.md",
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/configuring-two-factor-authentication.md"
-          ],
           "query": "configuring two factor authentication",
-          "reciprocalRank": 1
+          "relevant": "configuring-two-factor-authentication",
+          "kind": "task"
         },
         {
-          "ids": [29938, 29776, 29783, 29777, 29759, 29770],
-          "paths": [
-            "webhooks/using-webhooks/validating-webhook-deliveries.md",
-            "webhooks/testing-and-troubleshooting-webhooks/viewing-webhook-deliveries.md",
-            "webhooks/testing-and-troubleshooting-webhooks/viewing-webhook-deliveries.md",
-            "webhooks/testing-and-troubleshooting-webhooks/viewing-webhook-deliveries.md",
-            "webhooks/testing-and-troubleshooting-webhooks/troubleshooting-webhooks.md",
-            "webhooks/testing-and-troubleshooting-webhooks/troubleshooting-webhooks.md"
-          ],
           "query": "troubleshooting webhook deliveries",
-          "reciprocalRank": 0.5
+          "relevant": "troubleshooting-webhooks|redelivering-webhooks|viewing-webhook-deliveries",
+          "kind": "task"
         },
         {
-          "ids": [6744, 25013, 6867, 6745, 6746, 6618],
-          "paths": [
-            "apps/maintaining-github-apps/transferring-ownership-of-a-github-app.md",
-            "organizations/managing-organization-settings/transferring-organization-ownership.md",
-            "apps/oauth-apps/maintaining-oauth-apps/transferring-ownership-of-an-oauth-app.md",
-            "apps/maintaining-github-apps/transferring-ownership-of-a-github-app.md",
-            "apps/maintaining-github-apps/transferring-ownership-of-a-github-app.md",
-            "apps/github-marketplace/github-marketplace-overview/applying-for-publisher-verification-for-your-organization.md"
-          ],
           "query": "transferring repository ownership",
-          "reciprocalRank": 0
+          "relevant": "transferring-a-repository",
+          "kind": "task"
         },
         {
-          "ids": [13840, 13844, 14135, 13843, 13845, 13848],
-          "paths": [
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md",
-            "codespaces/reference/security-in-github-codespaces.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md"
-          ],
           "query": "codespaces forwarding ports",
-          "reciprocalRank": 1
+          "relevant": "forwarding-ports-in-your-codespace",
+          "kind": "task"
         },
         {
-          "ids": [7155, 7521, 7156, 7157, 7160, 7112],
-          "paths": [
-            "authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases.md",
-            "authentication/troubleshooting-ssh/recovering-your-ssh-key-passphrase.md",
-            "authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases.md",
-            "authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases.md",
-            "authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases.md",
-            "authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent.md"
-          ],
           "query": "ssh key passphrase",
-          "reciprocalRank": 1
+          "relevant": "working-with-ssh-key-passphrases",
+          "kind": "task"
         },
         {
-          "ids": [7364, 7363, 7336, 7362, 7371, 7352],
-          "paths": [
-            "authentication/managing-commit-signature-verification/signing-commits.md",
-            "authentication/managing-commit-signature-verification/index.md",
-            "authentication/managing-commit-signature-verification/about-commit-signature-verification.md",
-            "authentication/managing-commit-signature-verification/index.md",
-            "authentication/managing-commit-signature-verification/telling-git-about-your-signing-key.md",
-            "authentication/managing-commit-signature-verification/checking-for-existing-gpg-keys.md"
-          ],
           "query": "signing commits gpg",
-          "reciprocalRank": 1
+          "relevant": "signing-commits|telling-git-about-your-signing-key",
+          "kind": "task"
         },
         {
-          "ids": [1796, 8853, 2394, 2329, 2412, 8266],
-          "paths": [
-            "actions/reference/workflows-and-actions/dependency-caching.md",
-            "code-security/how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/codeql-for-compiled-languages.md",
-            "actions/tutorials/build-and-test-code/powershell.md",
-            "actions/tutorials/build-and-test-code/go.md",
-            "actions/tutorials/build-and-test-code/python.md",
-            "code-security/concepts/code-scanning/codeql/codeql-for-compiled-languages.md"
-          ],
           "query": "cach depend",
-          "reciprocalRank": 1
+          "relevant": "caching-dependencies|dependency-caching",
+          "kind": "task"
         },
         {
-          "ids": [],
-          "paths": [],
           "query": "nonexistentquokkawombat",
-          "reciprocalRank": 0
+          "relevant": "^$",
+          "kind": "negative"
+        },
+        {
+          "query": "Changing access permissions for wikis",
+          "relevant": "^communities/documenting-your-project-with-wikis/changing-access-permissions-for-wikis\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Checking out a commit in GitHub Desktop",
+          "relevant": "^desktop/managing-commits/checking-out-a-commit-in-github-desktop\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "REST API endpoints for enterprise teams",
+          "relevant": "^rest/enterprise-teams/enterprise-teams\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Handling plan cancellations",
+          "relevant": "^apps/github-marketplace/using-the-github-marketplace-api-in-your-app/handling-plan-cancellations\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Adding self-hosted runners",
+          "relevant": "^actions/how-tos/manage-runners/self-hosted-runners/add-runners\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "GitHub SIRT description RFC 2350",
+          "relevant": "^site-policy/security-policies/github-sirt-description-rfc-2350\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "GraphQL changelog for 2022",
+          "relevant": "^graphql/overview/changelog/2022\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Releasing and maintaining actions",
+          "relevant": "^actions/how-tos/create-and-publish-actions/release-and-maintain-actions\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Creating rulesets for a repository",
+          "relevant": "^repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Controlling and tracking costs at scale",
+          "relevant": "^billing/tutorials/control-costs-at-scale\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Automatic build failed for a compiled language",
+          "relevant": "^code-security/reference/code-scanning/troubleshoot-analysis-errors/automatic-build-failed\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Setting up budgets to control spending on metered products",
+          "relevant": "^billing/how-tos/set-up-budgets\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Using Markdown and Liquid in GitHub Docs",
+          "relevant": "^contributing/writing-for-github-docs/using-markdown-and-liquid-in-github-docs\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Adding agent skills for {% data variables.copilot.copilot_cli %}",
+          "relevant": "^copilot/how-tos/copilot-cli/customize-copilot/add-skills\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Using the content linter",
+          "relevant": "^contributing/collaborating-on-github-docs/using-the-content-linter\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "About customizing GitHub Copilot responses",
+          "relevant": "^copilot/concepts/prompting/response-customization\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Enabling or disabling cloud sandboxes for your organization or enterprise",
+          "relevant": "^copilot/how-tos/cloud-and-local-sandboxes/enabling-or-disabling-cloud-sandboxes-for-your-organization\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Monitoring your GitHub Copilot usage and entitlements (legacy)",
+          "relevant": "^copilot/reference/copilot-billing/request-based-billing-legacy/monitor-premium-requests\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Enabling Dependabot for your enterprise",
+          "relevant": "^admin/configuring-settings/configuring-github-connect/enabling-dependabot-for-your-enterprise\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Enabling GitHub Copilot cloud agent in your enterprise",
+          "relevant": "^copilot/how-tos/administer-copilot/manage-for-enterprise/manage-agents/enable-copilot-cloud-agent\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Building communities documentation",
+          "relevant": "^communities/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Guidelines for Legal Requests of User Data",
+          "relevant": "^site-policy/other-site-policies/guidelines-for-legal-requests-of-user-data\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Available filters for security overview",
+          "relevant": "^code-security/reference/security-at-scale/overview-dashboard-filters\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "GitHub Disrupting the Experience of Other Users",
+          "relevant": "^site-policy/acceptable-use-policies/github-disrupting-the-experience-of-other-users\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Governing Copilot to support developer productivity",
+          "relevant": "^copilot/tutorials/roll-out-at-scale/govern-at-scale/govern-for-adoption\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "GitHub Agentic Workflows",
+          "relevant": "^copilot/concepts/agent-capabilities/agent-powered-workflows-and-operations/about-github-agentic-workflows\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Approving OAuth apps for your organization",
+          "relevant": "^organizations/managing-oauth-access-to-your-organizations-data/approving-oauth-apps-for-your-organization\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Working with the Docker registry",
+          "relevant": "^packages/working-with-a-github-packages-registry/working-with-the-docker-registry\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Comparing GitHub Copilot CLI customization features",
+          "relevant": "^copilot/concepts/agents/copilot-cli/comparing-cli-features\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "REST API endpoints for enterprise credential authorizations",
+          "relevant": "^rest/enterprise-admin/credential-authorizations\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "REST API endpoints for enterprise audit logs",
+          "relevant": "^rest/enterprise-admin/audit-log\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Getting started with prompts for {% data variables.copilot.copilot_chat_short %} on {% data variables.product.github %}",
+          "relevant": "^copilot/how-tos/copilot-on-github/chat-with-copilot/get-started-with-chat\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Getting started with discounted GitHub Enterprise Cloud",
+          "relevant": "^nonprofit/nonprofit-enterprise-plan/getting-started-with-discounted-github-enterprise-cloud\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Triggering a workflow",
+          "relevant": "^actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "GitHub Actions Importer reference",
+          "relevant": "^actions/reference/github-actions-importer/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Configuring OpenID Connect in Docker",
+          "relevant": "^actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-docker\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Allowing a prebuild to access other repositories",
+          "relevant": "^codespaces/prebuilding-your-codespaces/allowing-a-prebuild-to-access-other-repositories\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Speeding up task completion with the `/fleet` command",
+          "relevant": "^copilot/how-tos/copilot-cli/use-copilot-cli/speed-up-task-completion\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Use the tool status page for code scanning",
+          "relevant": "^code-security/how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/use-the-tools-status-page-for-code-scanning\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Permissions for {% data variables.product.github %} in Teams",
+          "relevant": "^integrations/reference/teams-permissions\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "REST API endpoints for GitHub Actions cache",
+          "relevant": "^rest/actions/cache\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Assigning GitHub Copilot licenses in your enterprise",
+          "relevant": "^copilot/tutorials/roll-out-at-scale/assign-licenses/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "{% data variables.product.prodname_copilot_short %} for {% data variables.product.github %} tasks",
+          "relevant": "^copilot/how-tos/copilot-on-github/copilot-for-github-tasks/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "About rationale, confidence, and approvals for issues",
+          "relevant": "^copilot/concepts/agent-capabilities/agent-powered-workflows-and-operations/about-automation-rationale-and-approvals\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Checking out pull requests locally",
+          "relevant": "^pull-requests/how-tos/review-pull-requests/checking-out-pull-requests-locally\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "How-tos for viewing and interpreting security results",
+          "relevant": "^code-security/how-tos/view-and-interpret-data/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Syncing your branch in GitHub Desktop",
+          "relevant": "^desktop/working-with-your-remote-repository-on-github-or-github-enterprise/syncing-your-branch-in-github-desktop\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Connecting to a private network",
+          "relevant": "^codespaces/developing-in-a-codespace/connecting-to-a-private-network\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Using LSP servers with {% data variables.copilot.copilot_cli %}",
+          "relevant": "^copilot/concepts/agents/copilot-cli/lsp-servers\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Migrating your enterprise to the Container registry from the Docker registry",
+          "relevant": "^admin/configuring-packages/migrating-your-enterprise-to-the-container-registry-from-the-docker-registry\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "REST API endpoints for pull requests",
+          "relevant": "^rest/pulls/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Enforcing policies for code security and analysis for your enterprise",
+          "relevant": "^admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-code-security-and-analysis-for-your-enterprise\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Paying for GitHub Sponsors by invoice",
+          "relevant": "^sponsors/sponsoring-open-source-contributors/paying-for-github-sponsors-by-invoice\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Creating a pull request",
+          "relevant": "^pull-requests/how-tos/create-pull-requests/creating-a-pull-request\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Restricting email notifications for your enterprise",
+          "relevant": "^admin/enforcing-policies/enforcing-policies-for-your-enterprise/restricting-email-notifications-for-your-enterprise\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Identity and access management fundamentals",
+          "relevant": "^admin/concepts/identity-and-access-management/identity-and-access-management-fundamentals\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "GitHub Appeal and Reinstatement",
+          "relevant": "^site-policy/acceptable-use-policies/github-appeal-and-reinstatement\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Managing invitations to organizations within your enterprise",
+          "relevant": "^admin/managing-accounts-and-repositories/managing-users-in-your-enterprise/managing-invitations-to-organizations-within-your-enterprise\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "The agent loop",
+          "relevant": "^copilot/how-tos/copilot-sdk/features/agent-loop\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Building and testing Java with Ant",
+          "relevant": "^actions/tutorials/build-and-test-code/java-with-ant\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "REST API endpoints for issue events",
+          "relevant": "^rest/issues/events\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Personal account management",
+          "relevant": "^account-and-profile/concepts/account-management\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Setting guidelines for repository contributors",
+          "relevant": "^communities/setting-up-your-project-for-healthy-contributions/setting-guidelines-for-repository-contributors\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "JavaScript CodeQL queries for Code Quality",
+          "relevant": "^code-security/reference/code-quality/codeql-queries/javascript-queries\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "GitHub REST API documentation",
+          "relevant": "^rest/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Uploading storage and deployment data to the {% data variables.product.virtual_registry %}",
+          "relevant": "^code-security/how-tos/secure-your-supply-chain/establish-provenance-and-integrity/upload-linked-artifacts\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "About date fields",
+          "relevant": "^issues/planning-and-tracking-with-projects/understanding-fields/about-date-fields\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Troubleshooting network errors for GitHub Copilot",
+          "relevant": "^copilot/how-tos/troubleshoot-copilot/troubleshoot-network-errors\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Managing policies and features for GitHub Copilot in your enterprise",
+          "relevant": "^copilot/how-tos/administer-copilot/manage-for-enterprise/manage-enterprise-policies\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "REST API endpoints for {% data variables.product.prodname_pages %}",
+          "relevant": "^rest/pages/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "About sponsorships, fees, and taxes",
+          "relevant": "^sponsors/sponsoring-open-source-contributors/about-sponsorships-fees-and-taxes\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Viewing whether users in your organization have 2FA enabled",
+          "relevant": "^organizations/keeping-your-organization-secure/managing-two-factor-authentication-for-your-organization/viewing-whether-users-in-your-organization-have-2fa-enabled\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Usage and billing metrics",
+          "relevant": "^copilot/how-tos/copilot-sdk/features/usage-and-billing\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Setting up a Node.js project for GitHub Codespaces",
+          "relevant": "^codespaces/setting-up-your-project-for-codespaces/adding-a-dev-container-configuration/setting-up-your-nodejs-project-for-codespaces\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Creating a template repository",
+          "relevant": "^repositories/creating-and-managing-repositories/creating-a-template-repository\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Prioritizing Dependabot alerts using metrics",
+          "relevant": "^code-security/tutorials/manage-security-alerts/prioritizing-dependabot-alerts-using-metrics\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Hosting of models for GitHub Copilot",
+          "relevant": "^copilot/reference/ai-models/model-hosting\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "About upgrades to new releases",
+          "relevant": "^admin/overview/about-upgrades-to-new-releases\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Pushing changes to GitHub from GitHub Desktop",
+          "relevant": "^desktop/making-changes-in-a-branch/pushing-changes-to-github-from-github-desktop\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "REST API endpoints for user interactions",
+          "relevant": "^rest/interactions/user\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Register a learning management system with GitHub Classroom",
+          "relevant": "^education/manage-coursework-with-github-classroom/teach-with-github-classroom/register-a-learning-management-system-with-github-classroom\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Enabling default setup takes too long",
+          "relevant": "^code-security/reference/code-scanning/troubleshoot-analysis-errors/default-setup-timeout\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "REST API endpoints for pre-receive environments",
+          "relevant": "^rest/enterprise-admin/pre-receive-environments\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Code Quality enablement across organizations and enterprises",
+          "relevant": "^code-security/concepts/code-quality/enablement-at-scale\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Using the GitHub Marketplace API in your app",
+          "relevant": "^apps/github-marketplace/using-the-github-marketplace-api-in-your-app/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Organizing information with collapsed sections",
+          "relevant": "^get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-collapsed-sections\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Building and testing .NET",
+          "relevant": "^actions/tutorials/build-and-test-code/net\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Displaying IP addresses in the audit log for your enterprise",
+          "relevant": "^admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/displaying-ip-addresses-in-the-audit-log-for-your-enterprise\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Introduction to dev containers",
+          "relevant": "^codespaces/setting-up-your-project-for-codespaces/adding-a-dev-container-configuration/introduction-to-dev-containers\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "GitHub Copilot integrations",
+          "relevant": "^copilot/how-tos/copilot-integrations/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Secret scanning pattern configuration data",
+          "relevant": "^code-security/reference/secret-security/secret-pattern-data\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Roles for {% data variables.visual_studio.prodname_vss_ghe %} reference",
+          "relevant": "^billing/reference/roles-for-visual-studio\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "GitHub Sponsors Additional Terms",
+          "relevant": "^site-policy/github-terms/github-sponsors-additional-terms\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Restricting repository visibility changes in your organization",
+          "relevant": "^organizations/managing-organization-settings/restricting-repository-visibility-changes-in-your-organization\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "About Azure private networking for GitHub-hosted runners in your organization",
+          "relevant": "^organizations/managing-organization-settings/about-azure-private-networking-for-github-hosted-runners-in-your-organization\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Unlinking your email address from a locked account",
+          "relevant": "^account-and-profile/how-tos/account-management/unlinking-your-email-address-from-a-locked-account\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Allowing repository admins to rename branches with organization rulesets",
+          "relevant": "^organizations/managing-organization-settings/allowing-repository-admins-to-rename-branches-with-organization-rulesets\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Accessing a project's community profile",
+          "relevant": "^communities/setting-up-your-project-for-healthy-contributions/accessing-a-projects-community-profile\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "REST API endpoints for rate limits",
+          "relevant": "^rest/rate-limit/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Manually running a workflow",
+          "relevant": "^actions/how-tos/manage-workflow-runs/manually-run-a-workflow\\.md$",
+          "kind": "title"
         }
       ]
     },
-    {
-      "name": "minisearch",
-      "bundle": {
-        "engine": "minisearch",
-        "js": 18396,
-        "gzip": 6313,
-        "html": 18428,
-        "htmlGzip": 6336,
-        "assets": []
-      },
-      "median": {
-        "buildMs": 3780.7999999998137,
-        "retainedJSBytes": 50540633,
-        "wasmBytes": 0,
-        "memoryMiB": 48.19930362701416,
-        "updateMs": 35.800000000046566,
-        "queryMs": 6.599999999860302,
-        "queryP95Ms": 80
-      },
-      "hitAt6": 17,
-      "mrrAt6": 0.9019607843137255,
-      "chunkOverlapAt6": 0.4313725490196078,
-      "runs": [
+    "mdn": {
+      "repository": "https://github.com/mdn/content",
+      "commit": "44a1a0348720bbd1b1085c7d92b93b4fd311a3dd",
+      "files": 3005,
+      "bytes": 16832046,
+      "chunks": 37515,
+      "corpusSha256": "91d84d4a061952a41a0472cc36c9f7c1632dc367626578e559e89dbc4c1f107a",
+      "queriesSha256": "e125d098d2f58a8a403d97fc7669cb7736738a8d6fc6b128f28fdbd1997c0010",
+      "queries": [
         {
-          "after": 79028589,
-          "before": 28488052,
-          "buildMs": 3804.399999999907,
-          "bytes": 20530560,
-          "changedChunks": 263,
-          "changedFiles": 38,
-          "chunkMs": 231.782019,
-          "chunks": 29947,
-          "engine": "minisearch",
-          "files": 3760,
-          "mutationFound": 6,
-          "mutationRemoved": true,
-          "retainedBytes": 50540537,
-          "updateMs": 36.10000000009313,
-          "wasmBytes": 0,
-          "queryTimesMs": [
-            96.10000000009312, 24.5, 3.799999999813735, 9.400000000139698, 6.599999999860302,
-            24.100000000093132, 17.899999999906868, 8.800000000046566, 1.1000000000931325,
-            5.100000000093132, 8.800000000046566, 2.0999999998603016, 9.100000000093132,
-            1.1000000000931325, 2.699999999953434, 0.8999999999068677, 5.399999999906868,
-            0.19999999995343387
-          ]
+          "query": "css flexbox align items",
+          "relevant": "css_flexible_box_layout|align-items",
+          "kind": "task"
         },
         {
-          "after": 79028685,
-          "before": 28488052,
-          "buildMs": 3615.600000000093,
-          "bytes": 20530560,
-          "changedChunks": 263,
-          "changedFiles": 38,
-          "chunkMs": 231.782019,
-          "chunks": 29947,
-          "engine": "minisearch",
-          "files": 3760,
-          "mutationFound": 6,
-          "mutationRemoved": true,
-          "retainedBytes": 50540633,
-          "updateMs": 35.800000000046566,
-          "wasmBytes": 0,
-          "queryTimesMs": [
-            80.5, 28.899999999906868, 3.899999999906868, 10.200000000186265, 7.5, 22.5999999998603,
-            16.799999999813735, 7.800000000046566, 1, 4.699999999953434, 8.100000000093132,
-            1.8999999999068675, 8.699999999953434, 1.0999999998603016, 2.4000000001396984,
-            0.8999999999068677, 35.39999999990687, 0.19999999995343387
-          ]
+          "query": "css grid template columns",
+          "relevant": "grid-template-columns|css_grid_layout",
+          "kind": "task"
         },
         {
-          "after": 79028757,
-          "before": 28488020,
-          "buildMs": 3780.7999999998137,
-          "bytes": 20530560,
-          "changedChunks": 263,
-          "changedFiles": 38,
-          "chunkMs": 231.782019,
-          "chunks": 29947,
-          "engine": "minisearch",
-          "files": 3760,
-          "mutationFound": 6,
-          "mutationRemoved": true,
-          "retainedBytes": 50540737,
-          "updateMs": 34,
-          "wasmBytes": 0,
-          "queryTimesMs": [
-            80, 14.899999999906868, 2.2000000001862645, 10.299999999813735, 3.5, 32.9000000001397,
-            16.800000000046566, 7.900000000139698, 1, 4.800000000046566, 7.900000000139698,
-            1.9000000001396984, 8.5, 0.9000000001396984, 2.2999999998137355, 0.9000000001396984,
-            4.7000000001862645, 0.19999999995343387
-          ]
-        }
-      ],
-      "rankings": [
-        {
-          "ids": [1808, 509, 1796, 8853, 2329, 2853],
-          "paths": [
-            "actions/reference/workflows-and-actions/dependency-caching.md",
-            "actions/concepts/workflows-and-actions/dependency-caching.md",
-            "actions/reference/workflows-and-actions/dependency-caching.md",
-            "code-security/how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/codeql-for-compiled-languages.md",
-            "actions/tutorials/build-and-test-code/go.md",
-            "actions/tutorials/migrate-to-github-actions/manual-migrations/migrate-from-circleci.md"
-          ],
-          "query": "github actions dependency caching",
-          "reciprocalRank": 1
+          "query": "css selector specificity",
+          "relevant": "specificity",
+          "kind": "task"
         },
         {
-          "ids": [7298, 25185, 6285, 7211, 13635, 4072],
-          "paths": [
-            "authentication/keeping-your-account-and-data-secure/token-expiration-and-revocation.md",
-            "organizations/managing-programmatic-access-to-your-organization/setting-a-personal-access-token-policy-for-your-organization.md",
-            "apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app.md",
-            "authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens.md",
-            "code-security/tutorials/secure-your-organization/protect-against-threats.md",
-            "admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-personal-access-tokens-in-your-enterprise.md"
-          ],
-          "query": "personal access token expiration",
-          "reciprocalRank": 1
+          "query": "sticky position scrolling",
+          "relevant": "properties/position/",
+          "kind": "task"
         },
         {
-          "ids": [26183, 16972, 19108, 14713, 14714, 16973],
-          "paths": [
-            "pull-requests/reference/merge-conflicts.md",
-            "copilot/how-tos/copilot-cli/use-copilot-cli/manage-pull-requests.md",
-            "copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github.md",
-            "contributing/collaborating-on-github-docs/using-git-on-github-docs.md",
-            "contributing/collaborating-on-github-docs/using-git-on-github-docs.md",
-            "copilot/how-tos/copilot-cli/use-copilot-cli/manage-pull-requests.md"
-          ],
-          "query": "resolving merge conflicts",
-          "reciprocalRank": 1
+          "query": "css margin collapse",
+          "relevant": "margin_collapsing",
+          "kind": "task"
         },
         {
-          "ids": [4378, 26597, 26598, 26596, 4377, 26595],
-          "paths": [
-            "admin/managing-accounts-and-repositories/managing-repositories-in-your-enterprise/restoring-a-deleted-repository.md",
-            "repositories/creating-and-managing-repositories/restoring-a-deleted-repository.md",
-            "repositories/creating-and-managing-repositories/restoring-a-deleted-repository.md",
-            "repositories/creating-and-managing-repositories/restoring-a-deleted-repository.md",
-            "admin/managing-accounts-and-repositories/managing-repositories-in-your-enterprise/restoring-a-deleted-repository.md",
-            "repositories/creating-and-managing-repositories/restoring-a-deleted-repository.md"
-          ],
-          "query": "restore deleted repository",
-          "reciprocalRank": 1
+          "query": "css border box sizing",
+          "relevant": "box-sizing|box_model",
+          "kind": "task"
         },
         {
-          "ids": [26411, 26389, 26412, 26424, 26388, 26416],
-          "paths": [
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule.md",
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches.md",
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule.md",
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets.md",
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches.md",
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule.md"
-          ],
-          "query": "protected branch rules",
-          "reciprocalRank": 1
+          "query": "css prefers reduced motion",
+          "relevant": "prefers-reduced-motion",
+          "kind": "task"
         },
         {
-          "ids": [25727, 25686, 25680, 25694, 25693, 25728],
-          "paths": [
-            "pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages.md",
-            "pages/getting-started-with-github-pages/creating-a-github-pages-site.md",
-            "pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site.md",
-            "pages/getting-started-with-github-pages/deleting-a-github-pages-site.md",
-            "pages/getting-started-with-github-pages/deleting-a-github-pages-site.md",
-            "pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages.md"
-          ],
-          "query": "deploy github pages site",
-          "reciprocalRank": 1
+          "query": "http cors preflight request",
+          "relevant": "cors|preflight",
+          "kind": "task"
         },
         {
-          "ids": [25231, 25232, 25234, 25233, 5221, 5220],
-          "paths": [
-            "organizations/managing-saml-single-sign-on-for-your-organization/enabling-and-testing-saml-single-sign-on-for-your-organization.md",
-            "organizations/managing-saml-single-sign-on-for-your-organization/enabling-and-testing-saml-single-sign-on-for-your-organization.md",
-            "organizations/managing-saml-single-sign-on-for-your-organization/enabling-and-testing-saml-single-sign-on-for-your-organization.md",
-            "organizations/managing-saml-single-sign-on-for-your-organization/enabling-and-testing-saml-single-sign-on-for-your-organization.md",
-            "admin/managing-iam/using-saml-for-enterprise-iam/configuring-saml-single-sign-on-for-your-enterprise.md",
-            "admin/managing-iam/using-saml-for-enterprise-iam/configuring-saml-single-sign-on-for-your-enterprise.md"
-          ],
-          "query": "saml single sign on",
-          "reciprocalRank": 1
+          "query": "http cache control max age",
+          "relevant": "cache-control|caching",
+          "kind": "task"
         },
         {
-          "ids": [10157, 10156, 8414, 8419, 8421, 8407],
-          "paths": [
-            "code-security/how-tos/view-and-interpret-data/analyze-organization-data/viewing-metrics-for-secret-scanning-push-protection.md",
-            "code-security/how-tos/view-and-interpret-data/analyze-organization-data/viewing-metrics-for-secret-scanning-push-protection.md",
-            "code-security/concepts/secret-security/push-protection.md",
-            "code-security/concepts/secret-security/push-protection.md",
-            "code-security/concepts/secret-security/push-protection.md",
-            "code-security/concepts/secret-security/push-protection-from-the-rest-api.md"
-          ],
-          "query": "secret scanning push protection",
-          "reciprocalRank": 1
+          "query": "http cookie samesite secure",
+          "relevant": "set-cookie|cookies",
+          "kind": "task"
         },
         {
-          "ids": [26650, 26649, 26651, 26652, 88, 26647],
-          "paths": [
-            "repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md",
-            "repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md",
-            "repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md",
-            "repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md",
-            "account-and-profile/concepts/username-changes.md",
-            "repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md"
-          ],
-          "query": "codeowners syntax",
-          "reciprocalRank": 1
+          "query": "content security policy script src",
+          "relevant": "content-security-policy|script-src",
+          "kind": "task"
         },
         {
-          "ids": [26939, 26921, 26905, 26904, 17836, 4345],
-          "paths": [
-            "repositories/working-with-files/managing-large-files/removing-files-from-git-large-file-storage.md",
-            "repositories/working-with-files/managing-large-files/collaboration-with-git-large-file-storage.md",
-            "repositories/working-with-files/managing-large-files/about-git-large-file-storage.md",
-            "repositories/working-with-files/managing-large-files/about-git-large-file-storage.md",
-            "copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment.md",
-            "admin/managing-accounts-and-repositories/managing-repositories-in-your-enterprise/configuring-git-large-file-storage-for-your-enterprise.md"
-          ],
-          "query": "git lfs large files",
-          "reciprocalRank": 1
+          "query": "http redirect permanent 301",
+          "relevant": "status/301|redirections",
+          "kind": "task"
         },
         {
-          "ids": [7430, 7433, 7431, 7428, 7432, 7411],
-          "paths": [
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/configuring-two-factor-authentication.md",
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/configuring-two-factor-authentication.md",
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/configuring-two-factor-authentication.md",
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/configuring-two-factor-authentication.md",
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/configuring-two-factor-authentication.md",
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/changing-your-two-factor-authentication-method.md"
-          ],
-          "query": "configuring two factor authentication",
-          "reciprocalRank": 1
+          "query": "http conditional request etag",
+          "relevant": "conditional_requests|etag|if-none-match",
+          "kind": "task"
         },
         {
-          "ids": [29777, 29779, 29778, 29783, 29759, 29781],
-          "paths": [
-            "webhooks/testing-and-troubleshooting-webhooks/viewing-webhook-deliveries.md",
-            "webhooks/testing-and-troubleshooting-webhooks/viewing-webhook-deliveries.md",
-            "webhooks/testing-and-troubleshooting-webhooks/viewing-webhook-deliveries.md",
-            "webhooks/testing-and-troubleshooting-webhooks/viewing-webhook-deliveries.md",
-            "webhooks/testing-and-troubleshooting-webhooks/troubleshooting-webhooks.md",
-            "webhooks/testing-and-troubleshooting-webhooks/viewing-webhook-deliveries.md"
-          ],
-          "query": "troubleshooting webhook deliveries",
-          "reciprocalRank": 1
+          "query": "http accept encoding compression",
+          "relevant": "accept-encoding|compression",
+          "kind": "task"
         },
         {
-          "ids": [6745, 6746, 26611, 26610, 23592, 6744],
-          "paths": [
-            "apps/maintaining-github-apps/transferring-ownership-of-a-github-app.md",
-            "apps/maintaining-github-apps/transferring-ownership-of-a-github-app.md",
-            "repositories/creating-and-managing-repositories/transferring-a-repository.md",
-            "repositories/creating-and-managing-repositories/transferring-a-repository.md",
-            "issues/tracking-your-work-with-issues/administering-issues/transferring-an-issue-to-another-repository.md",
-            "apps/maintaining-github-apps/transferring-ownership-of-a-github-app.md"
-          ],
-          "query": "transferring repository ownership",
-          "reciprocalRank": 0.3333333333333333
+          "query": "javascript promise all rejection",
+          "relevant": "promise/all/|using_promises",
+          "kind": "task"
         },
         {
-          "ids": [13843, 13844, 13841, 13842, 13847, 13845],
-          "paths": [
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md"
-          ],
-          "query": "codespaces forwarding ports",
-          "reciprocalRank": 1
+          "query": "javascript optional chaining null",
+          "relevant": "optional_chaining",
+          "kind": "task"
         },
         {
-          "ids": [7104, 7156, 7106, 7108, 7157, 7160],
-          "paths": [
-            "authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent.md",
-            "authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases.md",
-            "authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent.md",
-            "authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent.md",
-            "authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases.md",
-            "authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases.md"
-          ],
-          "query": "ssh key passphrase",
-          "reciprocalRank": 0.5
+          "query": "javascript closures lexical scope",
+          "relevant": "closures",
+          "kind": "task"
         },
         {
-          "ids": [7371, 7370, 3784, 7364, 7343, 7336],
-          "paths": [
-            "authentication/managing-commit-signature-verification/telling-git-about-your-signing-key.md",
-            "authentication/managing-commit-signature-verification/telling-git-about-your-signing-key.md",
-            "admin/configuring-settings/configuring-user-applications-for-your-enterprise/configuring-web-commit-signing.md",
-            "authentication/managing-commit-signature-verification/signing-commits.md",
-            "authentication/managing-commit-signature-verification/adding-a-gpg-key-to-your-github-account.md",
-            "authentication/managing-commit-signature-verification/about-commit-signature-verification.md"
-          ],
-          "query": "signing commits gpg",
-          "reciprocalRank": 1
+          "query": "javascript array map callback",
+          "relevant": "array/map/",
+          "kind": "task"
         },
         {
-          "ids": [2394, 509, 2412, 2383, 2365, 2346],
-          "paths": [
-            "actions/tutorials/build-and-test-code/powershell.md",
-            "actions/concepts/workflows-and-actions/dependency-caching.md",
-            "actions/tutorials/build-and-test-code/python.md",
-            "actions/tutorials/build-and-test-code/nodejs.md",
-            "actions/tutorials/build-and-test-code/net.md",
-            "actions/tutorials/build-and-test-code/java-with-gradle.md"
-          ],
-          "query": "cach depend",
-          "reciprocalRank": 0.5
+          "query": "javascript reduce accumulator",
+          "relevant": "array/reduce/",
+          "kind": "task"
         },
         {
-          "ids": [],
-          "paths": [],
+          "query": "javascript async function await",
+          "relevant": "async_function/|await/",
+          "kind": "task"
+        },
+        {
+          "query": "javascript destructuring assignment",
+          "relevant": "destructuring",
+          "kind": "task"
+        },
+        {
+          "query": "javascript weakmap garbage collection",
+          "relevant": "weakmap/|memory_management",
+          "kind": "task"
+        },
+        {
+          "query": "javascript regular expression named capturing groups",
+          "relevant": "named_capturing_group|groups_and_backreferences",
+          "kind": "task"
+        },
+        {
+          "query": "javascript temporal dead zone let",
+          "relevant": "statements/let/",
+          "kind": "task"
+        },
+        {
           "query": "nonexistentquokkawombat",
-          "reciprocalRank": 0
-        }
-      ]
-    },
-    {
-      "name": "flexsearch",
-      "bundle": {
-        "engine": "flexsearch",
-        "js": 51142,
-        "gzip": 17762,
-        "html": 51174,
-        "htmlGzip": 17779,
-        "assets": []
-      },
-      "median": {
-        "buildMs": 5803.699999999953,
-        "retainedJSBytes": 133149881,
-        "wasmBytes": 0,
-        "memoryMiB": 126.98162174224854,
-        "updateMs": 125.0999999998603,
-        "queryMs": 2.2999999998137355,
-        "queryP95Ms": 18.899999999906868
-      },
-      "hitAt6": 15,
-      "mrrAt6": 0.7549019607843137,
-      "chunkOverlapAt6": 0.3333333333333333,
-      "runs": [
-        {
-          "after": 161692321,
-          "before": 28542444,
-          "buildMs": 5827.199999999953,
-          "bytes": 20530560,
-          "changedChunks": 263,
-          "changedFiles": 38,
-          "chunkMs": 231.782019,
-          "chunks": 29947,
-          "engine": "flexsearch",
-          "files": 3760,
-          "mutationFound": 6,
-          "mutationRemoved": true,
-          "retainedBytes": 133149877,
-          "updateMs": 219.29999999981376,
-          "wasmBytes": 0,
-          "queryTimesMs": [
-            40.4000000001397, 8.900000000139698, 1.1000000000931325, 6.199999999953434,
-            4.300000000046566, 16.300000000046566, 11.900000000139698, 4.900000000139698,
-            0.5999999998603016, 18.600000000093132, 3.800000000046566, 2.2999999998137355, 4.5,
-            0.6000000000931323, 1.5, 0.5, 1.699999999953434, 0.10000000009313226
-          ]
+          "relevant": "^$",
+          "kind": "negative"
         },
         {
-          "after": 161692325,
-          "before": 28542444,
-          "buildMs": 5803.699999999953,
-          "bytes": 20530560,
-          "changedChunks": 263,
-          "changedFiles": 38,
-          "chunkMs": 231.782019,
-          "chunks": 29947,
-          "engine": "flexsearch",
-          "files": 3760,
-          "mutationFound": 6,
-          "mutationRemoved": true,
-          "retainedBytes": 133149881,
-          "updateMs": 116.5,
-          "wasmBytes": 0,
-          "queryTimesMs": [
-            18.899999999906868, 4.900000000139698, 0.6999999999534339, 3.699999999953434,
-            2.3999999999068677, 9.300000000046566, 6.699999999953434, 2.5999999998603016,
-            0.30000000004656613, 8.899999999906868, 2, 1.4000000001396984, 2.1000000000931323,
-            0.4000000001396984, 0.7999999998137355, 0.20000000018626451, 0.8999999999068677,
-            0.10000000009313226
-          ]
+          "query": "RangeError: x can't be converted to BigInt because it isn't an integer",
+          "relevant": "^javascript/reference/errors/cant_be_converted_to_bigint_because_it_isnt_an_integer/index\\.md$",
+          "kind": "title"
         },
         {
-          "after": 161692333,
-          "before": 28542428,
-          "buildMs": 5697.699999999953,
-          "bytes": 20530560,
-          "changedChunks": 263,
-          "changedFiles": 38,
-          "chunkMs": 231.782019,
-          "chunks": 29947,
-          "engine": "flexsearch",
-          "files": 3760,
-          "mutationFound": 6,
-          "mutationRemoved": true,
-          "retainedBytes": 133149905,
-          "updateMs": 125.0999999998603,
-          "wasmBytes": 0,
-          "queryTimesMs": [
-            28.5, 5.399999999906868, 0.7000000001862645, 3.5, 2.199999999953434, 8.900000000139698,
-            5.900000000139698, 2.5, 0.19999999995343387, 9.300000000046566, 1.9000000001396984,
-            1.3999999999068675, 2.5, 0.30000000004656613, 0.8000000000465661, 0.19999999995343387,
-            1, 0
-          ]
-        }
-      ],
-      "rankings": [
-        {
-          "ids": [509, 2853, 2957, 1808, 8266, 508],
-          "paths": [
-            "actions/concepts/workflows-and-actions/dependency-caching.md",
-            "actions/tutorials/migrate-to-github-actions/manual-migrations/migrate-from-circleci.md",
-            "actions/tutorials/migrate-to-github-actions/manual-migrations/migrate-from-travis-ci.md",
-            "actions/reference/workflows-and-actions/dependency-caching.md",
-            "code-security/concepts/code-scanning/codeql/codeql-for-compiled-languages.md",
-            "actions/concepts/workflows-and-actions/dependency-caching.md"
-          ],
-          "query": "github actions dependency caching",
-          "reciprocalRank": 1
+          "query": "`animation-timeline` CSS property",
+          "relevant": "^css/reference/properties/animation-timeline/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [7298, 96, 7299, 7300, 7302, 7301],
-          "paths": [
-            "authentication/keeping-your-account-and-data-secure/token-expiration-and-revocation.md",
-            "account-and-profile/get-started/personal-dashboard-quickstart.md",
-            "authentication/keeping-your-account-and-data-secure/token-expiration-and-revocation.md",
-            "authentication/keeping-your-account-and-data-secure/token-expiration-and-revocation.md",
-            "authentication/keeping-your-account-and-data-secure/token-expiration-and-revocation.md",
-            "authentication/keeping-your-account-and-data-secure/token-expiration-and-revocation.md"
-          ],
-          "query": "personal access token expiration",
-          "reciprocalRank": 1
+          "query": "`max()` CSS function",
+          "relevant": "^css/reference/values/max/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [26183, 14713, 14714, 16972, 19108, 16973],
-          "paths": [
-            "pull-requests/reference/merge-conflicts.md",
-            "contributing/collaborating-on-github-docs/using-git-on-github-docs.md",
-            "contributing/collaborating-on-github-docs/using-git-on-github-docs.md",
-            "copilot/how-tos/copilot-cli/use-copilot-cli/manage-pull-requests.md",
-            "copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github.md",
-            "copilot/how-tos/copilot-cli/use-copilot-cli/manage-pull-requests.md"
-          ],
-          "query": "resolving merge conflicts",
-          "reciprocalRank": 1
+          "query": "Static initialization blocks",
+          "relevant": "^javascript/reference/classes/static_initialization_blocks/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [4378, 26597, 26598, 4377, 26596, 26375],
-          "paths": [
-            "admin/managing-accounts-and-repositories/managing-repositories-in-your-enterprise/restoring-a-deleted-repository.md",
-            "repositories/creating-and-managing-repositories/restoring-a-deleted-repository.md",
-            "repositories/creating-and-managing-repositories/restoring-a-deleted-repository.md",
-            "admin/managing-accounts-and-repositories/managing-repositories-in-your-enterprise/restoring-a-deleted-repository.md",
-            "repositories/creating-and-managing-repositories/restoring-a-deleted-repository.md",
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-branches-in-your-repository/deleting-and-restoring-branches-in-a-pull-request.md"
-          ],
-          "query": "restore deleted repository",
-          "reciprocalRank": 1
+          "query": "Comma operator (,)",
+          "relevant": "^javascript/reference/operators/comma_operator/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [26424, 26389, 26411, 26388, 26422, 26394],
-          "paths": [
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets.md",
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches.md",
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule.md",
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches.md",
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets.md",
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches.md"
-          ],
-          "query": "protected branch rules",
-          "reciprocalRank": 0.5
+          "query": "TypeError: \"x\" is read-only",
+          "relevant": "^javascript/reference/errors/read-only/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [3761, 25727, 25634, 25635, 25631, 3482],
-          "paths": [
-            "admin/configuring-settings/configuring-user-applications-for-your-enterprise/configuring-github-pages-for-your-enterprise.md",
-            "pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages.md",
-            "pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages.md",
-            "pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages.md",
-            "pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages.md",
-            "admin/concepts/enterprise-fundamentals/choose-an-enterprise-type.md"
-          ],
-          "query": "deploy github pages site",
-          "reciprocalRank": 0.5
+          "query": "`mask-image` CSS property",
+          "relevant": "^css/reference/properties/mask-image/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [5220, 5221, 25231, 25232, 5222, 5251],
-          "paths": [
-            "admin/managing-iam/using-saml-for-enterprise-iam/configuring-saml-single-sign-on-for-your-enterprise.md",
-            "admin/managing-iam/using-saml-for-enterprise-iam/configuring-saml-single-sign-on-for-your-enterprise.md",
-            "organizations/managing-saml-single-sign-on-for-your-organization/enabling-and-testing-saml-single-sign-on-for-your-organization.md",
-            "organizations/managing-saml-single-sign-on-for-your-organization/enabling-and-testing-saml-single-sign-on-for-your-organization.md",
-            "admin/managing-iam/using-saml-for-enterprise-iam/configuring-saml-single-sign-on-for-your-enterprise.md",
-            "admin/managing-iam/using-saml-for-enterprise-iam/switching-your-saml-configuration-from-an-organization-to-an-enterprise-account.md"
-          ],
-          "query": "saml single sign on",
-          "reciprocalRank": 1
+          "query": "`cos()` CSS function",
+          "relevant": "^css/reference/values/cos/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [8403, 8419, 8407, 8415, 8417, 8421],
-          "paths": [
-            "code-security/concepts/secret-security/push-protection-and-the-github-mcp-server.md",
-            "code-security/concepts/secret-security/push-protection.md",
-            "code-security/concepts/secret-security/push-protection-from-the-rest-api.md",
-            "code-security/concepts/secret-security/push-protection.md",
-            "code-security/concepts/secret-security/push-protection.md",
-            "code-security/concepts/secret-security/push-protection.md"
-          ],
-          "query": "secret scanning push protection",
-          "reciprocalRank": 1
+          "query": "SyntaxError: applying the 'delete' operator to an unqualified name is deprecated",
+          "relevant": "^javascript/reference/errors/delete_in_strict_mode/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [26649, 26650, 26651, 26652, 88, 12635],
-          "paths": [
-            "repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md",
-            "repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md",
-            "repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md",
-            "repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md",
-            "account-and-profile/concepts/username-changes.md",
-            "code-security/reference/secret-security/custom-patterns.md"
-          ],
-          "query": "codeowners syntax",
-          "reciprocalRank": 1
+          "query": "SyntaxError: invalid character in class in regular expression",
+          "relevant": "^javascript/reference/errors/regex_invalid_char_in_class/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [17836, 26921, 4342, 4343, 4344, 7623],
-          "paths": [
-            "copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment.md",
-            "repositories/working-with-files/managing-large-files/collaboration-with-git-large-file-storage.md",
-            "admin/managing-accounts-and-repositories/managing-repositories-in-your-enterprise/configuring-git-large-file-storage-for-your-enterprise.md",
-            "admin/managing-accounts-and-repositories/managing-repositories-in-your-enterprise/configuring-git-large-file-storage-for-your-enterprise.md",
-            "admin/managing-accounts-and-repositories/managing-repositories-in-your-enterprise/configuring-git-large-file-storage-for-your-enterprise.md",
-            "billing/concepts/product-billing/git-lfs.md"
-          ],
-          "query": "git lfs large files",
-          "reciprocalRank": 0.5
+          "query": "`:-moz-suppressed` CSS pseudo-class",
+          "relevant": "^css/reference/selectors/_colon_-moz-suppressed/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [7390, 7391, 7428, 7430, 7431, 7401],
-          "paths": [
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/about-two-factor-authentication.md",
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/about-two-factor-authentication.md",
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/configuring-two-factor-authentication.md",
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/configuring-two-factor-authentication.md",
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/configuring-two-factor-authentication.md",
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/accessing-github-using-two-factor-authentication.md"
-          ],
-          "query": "configuring two factor authentication",
-          "reciprocalRank": 0.3333333333333333
+          "query": "`sqrt()` CSS function",
+          "relevant": "^css/reference/values/sqrt/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [29769, 29770, 29777, 29759, 29760, 29778],
-          "paths": [
-            "webhooks/testing-and-troubleshooting-webhooks/troubleshooting-webhooks.md",
-            "webhooks/testing-and-troubleshooting-webhooks/troubleshooting-webhooks.md",
-            "webhooks/testing-and-troubleshooting-webhooks/viewing-webhook-deliveries.md",
-            "webhooks/testing-and-troubleshooting-webhooks/troubleshooting-webhooks.md",
-            "webhooks/testing-and-troubleshooting-webhooks/troubleshooting-webhooks.md",
-            "webhooks/testing-and-troubleshooting-webhooks/viewing-webhook-deliveries.md"
-          ],
-          "query": "troubleshooting webhook deliveries",
-          "reciprocalRank": 1
+          "query": "`corner-start-start-shape` CSS property",
+          "relevant": "^css/reference/properties/corner-start-start-shape/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [6746, 6745, 6744, 6867, 23592, 25013],
-          "paths": [
-            "apps/maintaining-github-apps/transferring-ownership-of-a-github-app.md",
-            "apps/maintaining-github-apps/transferring-ownership-of-a-github-app.md",
-            "apps/maintaining-github-apps/transferring-ownership-of-a-github-app.md",
-            "apps/oauth-apps/maintaining-oauth-apps/transferring-ownership-of-an-oauth-app.md",
-            "issues/tracking-your-work-with-issues/administering-issues/transferring-an-issue-to-another-repository.md",
-            "organizations/managing-organization-settings/transferring-organization-ownership.md"
-          ],
-          "query": "transferring repository ownership",
-          "reciprocalRank": 0
+          "query": "`image-resolution` CSS property",
+          "relevant": "^css/reference/properties/image-resolution/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [13842, 13841, 13843, 13844, 13847, 13845],
-          "paths": [
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md"
-          ],
-          "query": "codespaces forwarding ports",
-          "reciprocalRank": 1
+          "query": "`inline-size` CSS property",
+          "relevant": "^css/reference/properties/inline-size/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [7156, 7104, 7160, 7157, 7159, 7158],
-          "paths": [
-            "authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases.md",
-            "authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent.md",
-            "authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases.md",
-            "authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases.md",
-            "authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases.md",
-            "authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases.md"
-          ],
-          "query": "ssh key passphrase",
-          "reciprocalRank": 1
+          "query": "`-webkit-mask-box-image` CSS property",
+          "relevant": "^css/reference/properties/-webkit-mask-box-image/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [7343, 6158, 14373, 7051, 7052, 3784],
-          "paths": [
-            "authentication/managing-commit-signature-verification/adding-a-gpg-key-to-your-github-account.md",
-            "admin/upgrading-your-instance/troubleshooting-upgrades/rotating-the-signing-key-for-upgrade-packages.md",
-            "codespaces/troubleshooting/troubleshooting-gpg-verification-for-github-codespaces.md",
-            "authentication/authenticating-with-a-passkey/signing-in-with-a-passkey.md",
-            "authentication/authenticating-with-a-passkey/signing-in-with-a-passkey.md",
-            "admin/configuring-settings/configuring-user-applications-for-your-enterprise/configuring-web-commit-signing.md"
-          ],
-          "query": "signing commits gpg",
-          "reciprocalRank": 0
+          "query": "`-webkit-transform-2d` CSS media feature",
+          "relevant": "^css/reference/at-rules/@media/-webkit-transform-2d/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [509, 510, 1797, 1801, 2346, 1805],
-          "paths": [
-            "actions/concepts/workflows-and-actions/dependency-caching.md",
-            "actions/concepts/workflows-and-actions/dependency-caching.md",
-            "actions/reference/workflows-and-actions/dependency-caching.md",
-            "actions/reference/workflows-and-actions/dependency-caching.md",
-            "actions/tutorials/build-and-test-code/java-with-gradle.md",
-            "actions/reference/workflows-and-actions/dependency-caching.md"
-          ],
-          "query": "cach depend",
-          "reciprocalRank": 1
+          "query": "`attr()` CSS function",
+          "relevant": "^css/reference/values/attr/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [],
-          "paths": [],
-          "query": "nonexistentquokkawombat",
-          "reciprocalRank": 0
-        }
-      ]
-    },
-    {
-      "name": "orama",
-      "bundle": {
-        "engine": "orama",
-        "js": 67159,
-        "gzip": 23016,
-        "html": 67191,
-        "htmlGzip": 23039,
-        "assets": []
-      },
-      "median": {
-        "buildMs": 7452.699999999953,
-        "retainedJSBytes": 129461045,
-        "wasmBytes": 0,
-        "memoryMiB": 123.46367359161377,
-        "updateMs": 2267.3000000000466,
-        "queryMs": 10.200000000186265,
-        "queryP95Ms": 65.30000000004657
-      },
-      "hitAt6": 11,
-      "mrrAt6": 0.40392156862745093,
-      "chunkOverlapAt6": 0.196078431372549,
-      "runs": [
-        {
-          "after": 158078118,
-          "before": 28617073,
-          "buildMs": 7064.399999999907,
-          "bytes": 20530560,
-          "changedChunks": 263,
-          "changedFiles": 38,
-          "chunkMs": 231.782019,
-          "chunks": 29947,
-          "engine": "orama",
-          "files": 3760,
-          "mutationFound": 6,
-          "mutationRemoved": true,
-          "retainedBytes": 129461045,
-          "updateMs": 2487,
-          "wasmBytes": 0,
-          "queryTimesMs": [
-            65.30000000004657, 15.5, 2, 12.599999999860302, 4, 31.30000000004657, 34.60000000009313,
-            11.300000000046566, 0.8000000000465661, 41.39999999990687, 10.5, 3.6000000000931323, 12,
-            2.300000000046566, 3.899999999906868, 1.5, 5, 0.10000000009313226
-          ]
+          "query": "`touch-action` CSS property",
+          "relevant": "^css/reference/properties/touch-action/index\\.md$",
+          "kind": "title"
         },
         {
-          "after": 158091342,
-          "before": 28617129,
-          "buildMs": 7582.699999999953,
-          "bytes": 20530560,
-          "changedChunks": 263,
-          "changedFiles": 38,
-          "chunkMs": 231.782019,
-          "chunks": 29947,
-          "engine": "orama",
-          "files": 3760,
-          "mutationFound": 6,
-          "mutationRemoved": true,
-          "retainedBytes": 129474213,
-          "updateMs": 2046.5999999998603,
-          "wasmBytes": 0,
-          "queryTimesMs": [
-            138.69999999995343, 19.100000000093132, 2.699999999953434, 15.399999999906868,
-            5.100000000093132, 38.5, 41.5, 13.399999999906868, 1.199999999953434,
-            33.300000000046566, 12.699999999953434, 3.3999999999068677, 12.300000000046566,
-            15.800000000046566, 4.199999999953434, 1.800000000046566, 5.199999999953434,
-            0.10000000009313226
-          ]
+          "query": "`border-left` CSS property",
+          "relevant": "^css/reference/properties/border-left/index\\.md$",
+          "kind": "title"
         },
         {
-          "after": 158063854,
-          "before": 28617073,
-          "buildMs": 7452.699999999953,
-          "bytes": 20530560,
-          "changedChunks": 263,
-          "changedFiles": 38,
-          "chunkMs": 231.782019,
-          "chunks": 29947,
-          "engine": "orama",
-          "files": 3760,
-          "mutationFound": 6,
-          "mutationRemoved": true,
-          "retainedBytes": 129446781,
-          "updateMs": 2267.3000000000466,
-          "wasmBytes": 0,
-          "queryTimesMs": [
-            66.80000000004657, 16, 2.1000000000931323, 12.099999999860302, 3.699999999953434, 30.5,
-            34.5, 10.200000000186265, 1.2999999998137357, 29, 9.600000000093132, 3.300000000046566,
-            11.700000000186265, 2.2999999998137355, 3.4000000001396984, 1.5, 5.5,
-            0.10000000009313226
-          ]
-        }
-      ],
-      "rankings": [
-        {
-          "ids": [28880, 28221, 8102, 8103, 6606, 29057],
-          "paths": [
-            "site-policy/github-terms/index.md",
-            "site-policy/acceptable-use-policies/index.md",
-            "billing/reference/product-and-sku-names.md",
-            "billing/reference/product-and-sku-names.md",
-            "apps/github-marketplace/github-marketplace-overview/about-github-marketplace-for-apps.md",
-            "site-policy/privacy-policies/index.md"
-          ],
-          "query": "github actions dependency caching",
-          "reciprocalRank": 0
+          "query": "Content-Security-Policy: upgrade-insecure-requests directive",
+          "relevant": "^http/reference/headers/content-security-policy/upgrade-insecure-requests/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [6835, 96, 7298, 24591, 22168, 21678],
-          "paths": [
-            "apps/oauth-apps/building-oauth-apps/differences-between-github-apps-and-oauth-apps.md",
-            "account-and-profile/get-started/personal-dashboard-quickstart.md",
-            "authentication/keeping-your-account-and-data-secure/token-expiration-and-revocation.md",
-            "organizations/collaborating-with-groups-in-organizations/about-your-organization-dashboard.md",
-            "get-started/learning-about-github/access-permissions-on-github.md",
-            "education/contribute-with-github-community-exchange/getting-started-with-github-community-exchange.md"
-          ],
-          "query": "personal access token expiration",
-          "reciprocalRank": 0.3333333333333333
+          "query": "`:active` CSS pseudo-class",
+          "relevant": "^css/reference/selectors/_colon_active/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [26183, 14713, 16972, 19108, 26400, 26039],
-          "paths": [
-            "pull-requests/reference/merge-conflicts.md",
-            "contributing/collaborating-on-github-docs/using-git-on-github-docs.md",
-            "copilot/how-tos/copilot-cli/use-copilot-cli/manage-pull-requests.md",
-            "copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github.md",
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches.md",
-            "pull-requests/how-tos/merge-and-close-pull-requests/resolving-a-merge-conflict-using-the-command-line.md"
-          ],
-          "query": "resolving merge conflicts",
-          "reciprocalRank": 1
+          "query": "URIError: malformed URI sequence",
+          "relevant": "^javascript/reference/errors/malformed_uri/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [23050, 1901, 23054, 23057, 26598, 1900],
-          "paths": [
-            "graphql/guides/using-the-graphql-api-for-discussions.md",
-            "actions/reference/workflows-and-actions/events-that-trigger-workflows.md",
-            "graphql/guides/using-the-graphql-api-for-discussions.md",
-            "graphql/guides/using-the-graphql-api-for-discussions.md",
-            "repositories/creating-and-managing-repositories/restoring-a-deleted-repository.md",
-            "actions/reference/workflows-and-actions/events-that-trigger-workflows.md"
-          ],
-          "query": "restore deleted repository",
-          "reciprocalRank": 0.2
+          "query": "Basic concepts of scroll snap",
+          "relevant": "^css/guides/scroll_snap/basic_concepts/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [1850, 26424, 24949, 26500, 2153, 26150],
-          "paths": [
-            "actions/reference/workflows-and-actions/events-that-trigger-workflows.md",
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets.md",
-            "organizations/managing-organization-settings/managing-rulesets-for-repositories-in-your-organization.md",
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/managing-rulesets-for-a-repository.md",
-            "actions/reference/workflows-and-actions/workflow-syntax.md",
-            "pull-requests/reference/branches.md"
-          ],
-          "query": "protected branch rules",
-          "reciprocalRank": 0
+          "query": "CSS media queries",
+          "relevant": "^css/guides/media_queries/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [28880, 28221, 29057, 28941, 29325, 28322],
-          "paths": [
-            "site-policy/github-terms/index.md",
-            "site-policy/acceptable-use-policies/index.md",
-            "site-policy/privacy-policies/index.md",
-            "site-policy/other-site-policies/index.md",
-            "site-policy/site-policy-deprecated/index.md",
-            "site-policy/github-company-policies/index.md"
-          ],
-          "query": "deploy github pages site",
-          "reciprocalRank": 0
+          "query": "SyntaxError: await/yield expression can't be used in parameter",
+          "relevant": "^javascript/reference/errors/await_yield_in_parameter/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [25231, 5172, 4837, 18182, 7363, 5242],
-          "paths": [
-            "organizations/managing-saml-single-sign-on-for-your-organization/enabling-and-testing-saml-single-sign-on-for-your-organization.md",
-            "admin/managing-iam/using-built-in-authentication/disabling-unauthenticated-sign-ups.md",
-            "admin/managing-iam/iam-configuration-reference/saml-configuration-reference.md",
-            "copilot/how-tos/copilot-sdk/features/hooks.md",
-            "authentication/managing-commit-signature-verification/index.md",
-            "admin/managing-iam/using-saml-for-enterprise-iam/enabling-encrypted-assertions.md"
-          ],
-          "query": "saml single sign on",
-          "reciprocalRank": 1
+          "query": "`text-size-adjust` CSS property",
+          "relevant": "^css/reference/properties/text-size-adjust/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [27773, 8416, 27643, 9749, 12647, 8414],
-          "paths": [
-            "rest/using-the-rest-api/github-event-types.md",
-            "code-security/concepts/secret-security/push-protection.md",
-            "rest/secret-scanning/secret-scanning.md",
-            "code-security/how-tos/secure-your-secrets/work-with-leak-prevention/push-protection-in-the-github-ui.md",
-            "code-security/reference/secret-security/secret-scanning-scope.md",
-            "code-security/concepts/secret-security/push-protection.md"
-          ],
-          "query": "secret scanning push protection",
-          "reciprocalRank": 0.5
+          "query": "`grid-template` CSS property",
+          "relevant": "^css/reference/properties/grid-template/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [26649, 26650, 14689, 21591, 14687, 88],
-          "paths": [
-            "repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md",
-            "repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md",
-            "communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-issue-forms.md",
-            "discussions/managing-discussions-for-your-community/syntax-for-discussion-category-forms.md",
-            "communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-issue-forms.md",
-            "account-and-profile/concepts/username-changes.md"
-          ],
-          "query": "codeowners syntax",
-          "reciprocalRank": 1
+          "query": "SyntaxError: return not in function",
+          "relevant": "^javascript/reference/errors/bad_return/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [28880, 28221, 19596, 29057, 28941, 28322],
-          "paths": [
-            "site-policy/github-terms/index.md",
-            "site-policy/acceptable-use-policies/index.md",
-            "copilot/reference/copilot-cli-reference/cli-command-reference.md",
-            "site-policy/privacy-policies/index.md",
-            "site-policy/other-site-policies/index.md",
-            "site-policy/github-company-policies/index.md"
-          ],
-          "query": "git lfs large files",
-          "reciprocalRank": 0
+          "query": "`overflow-inline` CSS media feature",
+          "relevant": "^css/reference/at-rules/@media/overflow-inline/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [3794, 4337, 7430, 3684, 3715, 5164],
-          "paths": [
-            "admin/configuring-settings/configuring-user-applications-for-your-enterprise/index.md",
-            "admin/managing-accounts-and-repositories/managing-repositories-in-your-enterprise/configuring-git-large-file-storage-for-your-enterprise.md",
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/configuring-two-factor-authentication.md",
-            "admin/configuring-settings/configuring-network-settings/index.md",
-            "admin/configuring-settings/configuring-private-networking-for-hosted-compute-products/configuring-private-networking-for-github-hosted-runners-in-your-enterprise.md",
-            "admin/managing-iam/using-built-in-authentication/configuring-built-in-authentication.md"
-          ],
-          "query": "configuring two factor authentication",
-          "reciprocalRank": 0.3333333333333333
+          "query": "CSS: Cascading Style Sheets",
+          "relevant": "^css/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [14348, 29761, 29759, 29783, 29760, 14394],
-          "paths": [
-            "codespaces/troubleshooting/index.md",
-            "webhooks/testing-and-troubleshooting-webhooks/troubleshooting-webhooks.md",
-            "webhooks/testing-and-troubleshooting-webhooks/troubleshooting-webhooks.md",
-            "webhooks/testing-and-troubleshooting-webhooks/viewing-webhook-deliveries.md",
-            "webhooks/testing-and-troubleshooting-webhooks/troubleshooting-webhooks.md",
-            "codespaces/troubleshooting/troubleshooting-personalization-for-codespaces.md"
-          ],
-          "query": "troubleshooting webhook deliveries",
-          "reciprocalRank": 0.5
+          "query": "`revert-rule` CSS keyword",
+          "relevant": "^css/reference/values/revert-rule/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [23050, 1901, 1900, 23049, 26525, 6744],
-          "paths": [
-            "graphql/guides/using-the-graphql-api-for-discussions.md",
-            "actions/reference/workflows-and-actions/events-that-trigger-workflows.md",
-            "actions/reference/workflows-and-actions/events-that-trigger-workflows.md",
-            "graphql/guides/using-the-graphql-api-for-discussions.md",
-            "repositories/creating-and-managing-repositories/about-repositories.md",
-            "apps/maintaining-github-apps/transferring-ownership-of-a-github-app.md"
-          ],
-          "query": "transferring repository ownership",
-          "reciprocalRank": 0
+          "query": "JavaScript error reference",
+          "relevant": "^javascript/reference/errors/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [8104, 13841, 13845, 13842, 13844, 13843],
-          "paths": [
-            "billing/reference/product-and-sku-names.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md"
-          ],
-          "query": "codespaces forwarding ports",
-          "reciprocalRank": 0.5
+          "query": "`isolation` CSS property",
+          "relevant": "^css/reference/properties/isolation/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [7156, 7422, 7104, 27667, 27671, 7101],
-          "paths": [
-            "authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases.md",
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/configuring-two-factor-authentication-recovery-methods.md",
-            "authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent.md",
-            "rest/users/keys.md",
-            "rest/users/ssh-signing-keys.md",
-            "authentication/connecting-to-github-with-ssh/checking-for-existing-ssh-keys.md"
-          ],
-          "query": "ssh key passphrase",
-          "reciprocalRank": 1
+          "query": "`sign()` CSS function",
+          "relevant": "^css/reference/values/sign/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [26157, 7364, 27664, 27331, 7363, 7367],
-          "paths": [
-            "pull-requests/reference/commits.md",
-            "authentication/managing-commit-signature-verification/signing-commits.md",
-            "rest/users/gpg-keys.md",
-            "rest/git/commits.md",
-            "authentication/managing-commit-signature-verification/index.md",
-            "authentication/managing-commit-signature-verification/signing-tags.md"
-          ],
-          "query": "signing commits gpg",
-          "reciprocalRank": 0.5
+          "query": "`:-moz-broken` CSS pseudo-class",
+          "relevant": "^css/reference/selectors/_colon_-moz-broken/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [2346, 2955, 2394, 27224, 27225, 2354],
-          "paths": [
-            "actions/tutorials/build-and-test-code/java-with-gradle.md",
-            "actions/tutorials/migrate-to-github-actions/manual-migrations/migrate-from-travis-ci.md",
-            "actions/tutorials/build-and-test-code/powershell.md",
-            "rest/dependency-graph/dependency-submission.md",
-            "rest/dependency-graph/dependency-submission.md",
-            "actions/tutorials/build-and-test-code/java-with-maven.md"
-          ],
-          "query": "cach depend",
-          "reciprocalRank": 0
+          "query": "`size-adjust` CSS at-rule descriptor",
+          "relevant": "^css/reference/at-rules/@font-face/size-adjust/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [],
-          "paths": [],
-          "query": "nonexistentquokkawombat",
-          "reciprocalRank": 0
-        }
-      ]
-    },
-    {
-      "name": "bm25",
-      "bundle": {
-        "engine": "bm25",
-        "js": 1069,
-        "gzip": 633,
-        "html": 1101,
-        "htmlGzip": 657,
-        "assets": []
-      },
-      "median": {
-        "buildMs": 1612.8999999999069,
-        "retainedJSBytes": 49761385,
-        "wasmBytes": 0,
-        "memoryMiB": 47.45615482330322,
-        "updateMs": 21.30000000004657,
-        "queryMs": 11.5,
-        "queryP95Ms": 61.800000000046566
-      },
-      "hitAt6": 16,
-      "mrrAt6": 0.8235294117647058,
-      "chunkOverlapAt6": 1,
-      "runs": [
-        {
-          "after": 78205150,
-          "before": 28443765,
-          "buildMs": 1555.8999999999069,
-          "bytes": 20530560,
-          "changedChunks": 263,
-          "changedFiles": 38,
-          "chunkMs": 231.782019,
-          "chunks": 29947,
-          "engine": "bm25",
-          "files": 3760,
-          "mutationFound": 6,
-          "mutationRemoved": true,
-          "retainedBytes": 49761385,
-          "updateMs": 19.399999999906868,
-          "wasmBytes": 0,
-          "queryTimesMs": [
-            61.800000000046566, 34.700000000186265, 11.600000000093132, 21, 9.900000000139698,
-            26.200000000186265, 23, 33.199999999953434, 5.599999999860302, 9.800000000046566,
-            12.300000000046566, 7.5, 9.699999999953434, 7, 6.600000000093132, 5.399999999906868, 5,
-            2.5999999998603016
-          ]
+          "query": "`text-box-edge` CSS property",
+          "relevant": "^css/reference/properties/text-box-edge/index\\.md$",
+          "kind": "title"
         },
         {
-          "after": 78205150,
-          "before": 28443765,
-          "buildMs": 1612.8999999999069,
-          "bytes": 20530560,
-          "changedChunks": 263,
-          "changedFiles": 38,
-          "chunkMs": 231.782019,
-          "chunks": 29947,
-          "engine": "bm25",
-          "files": 3760,
-          "mutationFound": 6,
-          "mutationRemoved": true,
-          "retainedBytes": 49761385,
-          "updateMs": 21.5,
-          "wasmBytes": 0,
-          "queryTimesMs": [
-            79, 40.300000000046566, 16.600000000093132, 22, 11.300000000046566, 23.899999999906868,
-            20.30000000004657, 15.599999999860302, 6.400000000139698, 11.5, 14.5, 8.600000000093132,
-            11.5, 9.100000000093132, 7.800000000046566, 6.699999999953434, 6.399999999906868, 3
-          ]
+          "query": "`position-visibility` CSS property",
+          "relevant": "^css/reference/properties/position-visibility/index\\.md$",
+          "kind": "title"
         },
         {
-          "after": 78205126,
-          "before": 28443765,
-          "buildMs": 1900.6999999999537,
-          "bytes": 20530560,
-          "changedChunks": 263,
-          "changedFiles": 38,
-          "chunkMs": 231.782019,
-          "chunks": 29947,
-          "engine": "bm25",
-          "files": 3760,
-          "mutationFound": 6,
-          "mutationRemoved": true,
-          "retainedBytes": 49761361,
-          "updateMs": 21.30000000004657,
-          "wasmBytes": 0,
-          "queryTimesMs": [
-            71.4000000001397, 42.89999999990687, 19.0999999998603, 27, 11.100000000093132,
-            25.19999999995343, 20.5, 15, 6, 10.900000000139698, 14, 8.300000000046566,
-            12.099999999860302, 8.400000000139698, 7.399999999906868, 6.199999999953434,
-            6.199999999953434, 2.8999999999068677
-          ]
-        }
-      ],
-      "rankings": [
-        {
-          "ids": [511, 1796, 508, 8266, 1808, 2329],
-          "paths": [
-            "actions/concepts/workflows-and-actions/dependency-caching.md",
-            "actions/reference/workflows-and-actions/dependency-caching.md",
-            "actions/concepts/workflows-and-actions/dependency-caching.md",
-            "code-security/concepts/code-scanning/codeql/codeql-for-compiled-languages.md",
-            "actions/reference/workflows-and-actions/dependency-caching.md",
-            "actions/tutorials/build-and-test-code/go.md"
-          ],
-          "query": "github actions dependency caching",
-          "reciprocalRank": 1
+          "query": "CSS scroll-driven animations",
+          "relevant": "^css/guides/scroll-driven_animations/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [7298, 13635, 7233, 4900, 25185, 7211],
-          "paths": [
-            "authentication/keeping-your-account-and-data-secure/token-expiration-and-revocation.md",
-            "code-security/tutorials/secure-your-organization/protect-against-threats.md",
-            "authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens.md",
-            "admin/managing-iam/provisioning-user-accounts-with-scim/configuring-scim-provisioning-for-users.md",
-            "organizations/managing-programmatic-access-to-your-organization/setting-a-personal-access-token-policy-for-your-organization.md",
-            "authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens.md"
-          ],
-          "query": "personal access token expiration",
-          "reciprocalRank": 1
+          "query": "`dynamic-range-limit-mix()` CSS function",
+          "relevant": "^css/reference/values/dynamic-range-limit-mix/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [14715, 26030, 16972, 26035, 26183, 14713],
-          "paths": [
-            "contributing/collaborating-on-github-docs/using-git-on-github-docs.md",
-            "pull-requests/how-tos/merge-and-close-pull-requests/resolving-a-merge-conflict-on-github.md",
-            "copilot/how-tos/copilot-cli/use-copilot-cli/manage-pull-requests.md",
-            "pull-requests/how-tos/merge-and-close-pull-requests/resolving-a-merge-conflict-using-the-command-line.md",
-            "pull-requests/reference/merge-conflicts.md",
-            "contributing/collaborating-on-github-docs/using-git-on-github-docs.md"
-          ],
-          "query": "resolving merge conflicts",
-          "reciprocalRank": 0.5
+          "query": "`filter` CSS property",
+          "relevant": "^css/reference/properties/filter/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [4376, 26595, 4378, 26598, 26597, 4377],
-          "paths": [
-            "admin/managing-accounts-and-repositories/managing-repositories-in-your-enterprise/restoring-a-deleted-repository.md",
-            "repositories/creating-and-managing-repositories/restoring-a-deleted-repository.md",
-            "admin/managing-accounts-and-repositories/managing-repositories-in-your-enterprise/restoring-a-deleted-repository.md",
-            "repositories/creating-and-managing-repositories/restoring-a-deleted-repository.md",
-            "repositories/creating-and-managing-repositories/restoring-a-deleted-repository.md",
-            "admin/managing-accounts-and-repositories/managing-repositories-in-your-enterprise/restoring-a-deleted-repository.md"
-          ],
-          "query": "restore deleted repository",
-          "reciprocalRank": 1
+          "query": "SyntaxError: \\\\ at end of pattern",
+          "relevant": "^javascript/reference/errors/regex_backslash_at_end_of_pattern/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [26476, 26411, 26389, 1831, 26424, 13600],
-          "paths": [
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/converting-branch-protections-to-rulesets.md",
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule.md",
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches.md",
-            "actions/reference/workflows-and-actions/deployments-and-environments.md",
-            "repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets.md",
-            "code-security/tutorials/secure-your-organization/prevent-data-leaks.md"
-          ],
-          "query": "protected branch rules",
-          "reciprocalRank": 0.5
+          "query": "Shapes from images",
+          "relevant": "^css/guides/shapes/from_images/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [25720, 25680, 25694, 25718, 25721, 25676],
-          "paths": [
-            "pages/getting-started-with-github-pages/unpublishing-a-github-pages-site.md",
-            "pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site.md",
-            "pages/getting-started-with-github-pages/deleting-a-github-pages-site.md",
-            "pages/getting-started-with-github-pages/unpublishing-a-github-pages-site.md",
-            "pages/getting-started-with-github-pages/unpublishing-a-github-pages-site.md",
-            "pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site.md"
-          ],
-          "query": "deploy github pages site",
-          "reciprocalRank": 0.5
+          "query": "`anchor-name` CSS property",
+          "relevant": "^css/reference/properties/anchor-name/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [25236, 25241, 7054, 25234, 25230, 25206],
-          "paths": [
-            "organizations/managing-saml-single-sign-on-for-your-organization/enforcing-saml-single-sign-on-for-your-organization.md",
-            "organizations/managing-saml-single-sign-on-for-your-organization/index.md",
-            "authentication/authenticating-with-single-sign-on/about-authentication-with-single-sign-on.md",
-            "organizations/managing-saml-single-sign-on-for-your-organization/enabling-and-testing-saml-single-sign-on-for-your-organization.md",
-            "organizations/managing-saml-single-sign-on-for-your-organization/enabling-and-testing-saml-single-sign-on-for-your-organization.md",
-            "organizations/managing-saml-single-sign-on-for-your-organization/about-identity-and-access-management-with-saml-single-sign-on.md"
-          ],
-          "query": "saml single sign on",
-          "reciprocalRank": 1
+          "query": "Using color wisely",
+          "relevant": "^css/guides/colors/using_color_wisely/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [8413, 8392, 8377, 9757, 13103, 12647],
-          "paths": [
-            "code-security/concepts/secret-security/push-protection.md",
-            "code-security/concepts/secret-security/delegated-bypass.md",
-            "code-security/concepts/secret-security/about-alerts.md",
-            "code-security/how-tos/secure-your-secrets/work-with-leak-prevention/push-protection-on-the-command-line.md",
-            "code-security/tutorials/adopting-github-advanced-security-at-scale/phase-2-preparing-to-enable-at-scale.md",
-            "code-security/reference/secret-security/secret-scanning-scope.md"
-          ],
-          "query": "secret scanning push protection",
-          "reciprocalRank": 1
+          "query": "Right shift assignment (>>=)",
+          "relevant": "^javascript/reference/operators/right_shift_assignment/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [26650, 26649, 26652, 26651, 88, 26648],
-          "paths": [
-            "repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md",
-            "repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md",
-            "repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md",
-            "repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md",
-            "account-and-profile/concepts/username-changes.md",
-            "repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md"
-          ],
-          "query": "codeowners syntax",
-          "reciprocalRank": 1
+          "query": "`outline-width` CSS property",
+          "relevant": "^css/reference/properties/outline-width/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [26929, 4343, 7638, 26741, 26935, 4345],
-          "paths": [
-            "repositories/working-with-files/managing-large-files/installing-git-large-file-storage.md",
-            "admin/managing-accounts-and-repositories/managing-repositories-in-your-enterprise/configuring-git-large-file-storage-for-your-enterprise.md",
-            "billing/concepts/product-billing/git-lfs.md",
-            "repositories/managing-your-repositorys-settings-and-features/managing-repository-settings/managing-git-lfs-objects-in-archives-of-your-repository.md",
-            "repositories/working-with-files/managing-large-files/moving-a-file-in-your-repository-to-git-large-file-storage.md",
-            "admin/managing-accounts-and-repositories/managing-repositories-in-your-enterprise/configuring-git-large-file-storage-for-your-enterprise.md"
-          ],
-          "query": "git lfs large files",
-          "reciprocalRank": 1
+          "query": "`:visited` CSS pseudo-class",
+          "relevant": "^css/reference/selectors/_colon_visited/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [7429, 7416, 7415, 7424, 7444, 7425],
-          "paths": [
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/configuring-two-factor-authentication.md",
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/configuring-two-factor-authentication-recovery-methods.md",
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/changing-your-two-factor-authentication-method.md",
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/configuring-two-factor-authentication-recovery-methods.md",
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/disabling-two-factor-authentication-for-your-personal-account.md",
-            "authentication/securing-your-account-with-two-factor-authentication-2fa/configuring-two-factor-authentication.md"
-          ],
-          "query": "configuring two factor authentication",
-          "reciprocalRank": 1
+          "query": "`-webkit-text-fill-color` CSS property",
+          "relevant": "^css/reference/properties/-webkit-text-fill-color/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [29938, 29776, 29783, 29777, 29759, 29770],
-          "paths": [
-            "webhooks/using-webhooks/validating-webhook-deliveries.md",
-            "webhooks/testing-and-troubleshooting-webhooks/viewing-webhook-deliveries.md",
-            "webhooks/testing-and-troubleshooting-webhooks/viewing-webhook-deliveries.md",
-            "webhooks/testing-and-troubleshooting-webhooks/viewing-webhook-deliveries.md",
-            "webhooks/testing-and-troubleshooting-webhooks/troubleshooting-webhooks.md",
-            "webhooks/testing-and-troubleshooting-webhooks/troubleshooting-webhooks.md"
-          ],
-          "query": "troubleshooting webhook deliveries",
-          "reciprocalRank": 0.5
+          "query": "`::-webkit-inner-spin-button` CSS pseudo-element",
+          "relevant": "^css/reference/selectors/_doublecolon_-webkit-inner-spin-button/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [6744, 25013, 6867, 6745, 6746, 6618],
-          "paths": [
-            "apps/maintaining-github-apps/transferring-ownership-of-a-github-app.md",
-            "organizations/managing-organization-settings/transferring-organization-ownership.md",
-            "apps/oauth-apps/maintaining-oauth-apps/transferring-ownership-of-an-oauth-app.md",
-            "apps/maintaining-github-apps/transferring-ownership-of-a-github-app.md",
-            "apps/maintaining-github-apps/transferring-ownership-of-a-github-app.md",
-            "apps/github-marketplace/github-marketplace-overview/applying-for-publisher-verification-for-your-organization.md"
-          ],
-          "query": "transferring repository ownership",
-          "reciprocalRank": 0
+          "query": "`column-rule-style` CSS property",
+          "relevant": "^css/reference/properties/column-rule-style/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [13840, 13844, 14135, 13843, 13845, 13848],
-          "paths": [
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md",
-            "codespaces/reference/security-in-github-codespaces.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md",
-            "codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace.md"
-          ],
-          "query": "codespaces forwarding ports",
-          "reciprocalRank": 1
+          "query": "`scale3d()` CSS function",
+          "relevant": "^css/reference/values/transform-function/scale3d/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [7155, 7521, 7156, 7157, 7160, 7112],
-          "paths": [
-            "authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases.md",
-            "authentication/troubleshooting-ssh/recovering-your-ssh-key-passphrase.md",
-            "authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases.md",
-            "authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases.md",
-            "authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases.md",
-            "authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent.md"
-          ],
-          "query": "ssh key passphrase",
-          "reciprocalRank": 1
+          "query": "`:past` CSS pseudo-class",
+          "relevant": "^css/reference/selectors/_colon_past/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [7364, 7363, 7336, 7362, 7371, 7352],
-          "paths": [
-            "authentication/managing-commit-signature-verification/signing-commits.md",
-            "authentication/managing-commit-signature-verification/index.md",
-            "authentication/managing-commit-signature-verification/about-commit-signature-verification.md",
-            "authentication/managing-commit-signature-verification/index.md",
-            "authentication/managing-commit-signature-verification/telling-git-about-your-signing-key.md",
-            "authentication/managing-commit-signature-verification/checking-for-existing-gpg-keys.md"
-          ],
-          "query": "signing commits gpg",
-          "reciprocalRank": 1
+          "query": "Groups and backreferences",
+          "relevant": "^javascript/guide/regular_expressions/groups_and_backreferences/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [1796, 8853, 2394, 2329, 2412, 8266],
-          "paths": [
-            "actions/reference/workflows-and-actions/dependency-caching.md",
-            "code-security/how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/codeql-for-compiled-languages.md",
-            "actions/tutorials/build-and-test-code/powershell.md",
-            "actions/tutorials/build-and-test-code/go.md",
-            "actions/tutorials/build-and-test-code/python.md",
-            "code-security/concepts/code-scanning/codeql/codeql-for-compiled-languages.md"
-          ],
-          "query": "cach depend",
-          "reciprocalRank": 1
+          "query": "HTTP conditional requests",
+          "relevant": "^http/guides/conditional_requests/index\\.md$",
+          "kind": "title"
         },
         {
-          "ids": [],
-          "paths": [],
-          "query": "nonexistentquokkawombat",
-          "reciprocalRank": 0
+          "query": "`stop-opacity` CSS property",
+          "relevant": "^css/reference/properties/stop-opacity/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "TypeError: invalid Array.prototype.sort argument",
+          "relevant": "^javascript/reference/errors/array_sort_argument/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "async function expression",
+          "relevant": "^javascript/reference/operators/async_function/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "CONNECT request method",
+          "relevant": "^http/reference/methods/connect/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`orientation` CSS media feature",
+          "relevant": "^css/reference/at-rules/@media/orientation/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`padding-block-end` CSS property",
+          "relevant": "^css/reference/properties/padding-block-end/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`background-color` CSS property",
+          "relevant": "^css/reference/properties/background-color/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "CSS selectors and combinators",
+          "relevant": "^css/guides/selectors/selectors_and_combinators/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "JavaScript data types and data structures",
+          "relevant": "^javascript/guide/data_structures/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`:invalid` CSS pseudo-class",
+          "relevant": "^css/reference/selectors/_colon_invalid/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`image-set()` CSS function",
+          "relevant": "^css/reference/values/image/image-set/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`stroke-miterlimit` CSS property",
+          "relevant": "^css/reference/properties/stroke-miterlimit/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "QUERY request method",
+          "relevant": "^http/reference/methods/query/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`column-height` CSS property",
+          "relevant": "^css/reference/properties/column-height/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Testing media queries programmatically",
+          "relevant": "^css/guides/media_queries/testing/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`mask-mode` CSS property",
+          "relevant": "^css/reference/properties/mask-mode/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`row-gap` CSS property",
+          "relevant": "^css/reference/properties/row-gap/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`border-top-style` CSS property",
+          "relevant": "^css/reference/properties/border-top-style/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "CSS logical properties and values",
+          "relevant": "^css/guides/logical_properties_and_values/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`::-webkit-search-cancel-button` CSS pseudo-element",
+          "relevant": "^css/reference/selectors/_doublecolon_-webkit-search-cancel-button/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "SyntaxError: missing } after property list",
+          "relevant": "^javascript/reference/errors/missing_curly_after_property_list/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Expressions and operators",
+          "relevant": "^javascript/reference/operators/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`drop-shadow()` CSS function",
+          "relevant": "^css/reference/values/filter-function/drop-shadow/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`border-block-start-color` CSS property",
+          "relevant": "^css/reference/properties/border-block-start-color/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`:focus` CSS pseudo-class",
+          "relevant": "^css/reference/selectors/_colon_focus/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`:left` CSS pseudo-class",
+          "relevant": "^css/reference/selectors/_colon_left/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`aspect-ratio` CSS property",
+          "relevant": "^css/reference/properties/aspect-ratio/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Input boundary assertion: ^, $",
+          "relevant": "^javascript/reference/regular_expressions/input_boundary_assertion/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`d` CSS property",
+          "relevant": "^css/reference/properties/d/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`:heading` CSS pseudo-class",
+          "relevant": "^css/reference/selectors/_colon_heading/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Using relative colors",
+          "relevant": "^css/guides/colors/using_relative_colors/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Layout using named grid lines",
+          "relevant": "^css/guides/grid_layout/named_grid_lines/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`box-ordinal-group` CSS property",
+          "relevant": "^css/reference/properties/box-ordinal-group/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`break-inside` CSS property",
+          "relevant": "^css/reference/properties/break-inside/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`param()` CSS function",
+          "relevant": "^css/reference/values/param/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Handling overflow in multi-column layout",
+          "relevant": "^css/guides/multicol_layout/handling_overflow/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "204 No Content",
+          "relevant": "^http/reference/status/204/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Permissions-Policy: local-fonts directive",
+          "relevant": "^http/reference/headers/permissions-policy/local-fonts/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "418 I'm a teapot",
+          "relevant": "^http/reference/status/418/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`shape()` CSS function",
+          "relevant": "^css/reference/values/basic-shape/shape/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "Content-Security-Policy: default-src directive",
+          "relevant": "^http/reference/headers/content-security-policy/default-src/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`<baseline-position>` CSS type",
+          "relevant": "^css/reference/values/baseline-position/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`additive-symbols` CSS at-rule descriptor",
+          "relevant": "^css/reference/at-rules/@counter-style/additive-symbols/index\\.md$",
+          "kind": "title"
+        },
+        {
+          "query": "`table-layout` CSS property",
+          "relevant": "^css/reference/properties/table-layout/index\\.md$",
+          "kind": "title"
         }
       ]
     }
-  ]
+  },
+  "engines": [
+    {
+      "engine": "fts5",
+      "js": 218544,
+      "gzip": 66249,
+      "html": 1377126,
+      "htmlGzip": 578784,
+      "assets": [
+        {
+          "path": "./sqlite3-dvy61q50.wasm",
+          "bytes": 868907
+        }
+      ],
+      "contractDifferences": [],
+      "corpora": {
+        "github": {
+          "completeTrials": 3,
+          "completedBuilds": 3,
+          "task": {
+            "hits": 16,
+            "queries": 17,
+            "mrr": 0.8235294117647058
+          },
+          "title": {
+            "hits": 97,
+            "queries": 100,
+            "mrr": 0.8791666666666665
+          },
+          "buildMsMedian": 1122.1000000005588,
+          "buildMsRange": [1087.3999999994412, 1258.9000000003725],
+          "initializationMsMedian": 102.29999999981374,
+          "postGcJsAndBackingMiBMedian": 25.201425552368164,
+          "wasmMiB": 16.6875,
+          "peakRendererRssMiBMedian": 311.2578125,
+          "updateMsMedian": 52.5,
+          "changedFiles": 38,
+          "changedChunks": 263,
+          "queryTaskP50Ms": 5.900000000372529,
+          "queryTaskP95Ms": 50.39999999944121
+        },
+        "mdn": {
+          "completeTrials": 3,
+          "completedBuilds": 3,
+          "task": {
+            "hits": 23,
+            "queries": 24,
+            "mrr": 0.795138888888889
+          },
+          "title": {
+            "hits": 97,
+            "queries": 100,
+            "mrr": 0.828333333333333
+          },
+          "buildMsMedian": 1151.0999999996275,
+          "buildMsRange": [1133.7000000001863, 1156.1000000005588],
+          "initializationMsMedian": 137.6000000005588,
+          "postGcJsAndBackingMiBMedian": 21.73591899871826,
+          "wasmMiB": 16.6875,
+          "peakRendererRssMiBMedian": 296.3671875,
+          "updateMsMedian": 58.40000000037253,
+          "changedFiles": 31,
+          "changedChunks": 400,
+          "queryTaskP50Ms": 16.40000000037253,
+          "queryTaskP95Ms": 28.600000000558794
+        }
+      }
+    },
+    {
+      "engine": "minisearch",
+      "js": 18503,
+      "gzip": 6318,
+      "html": 18535,
+      "htmlGzip": 6340,
+      "assets": [],
+      "contractDifferences": [],
+      "corpora": {
+        "github": {
+          "completeTrials": 3,
+          "completedBuilds": 3,
+          "task": {
+            "hits": 17,
+            "queries": 17,
+            "mrr": 0.9019607843137255
+          },
+          "title": {
+            "hits": 91,
+            "queries": 100,
+            "mrr": 0.8031666666666666
+          },
+          "buildMsMedian": 4355.5,
+          "buildMsRange": [4332.700000000186, 4784.799999999814],
+          "initializationMsMedian": 0.2999999998137355,
+          "postGcJsAndBackingMiBMedian": 73.48567199707031,
+          "wasmMiB": 0,
+          "peakRendererRssMiBMedian": 394.55859375,
+          "updateMsMedian": 39.09999999962747,
+          "changedFiles": 38,
+          "changedChunks": 263,
+          "queryTaskP50Ms": 7.1000000005587935,
+          "queryTaskP95Ms": 83.29999999981374
+        },
+        "mdn": {
+          "completeTrials": 3,
+          "completedBuilds": 3,
+          "task": {
+            "hits": 24,
+            "queries": 24,
+            "mrr": 0.9027777777777777
+          },
+          "title": {
+            "hits": 88,
+            "queries": 100,
+            "mrr": 0.7623333333333333
+          },
+          "buildMsMedian": 3396.9000000003725,
+          "buildMsRange": [3366.300000000745, 3517.100000000559],
+          "initializationMsMedian": 0.2999999998137355,
+          "postGcJsAndBackingMiBMedian": 66.28289890289307,
+          "wasmMiB": 0,
+          "peakRendererRssMiBMedian": 358.0390625,
+          "updateMsMedian": 40.700000000186265,
+          "changedFiles": 31,
+          "changedChunks": 400,
+          "queryTaskP50Ms": 18.40000000037253,
+          "queryTaskP95Ms": 47.59999999962747
+        }
+      }
+    },
+    {
+      "engine": "flexsearch",
+      "js": 51218,
+      "gzip": 17571,
+      "html": 51250,
+      "htmlGzip": 17589,
+      "assets": [],
+      "contractDifferences": [
+        "short exact, not prefix",
+        "short absent prefix",
+        "Chinese partial short"
+      ],
+      "corpora": {
+        "github": {
+          "completeTrials": 3,
+          "completedBuilds": 3,
+          "task": {
+            "hits": 15,
+            "queries": 17,
+            "mrr": 0.7549019607843137
+          },
+          "title": {
+            "hits": 65,
+            "queries": 100,
+            "mrr": 0.5156666666666666
+          },
+          "buildMsMedian": 5443.799999999814,
+          "buildMsRange": [5143.300000000745, 5895.299999999814],
+          "initializationMsMedian": 0.2999999998137355,
+          "postGcJsAndBackingMiBMedian": 152.31966876983643,
+          "wasmMiB": 0,
+          "peakRendererRssMiBMedian": 816.03515625,
+          "updateMsMedian": 111.29999999981374,
+          "changedFiles": 38,
+          "changedChunks": 263,
+          "queryTaskP50Ms": 2,
+          "queryTaskP95Ms": 23.90000000037253
+        },
+        "mdn": {
+          "completeTrials": 1,
+          "completedBuilds": 1,
+          "task": {
+            "hits": 21,
+            "queries": 24,
+            "mrr": 0.784722222222222
+          },
+          "title": {
+            "hits": 50,
+            "queries": 100,
+            "mrr": 0.37266666666666665
+          },
+          "buildMsMedian": 4122.600000000559,
+          "buildMsRange": [4122.600000000559, 4122.600000000559],
+          "initializationMsMedian": 0.20000000018626451,
+          "postGcJsAndBackingMiBMedian": 136.54967308044434,
+          "wasmMiB": 0,
+          "peakRendererRssMiBMedian": 699.69140625,
+          "updateMsMedian": 205.5,
+          "changedFiles": 31,
+          "changedChunks": 400,
+          "queryTaskP50Ms": 6.2999999998137355,
+          "queryTaskP95Ms": 14.799999999813735
+        }
+      }
+    },
+    {
+      "engine": "orama",
+      "js": 67193,
+      "gzip": 22566,
+      "html": 67225,
+      "htmlGzip": 22594,
+      "assets": [],
+      "contractDifferences": [
+        "short exact, not prefix",
+        "short absent prefix",
+        "decomposed Latin document",
+        "Cyrillic breve",
+        "Cyrillic diaeresis",
+        "Cyrillic plain",
+        "Greek accent",
+        "Greek plain",
+        "Chinese exact",
+        "Hebrew exact",
+        "empty query",
+        "punctuation-only query"
+      ],
+      "corpora": {
+        "github": {
+          "completeTrials": 3,
+          "completedBuilds": 3,
+          "task": {
+            "hits": 11,
+            "queries": 17,
+            "mrr": 0.40392156862745093
+          },
+          "title": {
+            "hits": 29,
+            "queries": 100,
+            "mrr": 0.08566666666666667
+          },
+          "buildMsMedian": 7069.300000000745,
+          "buildMsRange": [6824.399999999441, 7314.200000000186],
+          "initializationMsMedian": 1.1000000005587935,
+          "postGcJsAndBackingMiBMedian": 148.63287353515625,
+          "wasmMiB": 0,
+          "peakRendererRssMiBMedian": 446.7265625,
+          "updateMsMedian": 1618.6000000005588,
+          "changedFiles": 38,
+          "changedChunks": 263,
+          "queryTaskP50Ms": 10,
+          "queryTaskP95Ms": 92.20000000018626
+        },
+        "mdn": {
+          "completeTrials": 1,
+          "completedBuilds": 1,
+          "task": {
+            "hits": 15,
+            "queries": 24,
+            "mrr": 0.4402777777777778
+          },
+          "title": {
+            "hits": 22,
+            "queries": 100,
+            "mrr": 0.11100000000000002
+          },
+          "buildMsMedian": 5849.399999999441,
+          "buildMsRange": [5849.399999999441, 5849.399999999441],
+          "initializationMsMedian": 1.1000000005587935,
+          "postGcJsAndBackingMiBMedian": 132.59857654571533,
+          "wasmMiB": 0,
+          "peakRendererRssMiBMedian": 406.1171875,
+          "updateMsMedian": 3165.899999999441,
+          "changedFiles": 31,
+          "changedChunks": 400,
+          "queryTaskP50Ms": 31.699999999254942,
+          "queryTaskP95Ms": 142.59999999962747
+        }
+      }
+    },
+    {
+      "engine": "bm25",
+      "js": 1145,
+      "gzip": 658,
+      "html": 1177,
+      "htmlGzip": 680,
+      "assets": [],
+      "contractDifferences": [],
+      "corpora": {
+        "github": {
+          "completeTrials": 3,
+          "completedBuilds": 3,
+          "task": {
+            "hits": 16,
+            "queries": 17,
+            "mrr": 0.8235294117647058
+          },
+          "title": {
+            "hits": 97,
+            "queries": 100,
+            "mrr": 0.8791666666666665
+          },
+          "buildMsMedian": 1787.5999999996275,
+          "buildMsRange": [1782.7000000001863, 1796.4000000003725],
+          "initializationMsMedian": 0.20000000018626451,
+          "postGcJsAndBackingMiBMedian": 72.69992256164551,
+          "wasmMiB": 0,
+          "peakRendererRssMiBMedian": 637.171875,
+          "updateMsMedian": 35.5,
+          "changedFiles": 38,
+          "changedChunks": 263,
+          "queryTaskP50Ms": 10.900000000372529,
+          "queryTaskP95Ms": 66.19999999925494
+        },
+        "mdn": {
+          "completeTrials": 1,
+          "completedBuilds": 1,
+          "task": {
+            "hits": 23,
+            "queries": 24,
+            "mrr": 0.795138888888889
+          },
+          "title": {
+            "hits": 97,
+            "queries": 100,
+            "mrr": 0.828333333333333
+          },
+          "buildMsMedian": 1573.4000000003725,
+          "buildMsRange": [1573.4000000003725, 1573.4000000003725],
+          "initializationMsMedian": 0.20000000018626451,
+          "postGcJsAndBackingMiBMedian": 64.7717695236206,
+          "wasmMiB": 0,
+          "peakRendererRssMiBMedian": 547.6875,
+          "updateMsMedian": 25.299999999813735,
+          "changedFiles": 31,
+          "changedChunks": 400,
+          "queryTaskP50Ms": 26.399999999441206,
+          "queryTaskP95Ms": 57.299999999813735
+        }
+      }
+    },
+    {
+      "engine": "elasticlunr",
+      "js": 20908,
+      "gzip": 6368,
+      "html": 20940,
+      "htmlGzip": 6387,
+      "assets": [],
+      "contractDifferences": [],
+      "corpora": {
+        "github": {
+          "completeTrials": 3,
+          "completedBuilds": 3,
+          "task": {
+            "hits": 16,
+            "queries": 17,
+            "mrr": 0.7784313725490195
+          },
+          "title": {
+            "hits": 71,
+            "queries": 100,
+            "mrr": 0.5868333333333333
+          },
+          "buildMsMedian": 5349.5999999996275,
+          "buildMsRange": [4998.200000000186, 5677.700000000186],
+          "initializationMsMedian": 2.300000000745058,
+          "postGcJsAndBackingMiBMedian": 140.70117473602295,
+          "wasmMiB": 0,
+          "peakRendererRssMiBMedian": 834.48046875,
+          "updateMsMedian": 58.40000000037253,
+          "changedFiles": 38,
+          "changedChunks": 263,
+          "queryTaskP50Ms": 14.5,
+          "queryTaskP95Ms": 139.30000000074506
+        },
+        "mdn": {
+          "completeTrials": 1,
+          "completedBuilds": 1,
+          "task": {
+            "hits": 23,
+            "queries": 24,
+            "mrr": 0.8854166666666666
+          },
+          "title": {
+            "hits": 69,
+            "queries": 100,
+            "mrr": 0.5191666666666668
+          },
+          "buildMsMedian": 4132.200000000186,
+          "buildMsRange": [4132.200000000186, 4132.200000000186],
+          "initializationMsMedian": 1.2999999998137355,
+          "postGcJsAndBackingMiBMedian": 118.12616729736328,
+          "wasmMiB": 0,
+          "peakRendererRssMiBMedian": 715.74609375,
+          "updateMsMedian": 64.5,
+          "changedFiles": 31,
+          "changedChunks": 400,
+          "queryTaskP50Ms": 41.200000000186265,
+          "queryTaskP95Ms": 124.30000000074506
+        }
+      }
+    },
+    {
+      "engine": "lunr",
+      "js": 32066,
+      "gzip": 9398,
+      "html": 32098,
+      "htmlGzip": 9418,
+      "assets": [],
+      "contractDifferences": [],
+      "corpora": {
+        "github": {
+          "completeTrials": 0,
+          "completedBuilds": 1,
+          "task": {
+            "hits": 16,
+            "queries": 17,
+            "mrr": 0.6882352941176472
+          },
+          "title": {
+            "hits": 0,
+            "queries": 0,
+            "mrr": null
+          },
+          "buildMsMedian": 8793.899999999441,
+          "buildMsRange": [8793.899999999441, 8793.899999999441],
+          "initializationMsMedian": 0.10000000055879354,
+          "postGcJsAndBackingMiBMedian": 323.42102241516113,
+          "wasmMiB": 0,
+          "peakRendererRssMiBMedian": 1119.015625,
+          "updateMsMedian": null,
+          "changedFiles": null,
+          "changedChunks": null,
+          "queryTaskP50Ms": 21,
+          "queryTaskP95Ms": 208.8999999994412
+        },
+        "mdn": {
+          "completeTrials": 0,
+          "completedBuilds": 1,
+          "task": {
+            "hits": 22,
+            "queries": 24,
+            "mrr": 0.6993055555555556
+          },
+          "title": {
+            "hits": 0,
+            "queries": 0,
+            "mrr": null
+          },
+          "buildMsMedian": 7187.799999999814,
+          "buildMsRange": [7187.799999999814, 7187.799999999814],
+          "initializationMsMedian": 0.20000000018626451,
+          "postGcJsAndBackingMiBMedian": 274.94361305236816,
+          "wasmMiB": 0,
+          "peakRendererRssMiBMedian": 998.1328125,
+          "updateMsMedian": null,
+          "changedFiles": null,
+          "changedChunks": null,
+          "queryTaskP50Ms": 70.6000000005588,
+          "queryTaskP95Ms": 184.70000000018626
+        }
+      }
+    },
+    {
+      "engine": "fuse",
+      "js": 27442,
+      "gzip": 9991,
+      "html": 27474,
+      "htmlGzip": 10014,
+      "assets": [],
+      "contractDifferences": [
+        "short exact, not prefix",
+        "prefix, not infix",
+        "short absent prefix",
+        "Latin accent and case",
+        "Latin multi-accent",
+        "decomposed Latin document",
+        "Chinese partial short",
+        "empty query",
+        "punctuation-only query"
+      ],
+      "corpora": {
+        "github": {
+          "completeTrials": 1,
+          "completedBuilds": 1,
+          "task": {
+            "hits": 16,
+            "queries": 17,
+            "mrr": 0.8235294117647057
+          },
+          "title": {
+            "hits": 0,
+            "queries": 0,
+            "mrr": null
+          },
+          "buildMsMedian": 1732.300000000745,
+          "buildMsRange": [1732.300000000745, 1732.300000000745],
+          "initializationMsMedian": 0.599999999627471,
+          "postGcJsAndBackingMiBMedian": 68.09867477416992,
+          "wasmMiB": 0,
+          "peakRendererRssMiBMedian": 615.57421875,
+          "updateMsMedian": 2156.7999999998137,
+          "changedFiles": 38,
+          "changedChunks": 263,
+          "queryTaskP50Ms": 1727.6000000005588,
+          "queryTaskP95Ms": 2121.0999999996275
+        },
+        "mdn": {
+          "completeTrials": 1,
+          "completedBuilds": 1,
+          "task": {
+            "hits": 23,
+            "queries": 24,
+            "mrr": 0.8229166666666666
+          },
+          "title": {
+            "hits": 0,
+            "queries": 0,
+            "mrr": null
+          },
+          "buildMsMedian": 1472,
+          "buildMsRange": [1472, 1472],
+          "initializationMsMedian": 0.900000000372529,
+          "postGcJsAndBackingMiBMedian": 62.464439392089844,
+          "wasmMiB": 0,
+          "peakRendererRssMiBMedian": 537.71875,
+          "updateMsMedian": 4461.299999999814,
+          "changedFiles": 31,
+          "changedChunks": 400,
+          "queryTaskP50Ms": 1687.1000000005588,
+          "queryTaskP95Ms": 2097.7999999998137
+        }
+      }
+    },
+    {
+      "engine": "sqljs",
+      "js": 50321,
+      "gzip": 17001,
+      "html": 1087898,
+      "htmlGzip": 498597,
+      "stockHtml": {
+        "html": 1623329,
+        "htmlGzip": 658536
+      },
+      "assets": [
+        {
+          "path": "./sql-wasm-ngh7mg87.wasm",
+          "bytes": 778154
+        }
+      ],
+      "contractDifferences": [],
+      "corpora": {
+        "github": {
+          "completeTrials": 3,
+          "completedBuilds": 3,
+          "task": {
+            "hits": 16,
+            "queries": 17,
+            "mrr": 0.8235294117647058
+          },
+          "title": {
+            "hits": 97,
+            "queries": 100,
+            "mrr": 0.8791666666666665
+          },
+          "buildMsMedian": 1013.5,
+          "buildMsRange": [990.3000000007451, 1040],
+          "initializationMsMedian": 118,
+          "postGcJsAndBackingMiBMedian": 37.58113384246826,
+          "wasmMiB": 16,
+          "peakRendererRssMiBMedian": 232.953125,
+          "updateMsMedian": 73.90000000037253,
+          "changedFiles": 38,
+          "changedChunks": 263,
+          "queryTaskP50Ms": 6.2000000001862645,
+          "queryTaskP95Ms": 49.5
+        },
+        "mdn": {
+          "completeTrials": 1,
+          "completedBuilds": 1,
+          "task": {
+            "hits": 23,
+            "queries": 24,
+            "mrr": 0.795138888888889
+          },
+          "title": {
+            "hits": 97,
+            "queries": 100,
+            "mrr": 0.828333333333333
+          },
+          "buildMsMedian": 914.4000000003725,
+          "buildMsRange": [914.4000000003725, 914.4000000003725],
+          "initializationMsMedian": 160.09999999962747,
+          "postGcJsAndBackingMiBMedian": 34.3289909362793,
+          "wasmMiB": 16,
+          "peakRendererRssMiBMedian": 222.5234375,
+          "updateMsMedian": 51.90000000037253,
+          "changedFiles": 31,
+          "changedChunks": 400,
+          "queryTaskP50Ms": 19.40000000037253,
+          "queryTaskP95Ms": 26
+        }
+      }
+    }
+  ],
+  "validation": {
+    "matchingCases": 24,
+    "standaloneHtmlBundlesPassed": 9,
+    "churnCycles": 480,
+    "uiPhaseReads": [2, 2, 3, 0, 0],
+    "uiFiles": 3761
+  },
+  "rawEvidence": {
+    "path": "lighter-search-raw.json.gz",
+    "bytes": 378313,
+    "sha256": "ee62928e9539dfd9a1758457178d06a7976f8fe4daae4c3de507663e5584574e"
+  }
 }

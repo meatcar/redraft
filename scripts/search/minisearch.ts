@@ -22,5 +22,8 @@ export function makeEngine(): Engine {
         .search(terms(query).join(" "))
         .slice(0, limit)
         .map(({ id, score }) => ({ id: Number(id), score })),
+    settle: async () => {
+      await index.vacuum();
+    },
   };
 }

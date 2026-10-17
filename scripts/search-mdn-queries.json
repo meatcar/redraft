@@ -1,0 +1,36 @@
+[
+  { "query": "css flexbox align items", "relevant": "css_flexible_box_layout|align-items" },
+  { "query": "css grid template columns", "relevant": "grid-template-columns|css_grid_layout" },
+  { "query": "css selector specificity", "relevant": "specificity" },
+  { "query": "sticky position scrolling", "relevant": "properties/position/" },
+  { "query": "css margin collapse", "relevant": "margin_collapsing" },
+  { "query": "css border box sizing", "relevant": "box-sizing|box_model" },
+  { "query": "css prefers reduced motion", "relevant": "prefers-reduced-motion" },
+  { "query": "http cors preflight request", "relevant": "cors|preflight" },
+  { "query": "http cache control max age", "relevant": "cache-control|caching" },
+  { "query": "http cookie samesite secure", "relevant": "set-cookie|cookies" },
+  {
+    "query": "content security policy script src",
+    "relevant": "content-security-policy|script-src"
+  },
+  { "query": "http redirect permanent 301", "relevant": "status/301|redirections" },
+  {
+    "query": "http conditional request etag",
+    "relevant": "conditional_requests|etag|if-none-match"
+  },
+  { "query": "http accept encoding compression", "relevant": "accept-encoding|compression" },
+  { "query": "javascript promise all rejection", "relevant": "promise/all/|using_promises" },
+  { "query": "javascript optional chaining null", "relevant": "optional_chaining" },
+  { "query": "javascript closures lexical scope", "relevant": "closures" },
+  { "query": "javascript array map callback", "relevant": "array/map/" },
+  { "query": "javascript reduce accumulator", "relevant": "array/reduce/" },
+  { "query": "javascript async function await", "relevant": "async_function/|await/" },
+  { "query": "javascript destructuring assignment", "relevant": "destructuring" },
+  { "query": "javascript weakmap garbage collection", "relevant": "weakmap/|memory_management" },
+  {
+    "query": "javascript regular expression named capturing groups",
+    "relevant": "named_capturing_group|groups_and_backreferences"
+  },
+  { "query": "javascript temporal dead zone let", "relevant": "statements/let/" },
+  { "query": "nonexistentquokkawombat", "relevant": "^$" }
+]
