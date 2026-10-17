@@ -10,13 +10,26 @@ type Props = {
   value: string;
   onChange: (value: string) => void;
   secret?: boolean;
+  normalize?: (value: string) => string;
   className?: string;
 };
 
 /** Commits on blur or Enter so model discovery runs once per edit, not per keystroke. */
-export function SettingInput({ icon: Icon, label, value, onChange, secret, className }: Props) {
+export function SettingInput({
+  icon: Icon,
+  label,
+  value,
+  onChange,
+  secret,
+  normalize = (text) => text.trim(),
+  className,
+}: Props) {
   const [draft, setDraft] = useState(value);
-  const commit = () => draft.trim() !== value && onChange(draft.trim());
+  const commit = () => {
+    const next = normalize(draft);
+    setDraft(next);
+    if (next !== value) onChange(next);
+  };
 
   return (
     <div className="flex items-center gap-2">

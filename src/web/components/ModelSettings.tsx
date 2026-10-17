@@ -1,7 +1,7 @@
 import { Globe, KeyRound, Server } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import { createLlm } from "@core/llm";
+import { createLlm, normalizeEndpoint } from "@core/llm";
 import { ModelPicker } from "@/components/ModelPicker";
 import { SettingInput } from "@/components/SettingInput";
 import {
@@ -68,6 +68,7 @@ export function ModelSettings({ settings }: Props) {
           icon={Globe}
           label="Model endpoint"
           value={settings.endpoint}
+          normalize={normalizeEndpoint}
           onChange={(value) => settings.setEndpoint(value || DEFAULT_ENDPOINT)}
         />
       )}

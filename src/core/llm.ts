@@ -35,6 +35,18 @@ export function createLlm({ baseURL, apiKey }: { baseURL: string; apiKey: string
   };
 }
 
+const LOCAL_HOST = /^(localhost|127\.\d+\.\d+\.\d+|\[::1\]|0\.0\.0\.0|[\w-]+\.local)(:|\/|$)/i;
+
+/** Completes what the user typed: scheme (http for local hosts), and `/v1` when no path is given. */
+export function normalizeEndpoint(input: string): string {
+  const text = input.trim();
+  const scheme = LOCAL_HOST.test(text) ? "http" : "https";
+  const url = URL.parse(/^[a-z][\w+.-]*:\/\//i.test(text) ? text : `${scheme}://${text}`);
+  if (!url?.hostname) return text;
+  const path = url.pathname.replace(/\/+$/, "") || "/v1";
+  return `${url.origin}${path}`;
+}
+
 function describeStatus(status: number, what: string) {
   return status === 401 || status === 403
     ? `The model endpoint rejected the API key (${status}).`
