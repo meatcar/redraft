@@ -3,6 +3,10 @@
   "extends": ["github>meatcar/renovate-config"],
   "packageRules": [
     {
+      "matchManagers": ["github-actions"],
+      "pinDigests": true,
+    },
+    {
       "description": "CVA is still maintained and used by shadcn base-vega; release age is not abandonment.",
       "matchPackageNames": ["class-variance-authority"],
       "abandonmentThreshold": null,

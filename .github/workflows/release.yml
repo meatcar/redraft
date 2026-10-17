@@ -16,11 +16,11 @@ jobs:
       artifact-metadata: write
       actions: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
 
-      - uses: cachix/install-nix-action@v31
+      - uses: cachix/install-nix-action@448cde739abec1eaf0646249e3d25bb8d9bc7702 # v31
 
       - name: Install dependencies
         run: nix develop --command bun install --frozen-lockfile
@@ -36,7 +36,7 @@ jobs:
       - name: Build single-file HTML
         run: nix develop --command bun run build:html
 
-      - uses: actions/attest@v4
+      - uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4
         with:
           subject-path: dist/redraft.html
 
