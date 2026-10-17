@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: ["**"]
   pull_request:
     branches: [main]
 
@@ -13,18 +13,21 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 
-      - uses: cachix/install-nix-action@v31
+      - uses: cachix/install-nix-action@3c6342b75005b9cc7c7d4069c3e9179247c89012 # v31
 
-      - uses: nix-community/cache-nix-action@v7
+      - uses: nix-community/cache-nix-action@7df957e333c1e5da7721f60227dbba6d06080569 # v7
         with:
           primary-key: nix-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
           restore-prefixes-first-match: nix-${{ runner.os }}-${{ runner.arch }}-
 
       # Every step runs in the devshell: treefmt and the nix formatters live there.
       - name: Install dependencies
-        run: nix develop --command bun install --frozen-lockfile
+        run: nix develop --no-write-lock-file --command bun install --frozen-lockfile --ignore-scripts
+
+      - name: Audit dependencies
+        run: nix develop --no-write-lock-file --command bun audit --audit-level high
 
       - name: Check
         run: nix develop --command bun run check
@@ -33,4 +36,13 @@ jobs:
         run: nix develop --command bun test
 
       - name: Build single-file HTML
-        run: nix develop --command bun run build:html
+        run: nix develop --no-write-lock-file --command bun run build:html
+
+      - name: Reproduce from clean source and dependency installs
+        run: bash scripts/reproduce.sh "$GITHUB_SHA" dist/redraft.html
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: redraft
+          path: dist/redraft.html
+          if-no-files-found: error
