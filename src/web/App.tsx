@@ -101,8 +101,7 @@ export function App() {
         >
           <SuggestionPanel
             state={state}
-            previewing={preview.index}
-            onApply={preview.accept}
+            preview={preview}
             onSuggest={suggestForSelection}
             onDismiss={dismiss}
           />

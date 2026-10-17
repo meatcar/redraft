@@ -40,6 +40,8 @@ async function setup() {
   return { view, suggestions };
 }
 
+const click = (name: RegExp) => fireEvent.click(screen.getByRole("button", { name }));
+
 const userPrompt = async (request: Request) =>
   JSON.stringify(chatSchema.parse(await request.json()).messages.at(-1)?.content);
 
@@ -107,6 +109,28 @@ describe("App", () => {
     await waitFor(() => expect(screen.queryByText("Option text 2")).toBeNull());
     undo(view);
     expect(doc()).toBe(sample);
+  });
+
+  test("every preview shortcut has a button that does the same", async () => {
+    const { view } = await setup();
+    view.dispatch({ selection: { anchor: 6, head: 10 } });
+    fireEvent.click(screen.getByRole("button", { name: /^Suggest/ }));
+    await screen.findByText("Option text 3");
+    const doc = () => view.state.doc.toString();
+
+    expect(screen.getByRole("button", { name: /^Keep/ }).hasAttribute("disabled")).toBe(true);
+    click(/^Preview option 2/);
+    expect(doc()).toBe("Alpha Option text 2 gamma.");
+    click(/^Next/);
+    expect(doc()).toBe("Alpha Option text 3 gamma.");
+    click(/^Previous/);
+    expect(doc()).toBe("Alpha Option text 2 gamma.");
+    click(/^Restore/);
+    expect(doc()).toBe(sample);
+    click(/^Next/);
+    click(/^Keep/);
+    expect(doc()).toBe("Alpha Option text 1 gamma.");
+    await waitFor(() => expect(screen.queryByText("Option text 2")).toBeNull());
   });
 
   test("Ctrl or Alt with a digit previews that option", async () => {

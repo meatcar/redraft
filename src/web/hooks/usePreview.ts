@@ -30,12 +30,16 @@ export function usePreview(
   return {
     index,
     available: alternatives.length > 0,
-    show: (i: number) => i < alternatives.length && swapTo(i),
+    show: (i: number) => {
+      if (i < alternatives.length) swapTo(i);
+    },
     cycle: (step: 1 | -1) => {
       const n = alternatives.length;
       if (n) swapTo(index === null ? (step > 0 ? 0 : n - 1) : (index + step + n) % n);
     },
-    cancel: () => index !== null && swapTo(null),
+    cancel: () => {
+      if (index !== null) swapTo(null);
+    },
     /** Restores the original silently, then applies the choice as one undoable change. */
     accept: (i = index) => {
       if (!target || i === null || !alternatives[i]) return;
@@ -47,3 +51,4 @@ export function usePreview(
 }
 
 export type Preview = ReturnType<typeof usePreview>;
+export type PreviewControls = Pick<Preview, "index" | "show" | "cycle" | "accept" | "cancel">;

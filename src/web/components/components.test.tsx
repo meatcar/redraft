@@ -21,19 +21,27 @@ const alternatives = ["Hi", "Hey", "Greetings"].map((text) => ({
   rationale: `${text} reason`,
 }));
 
+const idlePreview = {
+  index: null,
+  show: () => {},
+  cycle: () => {},
+  accept: () => {},
+  cancel: () => {},
+};
+
 describe("SuggestionPanel", () => {
   test("applies the clicked alternative", () => {
-    const onApply = mock();
+    const accept = mock();
     render(
       <SuggestionPanel
         state={{ status: "done", target, result: { alternatives, sources: ["notes/a.md"] } }}
-        onApply={onApply}
+        preview={{ ...idlePreview, accept }}
         onSuggest={() => {}}
         onDismiss={() => {}}
       />,
     );
     fireEvent.click(screen.getByText("Hey"));
-    expect(onApply).toHaveBeenCalledWith(1);
+    expect(accept).toHaveBeenCalledWith(1);
     expect(screen.getByText("notes/a.md")).toBeTruthy();
   });
 
@@ -41,7 +49,7 @@ describe("SuggestionPanel", () => {
     render(
       <SuggestionPanel
         state={{ status: "error", target, error: "boom" }}
-        onApply={() => {}}
+        preview={idlePreview}
         onSuggest={() => {}}
         onDismiss={() => {}}
       />,
@@ -54,7 +62,7 @@ describe("SuggestionPanel", () => {
     render(
       <SuggestionPanel
         state={{ status: "idle" }}
-        onApply={() => {}}
+        preview={idlePreview}
         onSuggest={onSuggest}
         onDismiss={() => {}}
       />,
