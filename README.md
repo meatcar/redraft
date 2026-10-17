@@ -33,7 +33,7 @@ your notes, and keep your words off everyone's server but the model's.
   discovered from the endpoint; keys are stored per endpoint in your browser.
 - **Client-side only.** Your document, notes, and key go straight from your browser to the
   model. There is no Redraft backend.
-- **One verifiable file.** Each release is a single 3.5 MB HTML file with a GitHub build
+- **One verifiable file.** Each release is a single 2.2 MB HTML file with a GitHub build
   provenance attestation. Open it from disk, offline from everything but your model.
 - **Works on your phone.** Select with the usual handles and tap **Suggest**; rewrites slide
   up under the document.
@@ -77,8 +77,8 @@ Ctrl+Space ─▶ sync context index ─▶ model loop with tools ─▶ exactly
 
 - The first prompt holds only the selection and your steering. The model calls tools when it
   needs more, so short requests stay short.
-- The context folder is indexed in memory with SQLite FTS5 compiled to WebAssembly. The index
-  is contentless: snippets are read from your files, nothing is copied. Each request resyncs
+- The context folder is indexed in memory with MiniSearch (BM25+). The index stores terms,
+  not file bodies: snippets are read from your files. Each request resyncs
   changed, added, and deleted files first.
 - Chromium reads the folder live through the File System Access API. Other browsers upload
   a snapshot.
@@ -107,7 +107,7 @@ nix flake check
 `PORT` (see `.env.example`). Releases are cut by pushing a `v*` tag.
 
 Built with React 19, CodeMirror 6, shadcn/ui, Tailwind 4, the Vercel AI SDK, and
-`@sqlite.org/sqlite-wasm`. Contributors and agents: see [AGENTS.md](AGENTS.md).
+MiniSearch. Contributors and agents: see [AGENTS.md](AGENTS.md).
 
 ## License
 

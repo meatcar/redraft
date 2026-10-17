@@ -92,6 +92,21 @@ describe("ContextIndex", () => {
     expect(await index.search("sta")).toEqual([]);
   });
 
+  test("treats queries as words, folds accents, and matches any term without fuzzy matches", async () => {
+    const notes = folder({
+      "cafe.md": "# Café\n\nA résumé about the zeppelin.\n",
+      "other.md": "# Other\n\nA wombat lives here.\n",
+    });
+    const index = await ContextIndex.open(notes.source);
+    expect((await index.search('CAFE + "resume"'))[0]?.path).toBe("cafe.md");
+    expect((await index.search("missing zeppel"))[0]?.path).toBe("cafe.md");
+    expect(await index.search("zepplin")).toEqual([]);
+    expect(await index.search("* + : ()")).toEqual([]);
+    const hits = await index.search("zeppelin wombat", 1);
+    expect(hits).toHaveLength(1);
+    expect(hits[0]!.score).toBeGreaterThan(0);
+  });
+
   test("reads indexed files only", async () => {
     const index = await ContextIndex.open(corpus().source);
     expect(await index.read("product/pricing.md")).toContain("12 dollars");
@@ -103,19 +118,22 @@ describe("ContextIndex", () => {
     const notes = corpus();
     const index = await ContextIndex.open(notes.source);
 
-    notes.write("new.md", "# Fresh\n\nA brand new quokka fact.\n");
+    notes.write("new.md", "# Fresh\n\n## Facts\n\nA brand new quokka fact.\n");
     await index.sync();
     expect((await index.search("quokka"))[0]?.text).toContain("quokka fact");
+    expect(index.status.chunks).toBe(6);
 
     notes.write("new.md", "# Fresh\n\nNow about a wombat, with a longer body than before.\n");
     await index.sync();
     expect(await index.search("quokka")).toEqual([]);
     expect((await index.search("wombat"))[0]?.text).toContain("about a wombat");
+    expect(index.status.chunks).toBe(5);
 
     notes.remove("new.md");
     await index.sync();
     expect(await index.search("wombat")).toEqual([]);
     expect(index.status.files).toBe(3);
+    expect(index.status.chunks).toBe(4);
   });
 
   test("drops hits from files edited since the last sync", async () => {

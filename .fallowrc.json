@@ -1,6 +1,13 @@
 {
   "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
-  "entry": ["src/server/main.ts", "src/web/frontend.tsx", "src/**/*.test.{ts,tsx}"],
+  "entry": [
+    "src/server/main.ts",
+    "src/web/frontend.tsx",
+    "src/**/*.test.{ts,tsx}",
+    "scripts/search-benchmark.ts",
+    "scripts/search-runner.js",
+    "scripts/search/*.ts"
+  ],
   "ignoreDependencies": ["bun-plugin-tailwind"],
   "rules": {}
 }

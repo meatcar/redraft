@@ -1,0 +1,41 @@
+[
+  {
+    "query": "github actions dependency caching",
+    "relevant": "caching-dependencies|dependency-caching"
+  },
+  {
+    "query": "personal access token expiration",
+    "relevant": "managing-your-personal-access-tokens|token-expiration-and-revocation"
+  },
+  { "query": "resolving merge conflicts", "relevant": "merge-conflict" },
+  { "query": "restore deleted repository", "relevant": "restoring-a-deleted-repository" },
+  { "query": "protected branch rules", "relevant": "protected-branches|branch-protection-rule" },
+  {
+    "query": "deploy github pages site",
+    "relevant": "configuring-a-publishing-source|creating-a-github-pages-site|custom-workflow"
+  },
+  {
+    "query": "saml single sign on",
+    "relevant": "saml-single-sign-on|authentication-with-single-sign-on"
+  },
+  { "query": "secret scanning push protection", "relevant": "push-protection" },
+  { "query": "codeowners syntax", "relevant": "code-owners" },
+  { "query": "git lfs large files", "relevant": "git-large-file-storage" },
+  {
+    "query": "configuring two factor authentication",
+    "relevant": "configuring-two-factor-authentication"
+  },
+  {
+    "query": "troubleshooting webhook deliveries",
+    "relevant": "troubleshooting-webhooks|redelivering-webhooks|viewing-webhook-deliveries"
+  },
+  { "query": "transferring repository ownership", "relevant": "transferring-a-repository" },
+  { "query": "codespaces forwarding ports", "relevant": "forwarding-ports-in-your-codespace" },
+  { "query": "ssh key passphrase", "relevant": "working-with-ssh-key-passphrases" },
+  {
+    "query": "signing commits gpg",
+    "relevant": "signing-commits|telling-git-about-your-signing-key"
+  },
+  { "query": "cach depend", "relevant": "caching-dependencies|dependency-caching" },
+  { "query": "nonexistentquokkawombat", "relevant": "^$" }
+]

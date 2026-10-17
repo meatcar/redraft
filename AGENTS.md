@@ -10,7 +10,7 @@ nix/flake-modules/   # flake parts: devshell.nix, treefmt.nix
 .agents/             # orb lifecycle (vendored from meatcar/nix-templates#sandbox)
 .amp/services.yaml   # orb dev server + portal
 src/core/            # browser domain, no React: api.ts (zod contract), suggest.ts (LLM loop),
-                     # llm.ts (endpoint), context.ts (SQLite-wasm FTS5 index), files.ts (folder sources)
+                     # llm.ts (endpoint), context.ts (MiniSearch BM25+ index), files.ts (folder sources)
 src/server/          # main.ts (Bun.serve static + /healthz), config.ts (env)
 src/web/             # React 19 + shadcn/ui + Tailwind 4 + CodeMirror 6
 scripts/build-html.ts # single-file build (dist/redraft.html); attested by .github/workflows/release.yml
