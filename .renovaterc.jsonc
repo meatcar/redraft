@@ -8,7 +8,7 @@
       "abandonmentThreshold": null,
     },
     {
-      "description": "clsx is a finished 239-byte utility, also required by CVA; keep future updates enabled.",
+      "description": "clsx remains only through CVA: a finished 239-byte utility; keep future updates enabled.",
       "matchPackageNames": ["clsx"],
       "abandonmentThreshold": null,
     },
