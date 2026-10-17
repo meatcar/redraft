@@ -28,6 +28,12 @@ scripts/build-html.ts # single-file build (dist/redraft.html); attested by .gith
   - README: does the pitch, feature list, quick start, and `docs/screenshot.png` still describe the product a first-time visitor sees? Rewrite sections that drifted; retake the screenshot if the UI changed.
   - Topics: check them with `gh repo view --json repositoryTopics`. Add topics for new capabilities, drop stale ones, max 20. Weigh reach against fit with `gh api "search/repositories?q=topic:<name>&per_page=1" --jq .total_count`. Apply with `gh repo edit --add-topic/--remove-topic`.
 
+## UX
+
+- Every keyboard shortcut has a visible button that does the same thing, with the shortcut shown
+  in a `<kbd>` hint (hidden on touch screens via `pointer-coarse:hidden`). Buttons that drive
+  editor shortcuts keep focus in the editor.
+
 ## Commands (repo root)
 
 - `direnv exec .`: run commands
