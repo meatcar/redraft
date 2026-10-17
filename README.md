@@ -33,8 +33,9 @@ your notes, and keep your words off everyone's server but the model's.
   discovered from the endpoint; keys are stored per endpoint in your browser.
 - **Client-side only.** Your document, notes, and key go straight from your browser to the
   model. There is no Redraft backend.
-- **One verifiable file.** Each release is a single 3.5 MB HTML file with a GitHub build
-  provenance attestation. Open it from disk, offline from everything but your model.
+- **One verifiable file.** Each release is a single HTML file with a GitHub build provenance
+  attestation. Clean rebuilds must match byte for byte before publication. Open it from disk,
+  offline from everything but your model.
 - **Works on your phone.** Select with the usual handles and tap **Suggest**; rewrites slide
   up under the document.
 - **Markdown editor with Vim mode**, built on CodeMirror 6.
@@ -55,16 +56,31 @@ Optional: click **Context folder** to let the model search your notes.
 Redraft has no server of its own. Requests go from your browser to the endpoint you choose,
 and settings live in `localStorage`. A custom endpoint must allow CORS from the page's origin.
 
-Every release is built by [GitHub Actions](.github/workflows/release.yml) and attested. Check
-that a file is exactly what CI built from a tagged commit:
+**GitHub Pages is a shared origin:** other projects at `meatcar.github.io` can read Redraft's
+saved documents and API keys. A `/redraft/` path or `redraft:` key prefix does not isolate them.
+For sensitive work, use the verified download or self-host on a dedicated origin you trust.
+Local-file storage and endpoint CORS support vary by browser; keys remain stored there too.
+
+Every release is built by [GitHub Actions](.github/workflows/release.yml), independently
+rebuilt on a separate runner, then attested. To verify a download and rebuild its tagged source:
 
 ```sh
-gh attestation verify redraft.html --repo meatcar/redraft
+tag=vX.Y.Z # choose a release that includes the reproducibility check
+gh release download "$tag" --repo meatcar/redraft --pattern redraft.html --dir release
+gh attestation verify release/redraft.html --repo meatcar/redraft \
+  --signer-workflow meatcar/redraft/.github/workflows/release.yml \
+  --source-ref "refs/tags/$tag" --deny-self-hosted-runners
+# In a clone of this repo, with Nix on x86_64-linux:
+git fetch origin tag "$tag"
+bash scripts/reproduce.sh "$tag" release/redraft.html
 ```
 
 GitHub Pages serves the same attested bytes: the latest release at `/redraft/` and each
 release at `/redraft/<tag>/`. An attestation proves where the file came from, not what it
-does; the source for each tag is public for that.
+does; reproducibility connects those bytes to source, not to safety. The release CSP blocks
+remote scripts and JavaScript eval, but is not an endpoint-only network firewall.
+See [build verification and security limits](docs/security.md) for the exact guarantees,
+CSP exceptions, and remaining work.
 
 ## How it works
 
