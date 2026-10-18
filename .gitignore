@@ -46,3 +46,7 @@ results/
 
 # local artifacts
 .amp/in/
+
+# playwright
+test-results/
+playwright-report/
