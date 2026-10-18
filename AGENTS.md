@@ -42,6 +42,7 @@ scripts/build-html.ts # single-file build (dist/redraft.html); attested by .gith
 - `bun run build:html`: single self-contained HTML in `dist/`
 - `bun run test:e2e`: build, then drive `dist/redraft.html` in Chromium (`tests/*.e2e.ts`, desktop and phone).
   `@playwright/test` stays pinned to the nixpkgs `playwright-driver` version.
+- CI's `check` job is required on `main` by a ruleset; Renovate automerges through it. Keep the job name.
 - `bun run release [vX.Y.Z]`: regenerate `CHANGELOG.md` with git-cliff (`cliff.toml`), commit, and tag; version defaults to the
   one implied by commits since the last tag. Push `main` and the tag to publish; CI fails if `CHANGELOG.md` is stale.
 - `bun run dev`: dev server with HMR on `$PORT` (default 3000). If HMR keeps a stale failed import, run `amp orb service restart web`.
