@@ -21,8 +21,13 @@
       "groupName": "Tailwind CSS",
     },
     {
+      // NOTE: safe only while the main ruleset requires the CI "check" job.
       "matchUpdateTypes": ["minor", "patch"],
       "matchCurrentVersion": "!/^0/",
+      "automerge": true,
+    },
+    {
+      "matchUpdateTypes": ["digest", "pinDigest", "lockFileMaintenance"],
       "automerge": true,
     },
     {

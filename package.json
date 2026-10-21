@@ -9,6 +9,7 @@
     "build:html": "bun scripts/build-html.ts",
     "release": "bun scripts/release.ts",
     "test": "bun test",
+    "test:e2e": "bun run build:html && bunx --bun playwright test",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint && fallow",
     "format": "treefmt -q",
@@ -35,6 +36,7 @@
   "devDependencies": {
     "@codemirror/commands": "^6.11.1",
     "@happy-dom/global-registrator": "^21.0.3",
+    "@playwright/test": "1.59.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/react": "^16.3.3",

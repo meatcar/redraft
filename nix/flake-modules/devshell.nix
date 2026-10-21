@@ -26,6 +26,9 @@
             bun
             git-cliff
           ];
+        # NOTE: @playwright/test in package.json must match this driver version.
+        PLAYWRIGHT_BROWSERS_PATH = pkgs.playwright-driver.browsers;
+        PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
       };
       checks.devshell = config.devShells.default.overrideAttrs (old: {
         name = "devshell-check";

@@ -36,6 +36,9 @@ jobs:
       - name: Build single-file HTML
         run: nix develop --command bun run build:html
 
+      - name: End-to-end test the built HTML
+        run: nix develop --command bunx --bun playwright test
+
       - uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4
         with:
           subject-path: dist/redraft.html

@@ -32,5 +32,18 @@ jobs:
       - name: Test
         run: nix develop --command bun test
 
+      - name: Check flake
+        run: nix flake check
+
       - name: Build single-file HTML
         run: nix develop --command bun run build:html
+
+      - name: End-to-end test the built HTML
+        run: nix develop --command bunx --bun playwright test
+
+      - if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: playwright-traces
+          path: test-results/
+          retention-days: 7
