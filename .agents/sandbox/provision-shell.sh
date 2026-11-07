@@ -7,10 +7,11 @@ set -euo pipefail
 agent_env="$HOME/.sandbox-env.sh"
 printf 'for dir in %q %q; do\n' "$HOME/.nix-profile/bin" "$(dirname "$1")" > "$agent_env"
 cat >> "$agent_env" << 'EOF'
-  case ":$PATH:" in
-    *":$dir:"*) ;;
-    *) PATH="$dir:$PATH" ;;
-  esac
+  path=":$PATH:"
+  while [[ $path == *":$dir:"* ]]; do
+    path=${path/":$dir:"/:}
+  done
+  PATH="$dir${path%:}"
 done
 export PATH
 command -v direnv >/dev/null 2>&1 && eval "$(direnv hook bash)"
